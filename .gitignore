@@ -1,0 +1,5 @@
+.vscode
+.babelrc
+.prettierrc
+build/
+node_modules/
