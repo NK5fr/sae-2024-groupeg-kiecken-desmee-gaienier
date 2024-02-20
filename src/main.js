@@ -38,11 +38,13 @@ function onMouseMove(event) {
 	drawList[drawList.length - 1].append(event.offsetX, event.offsetY);
 }
 
-const image = new Image();
+requestAnimationFrame(render);
+
+/*const image = new Image();
 image.src = '/images/monster.png';
 image.addEventListener('load', event => {
 	requestAnimationFrame(render);
-});
+});*/
 
 let x = 0,
 	y = 0,
@@ -54,11 +56,11 @@ let speed = 10;
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	drawList.forEach(draw => draw.render(context));
-	context.drawImage(image, x, y);
+	//context.drawImage(image, x, y);
 	requestAnimationFrame(render);
 }
 
-function moveMonster() {
+/*function moveMonster() {
 	y += ySpeed;
 	if (y < 0) {
 		y = 0;
@@ -72,7 +74,7 @@ function moveMonster() {
 	} else if (x + image.width > canvas.width) {
 		x = canvas.width - image.width;
 	}
-}
+}*/
 
 document.addEventListener('keydown', event => {
 	switch (event.key) {
@@ -104,4 +106,4 @@ document.addEventListener('keyup', event => {
 	}
 });
 
-setInterval(moveMonster, 1000 / 60);
+//setInterval(moveMonster, 1000 / 60);
