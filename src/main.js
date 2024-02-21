@@ -15,7 +15,7 @@ const playerSpawnPoint = {
 	y: canvas.height / 2,
 };
 
-const player = new Player(
+let player = new Player(
 	playerName,
 	playerSpawnPoint.x,
 	playerSpawnPoint.y,
@@ -58,15 +58,20 @@ function renderGame() {
 function updateGame() {
 	if (gameNotFocused) return;
 	player.update(canvas);
-	stage.angels.forEach(angel => {
-		angel.update(canvas);
-		player.checkCollision(angel);
-	});
 	player.missiles.forEach(missile => {
 		missile.update(canvas);
 		stage.angels.forEach(angel => {
 			missile.checkCollision(angel);
 		});
+	});
+	stage.angels.forEach(angel => {
+		angel.update(canvas);
+		player.checkCollision(angel);
+		angel.missiles.forEach(missile => {
+			missile.update(canvas);
+			player.checkCollision(missile);
+		});
+		angel.missiles = angel.missiles.filter(missile => missile.stats.health > 0);
 	});
 	const angelsKilled = stage.angels.filter(angel => angel.stats.health <= 0);
 	stage.numberOfAngelsKilled += angelsKilled.length;
@@ -74,6 +79,17 @@ function updateGame() {
 	player.missiles = player.missiles.filter(missile => missile.stats.health > 0);
 	if (stage.stageIsClear()) {
 		alert('Stage Clear!');
+		stage = new Mars(player);
+	}
+	if (player.stats.health <= 0) {
+		alert('Game Over');
+		player = new Player(
+			playerName,
+			playerSpawnPoint.x,
+			playerSpawnPoint.y,
+			playerMaxSpeed,
+			playerHealth
+		);
 		stage = new Mars(player);
 	}
 }

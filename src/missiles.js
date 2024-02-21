@@ -15,7 +15,10 @@ export default class Missile extends Entity {
 
 	update(canvas) {
 		this.position.x += this.stats.speed;
-		if (this.position.x + this.renderSettings.sprite.width == canvas.width) {
+		if (
+			this.position.x == 0 ||
+			this.position.x + this.renderSettings.sprite.width == canvas.width
+		) {
 			this.stats.health = 0;
 		}
 	}

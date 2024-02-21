@@ -22,7 +22,10 @@ export default class Stage {
 	}
 
 	renderAngels(context) {
-		this.angels.forEach(angel => angel.render(context));
+		this.angels.forEach(angel => {
+			angel.render(context);
+			angel.missiles.forEach(missile => missile.render(context));
+		});
 	}
 }
 

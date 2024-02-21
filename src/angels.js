@@ -6,6 +6,11 @@ export default class Angel extends Entity {
 	constructor(x, y, speed, health, sprite) {
 		super(x, y, speed, health, sprite);
 		this.missiles = [];
+		this.fireSettings = {
+			on: false,
+			rate: 10,
+			nextShotIn: 0,
+		};
 	}
 
 	update(canvas) {
@@ -18,6 +23,14 @@ export default class Angel extends Entity {
 				Math.random() * (canvas.height - spriteHeight)
 			);
 		}
+		if (this.fireSettings.on) {
+			if (this.fireSettings.nextShotIn <= 0) {
+				this.shoot();
+				this.fireSettings.nextShotIn = this.fireSettings.rate;
+			} else {
+				this.fireSettings.nextShotIn--;
+			}
+		}
 		this.position.x -= this.stats.speed;
 	}
 }
@@ -25,14 +38,15 @@ export default class Angel extends Entity {
 export class Puissance extends Angel {
 	constructor(x, y, speed, health) {
 		super(x, y, speed, health, angels.puissance);
+		this.fireSettings.rate = 100;
+		this.fireSettings.on = false;
 	}
 
 	shoot() {
 		let x = this.position.x;
 		let y = this.position.y;
-		let speed = -5;
-		let health = 1;
-
-		this.missiles.push(new Missile(x, y, speed, health, missiles.card));
+		let speed = -6;
+		this.missiles.push(new Missile(x, y, speed, missiles.card));
+		console.log(this.missiles);
 	}
 }
