@@ -1,6 +1,7 @@
 import Player from './player.js';
 import Angel from './angels.js';
 import { backgrounds } from './imgLoader.js';
+import { Mars } from './stage.js';
 
 const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d'),
@@ -29,57 +30,52 @@ function resampleCanvas() {
 	canvas.height = canvas.clientHeight;
 }
 
-let angels = [];
+let stage = new Mars(player);
 let gameNotFocused = false;
 
-function render() {
+function renderGame() {
 	if (!gameNotFocused) {
 		context.clearRect(0, 0, canvas.width, canvas.height);
-		drawBackground();
+		stage.drawBackground(context);
 		player.render(context);
-		angels.forEach(angel => angel.render(context));
+		stage.renderAngels(context);
 		player.missiles.forEach(missile => missile.render(context));
+		context.beginPath();
+		context.rect(canvas.width / 2 - 150, 10, 300, 20);
+		context.strokeStyle = 'black';
+		context.stroke();
+		context.fillStyle = 'green';
+		context.fillRect(
+			canvas.width / 2 - 150,
+			10,
+			(stage.numberOfAngelsKilled / stage.numberOfAngels) * 300,
+			20
+		);
 	}
-	requestAnimationFrame(render);
-}
-
-let backgroundX = 0;
-function drawBackground() {
-	if (backgroundX <= -backgrounds.stageOne.width) {
-		backgroundX = -1;
-	}
-	context.drawImage(backgrounds.stageOne, backgroundX, 0);
-	context.drawImage(
-		backgrounds.stageOne,
-		backgroundX + backgrounds.stageOne.width,
-		0
-	);
-	backgroundX -= 0.5;
+	requestAnimationFrame(renderGame);
 }
 
 function updateGame() {
+	if (gameNotFocused) return;
 	player.update(canvas);
-	angels.forEach(angel => {
+	stage.angels.forEach(angel => {
 		angel.update(canvas);
 		player.checkCollision(angel);
 	});
 	player.missiles.forEach(missile => {
 		missile.update(canvas);
-		angels.forEach(angel => {
+		stage.angels.forEach(angel => {
 			missile.checkCollision(angel);
 		});
 	});
-	angels = angels.filter(angel => angel.stats.health > 0);
+	const angelsKilled = stage.angels.filter(angel => angel.stats.health <= 0);
+	stage.numberOfAngelsKilled += angelsKilled.length;
+	stage.angels = stage.angels.filter(angel => angel.stats.health > 0);
 	player.missiles = player.missiles.filter(missile => missile.stats.health > 0);
-}
-
-function spawnAngel() {
-	let x = canvas.width;
-	let y = Math.floor(Math.random() * canvas.height);
-	let speed = 5;
-	let health = 1;
-
-	angels.push(new Angel(x, y, speed, health));
+	if (stage.stageIsClear()) {
+		alert('Stage Clear!');
+		stage = new Mars(player);
+	}
 }
 
 document.addEventListener('keydown', event => {
@@ -93,17 +89,17 @@ document.addEventListener('keydown', event => {
 document.addEventListener('keyup', event => player.onKeyUp(event));
 
 document.addEventListener('mousedown', event => player.onMouseDown(event));
+document.addEventListener('mouseup', event => player.onMouseUp(event));
 
 window.addEventListener('blur', () => (gameNotFocused = true));
 window.addEventListener('focus', () => (gameNotFocused = false));
 
-requestAnimationFrame(render);
+function startGame() {
+	requestAnimationFrame(renderGame);
+	setInterval(updateGame, 1000 / 60);
+	setInterval(() => {
+		stage.spawnAngels(canvas, gameNotFocused);
+	}, 1000);
+}
 
-setInterval(() => {
-	if (gameNotFocused) return;
-	updateGame();
-}, 1000 / 60);
-setInterval(() => {
-	if (gameNotFocused) return;
-	spawnAngel();
-}, 1000);
+startGame();

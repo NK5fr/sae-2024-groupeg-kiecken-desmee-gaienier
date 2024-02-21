@@ -18,6 +18,11 @@ export default class Player extends Entity {
 		};
 		this.currentSprite = this.renderSettings.sprite.neutral;
 		this.missiles = [];
+		this.fireSettings = {
+			on: false,
+			rate: 10,
+			nextShotIn: 0,
+		};
 	}
 
 	render(context) {
@@ -57,6 +62,14 @@ export default class Player extends Entity {
 			: this.decelerateRight();
 
 		this.missiles = this.missiles.filter(missile => missile.stats.health > 0);
+		if (this.fireSettings.on) {
+			if (this.fireSettings.nextShotIn <= 0) {
+				this.fire();
+				this.fireSettings.nextShotIn = this.fireSettings.rate;
+			} else {
+				this.fireSettings.nextShotIn--;
+			}
+		}
 	}
 
 	accelerateUp() {
@@ -158,7 +171,11 @@ export default class Player extends Entity {
 	}
 
 	onMouseDown(event) {
-		this.fire(event.clientX, event.clientY);
+		this.fireSettings.on = true;
+	}
+
+	onMouseUp(event) {
+		this.fireSettings.on = false;
 	}
 
 	checkCollision(entity) {
