@@ -1,25 +1,21 @@
 import Entity from './entity';
 
 export default class Missile extends Entity {
-	constructor(x, y, speed, width, height) {
-		super(x, y, speed, 1, null, width, height);
+	constructor(x, y, speed, sprite) {
+		super(x, y, speed, 1, sprite);
 	}
 
 	render(context) {
-		context.beginPath();
-		context.rect(
+		context.drawImage(
+			this.renderSettings.sprite,
 			this.position.x,
-			this.position.y,
-			this.renderSettings.width,
-			this.renderSettings.height
+			this.position.y
 		);
-		context.fillStyle = 'blue';
-		context.fill();
 	}
 
 	update(canvas) {
 		this.position.x += this.stats.speed;
-		if (this.position.x + this.renderSettings.width == canvas.width) {
+		if (this.position.x + this.renderSettings.sprite.width == canvas.width) {
 			this.stats.health = 0;
 		}
 	}
@@ -27,13 +23,13 @@ export default class Missile extends Entity {
 	checkCollision(entity) {
 		let missileX = this.position.x;
 		let missileY = this.position.y;
-		let missileWidth = this.renderSettings.width;
-		let missileHeight = this.renderSettings.height;
+		let missileWidth = this.renderSettings.sprite.width;
+		let missileHeight = this.renderSettings.sprite.height;
 
 		let entityX = entity.position.x;
 		let entityY = entity.position.y;
-		let entityWidth = entity.renderSettings.width;
-		let entityHeight = entity.renderSettings.height;
+		let entityWidth = entity.renderSettings.sprite.width;
+		let entityHeight = entity.renderSettings.sprite.height;
 
 		if (
 			missileX < entityX + entityWidth &&

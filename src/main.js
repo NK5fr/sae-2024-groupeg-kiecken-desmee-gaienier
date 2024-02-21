@@ -5,14 +5,24 @@ const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d'),
 	canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
 
-const images = {
+const playerImages = {
 	left: new Image(),
 	neutral: new Image(),
 	right: new Image(),
 };
-images.left.src = '/images/nathan-left.png';
-images.neutral.src = '/images/nathan.png';
-images.right.src = '/images/nathan-right.png';
+playerImages.left.src = '/images/player/left.png';
+playerImages.neutral.src = '/images/player/neutral.png';
+playerImages.right.src = '/images/player/right.png';
+
+const angelImages = {
+	puissance: new Image(),
+};
+angelImages.puissance.src = '/images/angels/puissance.png';
+
+export const missileImages = {
+	card: new Image(),
+};
+missileImages.card.src = '/images/missiles/card.png';
 
 const player = new Player(
 	'Player',
@@ -20,9 +30,9 @@ const player = new Player(
 	canvas.height / 2,
 	10,
 	3,
-	images,
-	images.neutral.width,
-	images.neutral.height
+	playerImages,
+	playerImages.neutral.width,
+	playerImages.neutral.height
 );
 
 console.log(player);
@@ -50,14 +60,12 @@ function updateGame() {
 		angel.update(canvas);
 		player.checkCollision(angel);
 		player.missiles.forEach(missile => {
-			missile.update(canvas);
 			missile.checkCollision(angel);
 		});
-		player.missiles = player.missiles.filter(
-			missile => missile.stats.health > 0
-		);
 	});
+	player.missiles.forEach(missile => missile.update(canvas));
 	angels = angels.filter(angel => angel.stats.health > 0);
+	player.missiles = player.missiles.filter(missile => missile.stats.health > 0);
 }
 
 function spawnAngel() {
@@ -68,7 +76,9 @@ function spawnAngel() {
 	let speed = 5;
 	let health = 1;
 
-	angels.push(new Angel(x, y, speed, health, width, height));
+	angels.push(
+		new Angel(x, y, speed, health, angelImages.puissance, width, height)
+	);
 }
 
 document.addEventListener('keydown', event => player.onKeyDown(event));
@@ -79,4 +89,4 @@ document.addEventListener('mousedown', event => player.onMouseDown(event));
 
 requestAnimationFrame(render);
 setInterval(updateGame, 1000 / 60);
-//setInterval(spawnAngel, 1000);
+setInterval(spawnAngel, 1000);
