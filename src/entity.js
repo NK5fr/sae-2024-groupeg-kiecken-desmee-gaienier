@@ -1,5 +1,5 @@
 export default class Entity {
-	constructor(x, y, speed, health, sprite, width, height) {
+	constructor(x, y, speed, health, sprite) {
 		this.position = {
 			x: x,
 			y: y,
@@ -11,8 +11,6 @@ export default class Entity {
 		};
 		this.renderSettings = {
 			sprite: sprite,
-			width: width,
-			height: height,
 		};
 	}
 

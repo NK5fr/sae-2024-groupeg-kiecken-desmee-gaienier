@@ -1,9 +1,10 @@
 import Entity from './entity.js';
 import Missile from './missiles.js';
+import { missileImages } from './main.js';
 
 export default class Player extends Entity {
-	constructor(name, x, y, speed, health, sprite, width, height) {
-		super(x, y, speed, health, sprite, width, height);
+	constructor(name, x, y, speed, health, sprite) {
+		super(x, y, speed, health, sprite);
 		this.name = name;
 		this.movement = {
 			speedX: 0,
@@ -114,7 +115,7 @@ export default class Player extends Entity {
 		let speed = 10;
 
 		this.missiles.push(
-			new Missile(missileX, missileY, speed, missileWidth, missileHeight)
+			new Missile(missileX, missileY, speed, missileImages.card)
 		);
 	}
 
@@ -172,8 +173,8 @@ export default class Player extends Entity {
 
 		let entityX = entity.position.x;
 		let entityY = entity.position.y;
-		let entityWidth = entity.renderSettings.width;
-		let entityHeight = entity.renderSettings.height;
+		let entityWidth = entity.renderSettings.sprite.width;
+		let entityHeight = entity.renderSettings.sprite.height;
 
 		if (
 			playerX < entityX + entityWidth &&
