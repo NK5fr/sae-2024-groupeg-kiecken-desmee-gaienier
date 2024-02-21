@@ -1,18 +1,26 @@
 export default class Entity {
-	constructor(posX, posY, speed, health, sprite) {
-		this.posX = posX;
-		this.posY = posY;
-		this.speed = speed;
-		this.health = health;
-		this.maxHealth = health;
-		this.sprite = sprite;
+	constructor(x, y, speed, health, sprite, width, height) {
+		this.position = {
+			x: x,
+			y: y,
+		};
+		this.stats = {
+			speed: speed,
+			health: health,
+			maxHealth: health,
+		};
+		this.renderSettings = {
+			sprite: sprite,
+			width: width,
+			height: height,
+		};
 	}
 
 	render(context) {
-		context.drawImage(this.sprite, this.posX, this.posY);
-	}
-
-	update() {
-		console.log('Updating entity');
+		context.drawImage(
+			this.renderSettings.sprite,
+			this.position.x,
+			this.position.y
+		);
 	}
 }
