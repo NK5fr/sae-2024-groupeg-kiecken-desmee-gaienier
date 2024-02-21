@@ -1,10 +1,10 @@
 import Entity from './entity.js';
 import Missile from './missiles.js';
-import { missileImages } from './main.js';
+import { players, missiles } from './imgLoader.js';
 
 export default class Player extends Entity {
-	constructor(name, x, y, speed, health, sprite) {
-		super(x, y, speed, health, sprite);
+	constructor(name, x, y, speed, health) {
+		super(x, y, speed, health, players);
 		this.name = name;
 		this.movement = {
 			speedX: 0,
@@ -107,16 +107,12 @@ export default class Player extends Entity {
 		}
 	}
 
-	fire(x, y) {
-		let missileWidth = 10;
-		let missileHeight = 10;
+	fire() {
 		let missileX = this.position.x + this.currentSprite.width;
 		let missileY = this.position.y + this.currentSprite.height / 2;
 		let speed = 10;
 
-		this.missiles.push(
-			new Missile(missileX, missileY, speed, missileImages.card)
-		);
+		this.missiles.push(new Missile(missileX, missileY, speed, missiles.card));
 	}
 
 	onKeyDown(event) {

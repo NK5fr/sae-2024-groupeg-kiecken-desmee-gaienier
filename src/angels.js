@@ -1,8 +1,10 @@
-import Entity from './entity';
+import Entity from './entity.js';
+import Missile from './missiles.js';
+import { angels, missiles } from './imgLoader.js';
 
 export default class Angel extends Entity {
-	constructor(x, y, speed, health, sprite) {
-		super(x, y, speed, health, sprite);
+	constructor(x, y, speed, health) {
+		super(x, y, speed, health, angels.puissance);
 		this.missiles = [];
 	}
 

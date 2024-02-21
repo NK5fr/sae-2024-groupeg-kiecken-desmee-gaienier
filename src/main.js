@@ -5,35 +5,7 @@ const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d'),
 	canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
 
-const playerImages = {
-	left: new Image(),
-	neutral: new Image(),
-	right: new Image(),
-};
-playerImages.left.src = '/images/player/left.png';
-playerImages.neutral.src = '/images/player/neutral.png';
-playerImages.right.src = '/images/player/right.png';
-
-const angelImages = {
-	puissance: new Image(),
-};
-angelImages.puissance.src = '/images/angels/puissance.png';
-
-export const missileImages = {
-	card: new Image(),
-};
-missileImages.card.src = '/images/missiles/card.png';
-
-const player = new Player(
-	'Player',
-	canvas.width / 2,
-	canvas.height / 2,
-	10,
-	3,
-	playerImages,
-	playerImages.neutral.width,
-	playerImages.neutral.height
-);
+const player = new Player('Player', canvas.width / 2, canvas.height / 2, 10, 3);
 
 console.log(player);
 
@@ -76,9 +48,7 @@ function spawnAngel() {
 	let speed = 5;
 	let health = 1;
 
-	angels.push(
-		new Angel(x, y, speed, health, angelImages.puissance, width, height)
-	);
+	angels.push(new Angel(x, y, speed, health));
 }
 
 document.addEventListener('keydown', event => player.onKeyDown(event));

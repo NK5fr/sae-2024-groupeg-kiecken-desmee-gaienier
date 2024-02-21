@@ -1,4 +1,4 @@
-import Entity from './entity';
+import Entity from './entity.js';
 
 export default class Missile extends Entity {
 	constructor(x, y, speed, sprite) {
