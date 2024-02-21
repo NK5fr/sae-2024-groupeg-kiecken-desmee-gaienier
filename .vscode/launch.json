@@ -21,5 +21,13 @@
 				{ "url": "http://localhost:8000/build", "path": null }
 			]
 		},
+		{
+			"name": "Brave Browser",
+			"type": "chrome",
+			"request": "launch",
+			"runtimeExecutable": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+			"url": "http://localhost:8000",
+			"webRoot": "${workspaceFolder}"
+		},
 	]
 }
