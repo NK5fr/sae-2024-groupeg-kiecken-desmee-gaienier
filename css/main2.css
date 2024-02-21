@@ -3,6 +3,7 @@
 body {
     background-image: url("../images/decors-etage-1.png");
     background-size: cover;
+    background-repeat: no-repeat;
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
