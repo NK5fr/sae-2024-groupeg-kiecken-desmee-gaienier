@@ -29,5 +29,13 @@
 			"url": "http://localhost:8000",
 			"webRoot": "${workspaceFolder}"
 		},
+		{
+			"type": "chrome",
+			"request": "launch",
+			"name": "Launch Chrome against localhost",
+			"url": "http://localhost:8000",
+			"webRoot": "${workspaceFolder}",
+			"runtimeExecutable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+		},
 	]
 }
