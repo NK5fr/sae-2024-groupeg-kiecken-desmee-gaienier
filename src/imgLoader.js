@@ -4,19 +4,19 @@
 const angels = {
 	puissance: new Image(),
 };
-angels.puissance.src = '/images/angels/puissance.png';
+angels.puissance.src = '/assets/angels/puissance.png';
 
 //Load background images
 const backgrounds = {
 	stageOne: new Image(),
 };
-backgrounds.stageOne.src = '/images/backgrounds/stageOne.png';
+backgrounds.stageOne.src = '/assets/backgrounds/stageOne.png';
 
 //Load missile images
 const missiles = {
 	card: new Image(),
 };
-missiles.card.src = '/images/missiles/card.png';
+missiles.card.src = '/assets/missiles/card.png';
 
 //Load player images
 const players = {
@@ -24,8 +24,8 @@ const players = {
 	neutral: new Image(),
 	right: new Image(),
 };
-players.left.src = '/images/player/left.png';
-players.neutral.src = '/images/player/neutral.png';
-players.right.src = '/images/player/right.png';
+players.left.src = '/assets/player/left.png';
+players.neutral.src = '/assets/player/neutral.png';
+players.right.src = '/assets/player/right.png';
 
 export { angels, backgrounds, missiles, players };
