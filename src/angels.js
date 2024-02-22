@@ -13,16 +13,14 @@ export default class Angel extends Entity {
 		};
 	}
 
-	update(canvas) {
-		let spriteWidth = this.renderSettings.sprite.width;
-		let spriteHeight = this.renderSettings.sprite.height;
-
+	update(maxWidth, maxHeight) {
 		if (this.position.x <= 0) {
-			this.position.x = canvas.width - spriteWidth;
+			this.position.x = maxWidth - this.hitbox.width;
 			this.position.y = Math.floor(
-				Math.random() * (canvas.height - spriteHeight)
+				Math.random() * (maxHeight - this.hitbox.height)
 			);
 		}
+
 		if (this.fireSettings.on) {
 			if (this.fireSettings.nextShotIn <= 0) {
 				this.shoot();
@@ -31,13 +29,14 @@ export default class Angel extends Entity {
 				this.fireSettings.nextShotIn--;
 			}
 		}
+
 		this.position.x -= this.stats.speed;
 	}
 }
 
 export class Puissance extends Angel {
-	constructor(x, y, speed, health) {
-		super(x, y, speed, health, angels.puissance);
+	constructor(x, y) {
+		super(x, y, 5, 5, angels.puissance);
 		this.fireSettings.rate = 100;
 		this.fireSettings.on = false;
 	}

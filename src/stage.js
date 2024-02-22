@@ -18,7 +18,7 @@ export default class Stage {
 			this.backgroundX + this.backgroundImages.width,
 			0
 		);
-		this.backgroundX -= 0.5;
+		this.backgroundX -= 1.5;
 	}
 
 	renderAngels(context) {
