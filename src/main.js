@@ -1,6 +1,4 @@
 import Player from './player.js';
-import Angel from './angels.js';
-import { backgrounds } from './imgLoader.js';
 import { Mars } from './stage.js';
 
 const canvas = document.querySelector('.gameCanvas'),
