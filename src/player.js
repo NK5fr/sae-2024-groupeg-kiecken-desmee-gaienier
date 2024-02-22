@@ -20,7 +20,7 @@ export default class Player extends Entity {
 		this.missiles = [];
 		this.fireSettings = {
 			on: false,
-			rate: 10,
+			rate: 50,
 			nextShotIn: 0,
 		};
 	}
@@ -66,10 +66,9 @@ export default class Player extends Entity {
 			if (this.fireSettings.nextShotIn <= 0) {
 				this.fire();
 				this.fireSettings.nextShotIn = this.fireSettings.rate;
-			} else {
-				this.fireSettings.nextShotIn--;
 			}
 		}
+		this.fireSettings.nextShotIn--;
 	}
 
 	accelerateUp() {
