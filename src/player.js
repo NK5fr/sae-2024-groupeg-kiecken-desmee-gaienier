@@ -1,10 +1,10 @@
 import Entity from './entity.js';
 import Missile from './missiles.js';
-import { missileImages } from './main.js';
+import { players, missiles } from './imgLoader.js';
 
 export default class Player extends Entity {
-	constructor(name, x, y, speed, health, sprite) {
-		super(x, y, speed, health, sprite);
+	constructor(name, x, y, speed, health) {
+		super(x, y, speed, health, players);
 		this.name = name;
 		this.movement = {
 			speedX: 0,
@@ -18,6 +18,11 @@ export default class Player extends Entity {
 		};
 		this.currentSprite = this.renderSettings.sprite.neutral;
 		this.missiles = [];
+		this.fireSettings = {
+			on: false,
+			rate: 10,
+			nextShotIn: 0,
+		};
 	}
 
 	render(context) {
@@ -57,6 +62,14 @@ export default class Player extends Entity {
 			: this.decelerateRight();
 
 		this.missiles = this.missiles.filter(missile => missile.stats.health > 0);
+		if (this.fireSettings.on) {
+			if (this.fireSettings.nextShotIn <= 0) {
+				this.fire();
+				this.fireSettings.nextShotIn = this.fireSettings.rate;
+			} else {
+				this.fireSettings.nextShotIn--;
+			}
+		}
 	}
 
 	accelerateUp() {
@@ -107,16 +120,12 @@ export default class Player extends Entity {
 		}
 	}
 
-	fire(x, y) {
-		let missileWidth = 10;
-		let missileHeight = 10;
+	fire() {
 		let missileX = this.position.x + this.currentSprite.width;
 		let missileY = this.position.y + this.currentSprite.height / 2;
 		let speed = 10;
 
-		this.missiles.push(
-			new Missile(missileX, missileY, speed, missileImages.card)
-		);
+		this.missiles.push(new Missile(missileX, missileY, speed, missiles.card));
 	}
 
 	onKeyDown(event) {
@@ -162,7 +171,11 @@ export default class Player extends Entity {
 	}
 
 	onMouseDown(event) {
-		this.fire(event.clientX, event.clientY);
+		this.fireSettings.on = true;
+	}
+
+	onMouseUp(event) {
+		this.fireSettings.on = false;
 	}
 
 	checkCollision(entity) {

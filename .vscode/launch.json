@@ -21,5 +21,21 @@
 				{ "url": "http://localhost:8000/build", "path": null }
 			]
 		},
+		{
+			"name": "Brave Browser",
+			"type": "chrome",
+			"request": "launch",
+			"runtimeExecutable": "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+			"url": "http://localhost:8000",
+			"webRoot": "${workspaceFolder}"
+		},
+		{
+			"type": "chrome",
+			"request": "launch",
+			"name": "Launch Chrome against localhost",
+			"url": "http://localhost:8000",
+			"webRoot": "${workspaceFolder}",
+			"runtimeExecutable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+		},
 	]
 }
