@@ -1,0 +1,24 @@
+{
+    "puissance": {
+        "one": {
+            "speed": 5,
+            "health": 2,
+            "damage": 1
+        },
+        "two": {
+            "speed": 7,
+            "health": 1,
+            "damage": 3
+        },
+        "three": {
+            "speed": 3,
+            "health": 3,
+            "damage": 2
+        }
+    },
+    "camael": {
+        "speed": 10,
+        "health": 10,
+        "damage": 5
+    }
+}

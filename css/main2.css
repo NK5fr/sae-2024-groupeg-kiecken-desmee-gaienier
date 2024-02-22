@@ -1,7 +1,7 @@
 /* toute les div en display none */
 
 body {
-    background-image: url("../images/background/stageOne.png");
+    background-image: url("../assets/stages/background/one.png");
     background-size: cover;
     background-repeat: no-repeat;
     font-family: 'Roboto', sans-serif;

@@ -1,31 +1,65 @@
-import { Puissance } from './angels.js';
-import { backgrounds } from './imgLoader.js';
+import { Wanderer } from './angels.js';
+import { backgrounds } from './assetsLoader.js';
 
 export default class Stage {
-	constructor(backgroundImages) {
+	constructor(background) {
 		this.angels = [];
+		this.background = background;
 		this.backgroundX = 0;
-		this.backgroundImages = backgroundImages;
+		this.numberOfAngels = 0;
+		this.numberOfAngelsSpawned = 0;
+		this.numberOfAngelsKilled = 0;
 	}
 
-	drawBackground(context) {
-		if (this.backgroundX <= -this.backgroundImages.width) {
+	renderBackground(context) {
+		this.backgroundX -= 1.5;
+		if (this.backgroundX <= -this.background.width) {
 			this.backgroundX = -1;
 		}
-		context.drawImage(this.backgroundImages, this.backgroundX, 0);
+		context.drawImage(this.background, this.backgroundX, 0);
 		context.drawImage(
-			this.backgroundImages,
-			this.backgroundX + this.backgroundImages.width,
+			this.background,
+			this.backgroundX + this.background.width,
 			0
 		);
-		this.backgroundX -= 1.5;
 	}
 
 	renderAngels(context) {
-		this.angels.forEach(angel => {
-			angel.render(context);
-			angel.missiles.forEach(missile => missile.render(context));
-		});
+		this.angels.forEach(angel => angel.render(context));
+	}
+
+	renderProgressionBar(context, canvas) {
+		context.beginPath();
+		context.rect((canvas.width / 4) * 3 - 150, 10, 300, 20);
+		context.strokeStyle = 'black';
+		context.lineWidth = 2;
+		context.stroke();
+		context.fillStyle = this.calculateCurrentColorBasedOnProgression();
+		context.fillRect(
+			(canvas.width / 4) * 3 - 150,
+			10,
+			(this.numberOfAngelsKilled / this.numberOfAngels) * 300,
+			20
+		);
+	}
+
+	calculateCurrentColorBasedOnProgression() {
+		let green = (this.numberOfAngelsKilled / this.numberOfAngels) * 240;
+		let red = 240 - green;
+		return `rgb(${red}, ${green}, 0)`;
+	}
+
+	update(canvas) {
+		this.angels = this.angels.filter(angel => angel.health > 0);
+		this.numberOfAngelsKilled = this.numberOfAngelsSpawned - this.angels.length;
+		this.angels.forEach(angel => angel.update(canvas));
+	}
+
+	stageIsClear() {
+		return (
+			this.numberOfAngelsSpawned === this.numberOfAngels &&
+			this.angels.length === 0
+		);
 	}
 }
 
@@ -40,20 +74,11 @@ export class Mars extends Stage {
 	spawnAngels(canvas, gameNotFocused) {
 		let x = canvas.width;
 		let y = Math.floor(Math.random() * canvas.height);
-		let speed = 5;
-		let health = 1;
 
 		if (gameNotFocused) return;
 		if (this.numberOfAngelsSpawned < this.numberOfAngels) {
-			this.angels.push(new Puissance(x, y, speed, health));
+			this.angels.push(new Wanderer(x, y, 'puissance', 'one'));
 			this.numberOfAngelsSpawned++;
 		}
-	}
-
-	stageIsClear() {
-		return (
-			this.numberOfAngelsSpawned === this.numberOfAngels &&
-			this.angels.length === 0
-		);
 	}
 }

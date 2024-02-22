@@ -1,201 +1,134 @@
 import Entity from './entity.js';
 import Missile from './missiles.js';
-import { players, missiles } from './imgLoader.js';
+import { playersSprites, missilesSprites } from './assetsLoader.js';
 
 export default class Player extends Entity {
 	constructor(name, x, y, speed, health) {
-		super(x, y, speed, health, players);
+		super(x, y, speed, health, playersSprites);
 		this.name = name;
-		this.movement = {
-			speedX: 0,
-			speedY: 0,
-			direction: {
-				up: false,
-				down: false,
-				left: false,
-				right: false,
-			},
+		this.speedX = 0;
+		this.speedY = 0;
+		this.direction = {
+			up: false,
+			down: false,
+			left: false,
+			right: false,
 		};
-		this.currentSprite = this.renderSettings.sprite.neutral;
 		this.missiles = [];
-		this.fireSettings = {
-			on: false,
-			rate: 50,
-			nextShotIn: 0,
-		};
+		this.fireOn = false;
+		this.fireRate = 25;
+		this.fireNextShotIn = 0;
+		this.width = this.sprite.neutral.width;
+		this.height = this.sprite.neutral.height;
 	}
 
+	// The following methods are used to handle the player's rendering and update
 	render(context) {
-		if (this.movement.speedX == 0) {
-			this.currentSprite = this.renderSettings.sprite.neutral;
-		} else if (this.movement.speedX > 0) {
-			this.currentSprite = this.renderSettings.sprite.right;
-		} else if (this.movement.speedX < 0) {
-			this.currentSprite = this.renderSettings.sprite.left;
+		if (this.speedX === 0) {
+			context.drawImage(this.sprite.neutral, this.posX, this.posY);
+		} else if (this.speedX > 0) {
+			context.drawImage(this.sprite.right, this.posX, this.posY);
+		} else if (this.speedX < 0) {
+			context.drawImage(this.sprite.left, this.posX, this.posY);
 		}
-
-		context.drawImage(this.currentSprite, this.position.x, this.position.y);
+		this.missiles.forEach(missile => missile.render(context));
 	}
 
+	renderHealthBar(context, canvas) {
+		let healthBarWidth = (this.health / this.maxHealth) * 100;
+		context.beginPath();
+		context.rect(10, 10, 100, 10);
+		context.strokeStyle = 'black';
+		context.lineWidth = 2;
+		context.stroke();
+		context.fillStyle = this.calculateCurrentColorBasedOnHealth();
+		context.fillRect(10, 10, healthBarWidth, 10);
+	}
+
+	calculateCurrentColorBasedOnHealth() {
+		let red = Math.floor((this.health / this.maxHealth) * 255);
+		let green = 255 - red;
+		return `rgb(${red}, ${green}, 0)`;
+	}
 	update(canvas) {
-		let nextPosX = this.position.x + this.movement.speedX;
-		let nextPosY = this.position.y + this.movement.speedY;
-		let spriteWidth = this.currentSprite.width;
-		let spriteHeight = this.currentSprite.height;
+		if (this.canMoveOnAxis(canvas, 'X')) this.posX += this.speedX;
+		if (this.canMoveOnAxis(canvas, 'Y')) this.posY += this.speedY;
 
-		if (nextPosX > 0 && nextPosX + spriteWidth < canvas.width) {
-			this.position.x = nextPosX;
-		}
-		if (nextPosY > 0 && nextPosY + spriteHeight < canvas.height) {
-			this.position.y = nextPosY;
-		}
+		if (this.direction.up) this.accelerateUpOrLeft('Y');
+		else this.decelerateUpOrLeft('Y');
+		if (this.direction.down) this.accelerateDownOrRight('Y');
+		else this.decelerateDownOrRight('Y');
+		if (this.direction.left) this.accelerateUpOrLeft('X');
+		else this.decelerateUpOrLeft('X');
+		if (this.direction.right) this.accelerateDownOrRight('X');
+		else this.decelerateDownOrRight('X');
 
-		this.movement.direction.up ? this.accelerateUp() : this.decelerateUp();
-		this.movement.direction.down
-			? this.accelerateDown()
-			: this.decelerateDown();
-		this.movement.direction.left
-			? this.accelerateLeft()
-			: this.decelerateLeft();
-		this.movement.direction.right
-			? this.accelerateRight()
-			: this.decelerateRight();
+		this.missiles = this.missiles.filter(missile => missile.health > 0);
+		this.missiles.forEach(missile => missile.update(canvas));
 
-		this.missiles = this.missiles.filter(missile => missile.stats.health > 0);
-		if (this.fireSettings.on) {
-			if (this.fireSettings.nextShotIn <= 0) {
+		if (this.fireOn) {
+			if (this.fireNextShotIn <= 0) {
 				this.fire();
-				this.fireSettings.nextShotIn = this.fireSettings.rate;
+				this.fireNextShotIn = this.fireRate;
 			}
 		}
-		this.fireSettings.nextShotIn--;
+		this.fireNextShotIn--;
 	}
 
-	accelerateUp() {
-		if (this.movement.speedY > -this.stats.speed) {
-			this.movement.speedY--;
-		}
-	}
-
-	accelerateDown() {
-		if (this.movement.speedY < this.stats.speed) {
-			this.movement.speedY++;
-		}
-	}
-
-	accelerateLeft() {
-		if (this.movement.speedX > -this.stats.speed) {
-			this.movement.speedX--;
-		}
-	}
-
-	accelerateRight() {
-		if (this.movement.speedX < this.stats.speed) {
-			this.movement.speedX++;
-		}
-	}
-
-	decelerateUp() {
-		if (this.movement.speedY < 0) {
-			this.movement.speedY++;
-		}
-	}
-
-	decelerateDown() {
-		if (this.movement.speedY > 0) {
-			this.movement.speedY--;
-		}
-	}
-
-	decelerateLeft() {
-		if (this.movement.speedX < 0) {
-			this.movement.speedX++;
-		}
-	}
-
-	decelerateRight() {
-		if (this.movement.speedX > 0) {
-			this.movement.speedX--;
-		}
-	}
-
+	// This method is used to handle the player's shooting
 	fire() {
-		let missileX = this.position.x + this.currentSprite.width;
-		let missileY = this.position.y + this.currentSprite.height / 2;
+		let missileType = missilesSprites.card;
+		let missileX = this.posX + this.width;
+		let missileY = this.posY + this.height / 2 - missileType.height / 2;
 		let speed = 10;
 
-		this.missiles.push(new Missile(missileX, missileY, speed, missiles.card));
+		this.missiles.push(
+			new Missile(missileX, missileY, speed, missilesSprites.card)
+		);
 	}
 
-	onKeyDown(event) {
-		switch (event.key) {
-			case 'ArrowUp':
-			case 'z':
-				this.movement.direction.up = true;
-				break;
-			case 'ArrowDown':
-			case 's':
-				this.movement.direction.down = true;
-				break;
-			case 'ArrowLeft':
-			case 'q':
-				this.movement.direction.left = true;
-				break;
-			case 'ArrowRight':
-			case 'd':
-				this.movement.direction.right = true;
-				break;
-		}
+	// The following methods are used to handle the player's movement
+	// pos${axis} is the current position of the player on the axis X or Y
+	// speed${axis} is the current speed with which the player is moving on the axis X or Y
+	// this[bound] is the width or height of the player
+	// canvas[bound] is the width or height of the canvas
+	canMoveOnAxis(canvas, axis) {
+		let bound = axis === 'X' ? 'width' : 'height';
+		return (
+			this[`pos${axis}`] + this[`speed${axis}`] > 0 &&
+			this[`pos${axis}`] + this[`speed${axis}`] + this[bound] < canvas[bound]
+		);
+	}
+	accelerateUpOrLeft(axis) {
+		if (this[`speed${axis}`] > -this.speed) this[`speed${axis}`]--;
+	}
+	accelerateDownOrRight(axis) {
+		if (this[`speed${axis}`] < this.speed) this[`speed${axis}`]++;
+	}
+	decelerateUpOrLeft(axis) {
+		if (this[`speed${axis}`] < 0) this[`speed${axis}`]++;
+	}
+	decelerateDownOrRight(axis) {
+		if (this[`speed${axis}`] > 0) this[`speed${axis}`]--;
 	}
 
-	onKeyUp(event) {
-		switch (event.key) {
-			case 'ArrowUp':
-			case 'z':
-				this.movement.direction.up = false;
-				break;
-			case 'ArrowDown':
-			case 's':
-				this.movement.direction.down = false;
-				break;
-			case 'ArrowLeft':
-			case 'q':
-				this.movement.direction.left = false;
-				break;
-			case 'ArrowRight':
-			case 'd':
-				this.movement.direction.right = false;
-				break;
-		}
+	// The following methods are used to handle the player's input
+	onKeyDown(key) {
+		if (key === 'ArrowUp' || key === 'z') this.direction.up = true;
+		if (key === 'ArrowDown' || key === 's') this.direction.down = true;
+		if (key === 'ArrowLeft' || key === 'q') this.direction.left = true;
+		if (key === 'ArrowRight' || key === 'd') this.direction.right = true;
 	}
-
+	onKeyUp(key) {
+		if (key === 'ArrowUp' || key === 'z') this.direction.up = false;
+		if (key === 'ArrowDown' || key === 's') this.direction.down = false;
+		if (key === 'ArrowLeft' || key === 'q') this.direction.left = false;
+		if (key === 'ArrowRight' || key === 'd') this.direction.right = false;
+	}
 	onMouseDown(event) {
-		this.fireSettings.on = true;
+		this.fireOn = true;
 	}
-
 	onMouseUp(event) {
-		this.fireSettings.on = false;
-	}
-
-	checkCollision(entity) {
-		let playerX = this.position.x;
-		let playerY = this.position.y;
-		let playerWidth = this.currentSprite.width;
-		let playerHeight = this.currentSprite.height;
-
-		let entityX = entity.position.x;
-		let entityY = entity.position.y;
-		let entityWidth = entity.renderSettings.sprite.width;
-		let entityHeight = entity.renderSettings.sprite.height;
-
-		if (
-			playerX < entityX + entityWidth &&
-			playerX + playerWidth > entityX &&
-			playerY < entityY + entityHeight &&
-			playerY + playerHeight > entityY
-		) {
-			this.stats.health--;
-			entity.stats.health--;
-		}
+		this.fireOn = false;
 	}
 }
