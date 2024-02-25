@@ -8,10 +8,93 @@
 	<title>JSAÉ - TP Canvas</title>
 
 	<link rel="stylesheet" href="css/main.css" />
+	<link rel="stylesheet" href="css/login.css" />
+	<link rel="stylesheet" href="css/canvas.css" />
 	<script src="build/main.bundle.js" defer></script>
 </head>
 <body>
-	<h1><em>JSAÉ</em> / TP1 - Canvas</h1>
-	<canvas class="gameCanvas" width="600" height="800"></canvas>
+	<main class="activeOnly">
+		<div class="jeu">
+			<canvas class="gameCanvas" width="600" height="800"></canvas>
+		</div>
+		<div class="login">
+			<form action="login" method="post">
+				<p>Login</p>
+				<label for="login">Login</label>
+				<input type="text" id="login" name="login">
+				<label for="password">Password</label>
+				<input type="password" id="password" name="password">
+				<input type="submit" value="Connexion">
+				<a href="/mdp_oublie" class="mdp_oublieLien innerLink">Mot de passe oublié</a>
+				<a href="/signin" class="siginLien innerLink">S'inscrire</a>
+			</form>
+		</div>
+		<div class="signin">
+			<form action="signin" method="post">
+				<p>Signin</p>
+				<label for="login">Login</label>
+				<input type="text" id="login" name="login">
+				<label for="password">Password</label>
+				<input type="password" id="password" name="password">
+				<label for="password">Confirmer Password</label>
+				<input type="password" id="password" name="password">
+				<label for="question">Question de sécurité</label>
+				<select name="question" id="question">
+					<option value="1">Quel est le nom de votre premier animal de compagnie ?</option>
+					<option value="2">Quel est le nom de jeune fille de votre mère ?</option>
+					<option value="3">Quel est le nom de votre ville natale ?</option>
+					<option value="4">Quel est le nom de votre premier professeur ?</option>
+					<option value="5">Quel est le nom de votre meilleur ami d'enfance ?</option>
+				</select>
+				<input type="text" id="reponse" name="reponse">
+				<input type="submit" value="S'inscrire">
+				<a href="/login" class="loginLien innerLink">Se connecter</a>
+			</form>
+		</div>
+		<div class="mdp_oublie">
+			<form action="mdp_oublie" method="post">
+				<label for="login">Login</label>
+				<input type="text" id="login" name="login">
+				<label for="question">Votre question de sécurité</label>
+				<select name="question" id="question">
+					<option value="1">Quel est le nom de votre premier animal de compagnie ?</option>
+					<option value="2">Quel est le nom de jeune fille de votre mère ?</option>
+					<option value="3">Quel est le nom de votre ville natale ?</option>
+					<option value="4">Quel est le nom de votre premier professeur ?</option>
+					<option value="5">Quel est le nom de votre meilleur ami d'enfance ?</option>
+				</select>
+				<label for="reponse">Réponse</label>
+				<input type="text" id="reponse" name="reponse">
+				<input type="submit" value="Réhintialiser le mot de passe">
+				<a href="/login" class="loginLien innerLink">Se connecter</a>
+				<a href="/signin" class="siginLien innerLink">S'inscrire</a>
+			</form>
+		</div>
+		<div class="accueil">
+			<div>
+				<div>
+					<button href="/jeu" class="innerLink">Nouvelle partie</button>
+				</div>
+				<div>
+					<button>Rejoindre</button>
+				</div>
+			</div>
+		</div>
+		<div class="regles">
+			<p class="description">
+				Dans "Heaven Must Fall", incarnez Nathan, un héros déterminé à remettre
+				Dieu à sa place après que son frère divin ait semé le chaos. Armé jusqu'aux dents, Nathan s'élance 
+				à travers les cieux déchus, affrontant des hordes d'anges déchus devenus les sbires de la rébellion.
+				Des séraphins impitoyables aux trônes colossaux, en passant par les archanges déchus, chaque niveau
+				offre un défi épique, ponctué de rencontres avec de redoutables boss, les Archanges déchus, chacun 
+				doté de pouvoirs divins corrompus. Utilisez un arsenal varié et améliorable pour pulvériser vos 
+				ennemis célestes et restaurer l'ordre divin. "Heaven Must Fall" offre une action frénétique et 
+				une histoire captivante où la lutte pour la justice traverse les cieux eux-mêmes.
+				Êtes-vous prêt à prendre les armes et à faire tomber le paradis déchu ? 
+			</p>
+		</div>
+		<div class="credits">Credits</div>
+		<div class="personnalisation">Personnalisation</div>
+	</main>
 </body>
 </html>
