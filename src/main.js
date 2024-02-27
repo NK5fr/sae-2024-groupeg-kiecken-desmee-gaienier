@@ -1,6 +1,10 @@
 import { GameView } from './gameView.js';
 import Router from './router.js';
 import View from './view.js';
+import PlayMenu from './playMenu.js';
+
+
+const menuJouer = new PlayMenu(document.querySelector('.menuJouer'));
 
 
 const acceuil = new View(document.querySelector('.accueil'));
