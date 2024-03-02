@@ -5,6 +5,13 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "Attach to Chrome",
+			"port": 9222,
+			"request": "attach",
+			"type": "chrome",
+			"webRoot": "${workspaceFolder}"
+		},
+		{
 			"name": "Firefox Debug",
 			"type": "firefox",
 			"request": "launch",
@@ -37,5 +44,12 @@
 			"webRoot": "${workspaceFolder}",
 			"runtimeExecutable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
 		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Launch Program",
+			"skipFiles": ["<node_internals>/**"],
+			"program": "${workspaceFolder}/index.js"
+		}
 	]
 }

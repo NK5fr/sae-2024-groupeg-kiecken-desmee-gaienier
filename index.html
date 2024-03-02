@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="css/login.css" />
 	<link rel="stylesheet" href="css/canvas.css" />
 	<link rel="stylesheet" href="css/accueil.css" />
+	<link rel="stylesheet" href="css/regles.css" />
 	<script src="build/main.bundle.js" defer></script>
 </head>
 <body>
@@ -72,20 +73,22 @@
 			</form>
 		</div>
 		<div class="accueil">
-			<div class="menuJouer">
-				<button class="jouer">Jouer</button>
-				<div class="menu">
-					<button href="/jeu" class="innerLink">Nouvelle partie</button>
-					<button href="/jeu" class="innerLink">Rejoindre</button>
-					<button class="facile">Facile</button>
-					<button class="normal">Normal</button>
-					<button class="difficile">Difficile</button>
+			<div class="menuAccueil">
+				<div class="menuJouer">
+					<button class="jouer">Jouer</button>
+					<div class="menu">
+						<button href="/jeu" class="innerLink">Nouvelle partie</button>
+						<button href="/jeu" class="innerLink">Rejoindre</button>
+						<button class="facile">Facile</button>
+						<button class="normal">Normal</button>
+						<button class="difficile">Difficile</button>
+					</div>
 				</div>
+				<button href="/regles" class="innerLink">Règles</button>
+				<button href="/credits" class="innerLink">Crédits</button>
+				<button href="/personnalisation" class="innerLink">Personnalisation</button>
+				<button class="deconnexion">Deconnexion</button>
 			</div>
-			<button href="/regles" class="innerLink">Règles</button>
-			<button href="/credits" class="innerLink">Crédits</button>
-			<button href="/personnalisation" class="innerLink">Personnalisation</button>
-			<button class="deconnexion">Deconnexion</button>
 		</div>
 		<div class="regles">
 			<p class="description">
