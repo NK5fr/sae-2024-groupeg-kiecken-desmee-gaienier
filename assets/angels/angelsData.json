@@ -16,9 +16,12 @@
             "damage": 2
         }
     },
-    "camael": {
-        "speed": 10,
-        "health": 10,
-        "damage": 5
+    "archanges": {
+        "camael": {
+            "speed": 10,
+            "health": 10,
+            "damage": 5
+        }
     }
+    
 }

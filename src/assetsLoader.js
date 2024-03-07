@@ -7,14 +7,14 @@ const angelsSprites = {
 		two: new Image(),
 		three: new Image(),
 	},
-	archange: {
+	archanges: {
 		camael: new Image(),
 	},
 };
 angelsSprites.puissance.one.src = '/assets/angels/puissance/one.png';
 angelsSprites.puissance.two.src = '/assets/angels/puissance/two.png';
 angelsSprites.puissance.three.src = '/assets/angels/puissance/three.png';
-angelsSprites.archange.camael.src = '/assets/angels/camael.png';
+angelsSprites.archanges.camael.src = '/assets/angels/archanges/camael.png';
 
 //Load background images
 const backgrounds = {
