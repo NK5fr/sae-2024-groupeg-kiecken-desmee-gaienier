@@ -2,9 +2,9 @@ import { GameView } from './gameView.js';
 import Router from './router.js';
 import View from './view.js';
 import PlayMenu from './playMenu.js';
+import $ from 'jquery';
 
-
-const menuJouer = new PlayMenu(document.querySelector('.menuJouer'));
+const menuJouer = new PlayMenu($('.menuJouer'));
 
 
 const acceuil = new View(document.querySelector('.accueil'));
@@ -15,6 +15,7 @@ const mdp_oublie = new View(document.querySelector('.mdp_oublie'));
 const regles = new View(document.querySelector('.regles'));
 const credits = new View(document.querySelector('.credits'));
 const personnalisation = new View(document.querySelector('.personnalisation'));
+const rejouer = new View(document.querySelector('.rejouer'));
 
 
 const routes = [
@@ -26,6 +27,7 @@ const routes = [
     { path: '/regles', view: regles},
     { path: '/credits', view: credits},
     { path: '/personnalisation', view: personnalisation},
+    { path: '/rejouer', view: rejouer},
 ];
 
 Router.routes = routes;

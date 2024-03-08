@@ -1,5 +1,6 @@
 import Player from './player.js';
 import { Mars } from './stage.js';
+import Router from './router.js';
 
 const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d'),
@@ -11,6 +12,9 @@ function resampleCanvas() {
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
 }
+
+let gameUpdater;
+let angelsSpawner;
 
 const playerName = 'Player';
 const playerHealth = 3;
@@ -54,18 +58,17 @@ function updateGame() {
 	console.log(player.health);
 	if (stage.stageIsClear()) {
 		alert('Stage Clear!');
-		stage = new Mars(player);
+		clearInterval(gameUpdater);
+		clearInterval(angelsSpawner);
+		cancelAnimationFrame(renderGame);
+		Router.navigate('/rejouer');
 	}
 	if (player.health <= 0) {
 		alert('Game Over');
-		player = new Player(
-			playerName,
-			playerSpawnPoint.x,
-			playerSpawnPoint.y,
-			playerMaxSpeed,
-			playerHealth
-		);
-		stage = new Mars(player);
+		clearInterval(gameUpdater);
+		clearInterval(angelsSpawner);
+		cancelAnimationFrame(renderGame);
+		Router.navigate('/rejouer');
 	}
 	if (gameNotFocused) return;
 	player.update(canvas);
@@ -109,6 +112,9 @@ document.addEventListener('mouseup', e => player.onMouseUp(e));
 
 export default function startGame() {
 	requestAnimationFrame(renderGame);
-	setInterval(updateGame, 1000 / 60);
-	setInterval(() => stage.spawnAngels(canvas, gameNotFocused), 1000);
+	gameUpdater = setInterval(updateGame, 1000 / 60);
+	angelsSpawner = setInterval(
+		() => stage.spawnAngels(canvas, gameNotFocused),
+		1000
+	);
 }

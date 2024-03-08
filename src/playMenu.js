@@ -1,15 +1,17 @@
+import $ from 'jquery';
+
 export default class PlayMenu{
 
     constructor(element){
         this.element = element;
         this.showed = false;
-        element.querySelector(".jouer").addEventListener('click', event => this.handleMenu(event));
+        $(".jouer", element).on('click', event => this.handleMenu(event));
     }
 
     handleMenu(event){
         event.preventDefault();
-        if(this.showed) this.element.querySelector(".menu").style.display = "none";
-        else this.element.querySelector(".menu").style.display = "block";
+        if(this.showed) $(".menu", this.element).hide();
+        else $(".menu", this.element).show();
         this.showed = !this.showed;
     }
 }

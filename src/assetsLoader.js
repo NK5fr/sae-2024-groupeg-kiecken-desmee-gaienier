@@ -20,7 +20,7 @@ angelsSprites.archanges.camael.src = '/assets/angels/archanges/camael.png';
 const backgrounds = {
 	stageOne: new Image(),
 };
-backgrounds.stageOne.src = '/assets/stages/background/six.png';
+backgrounds.stageOne.src = '/assets/stages/background/five.png';
 
 //Load missile sprites
 const missilesSprites = {
