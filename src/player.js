@@ -1,11 +1,11 @@
 import Entity from './entity.js';
 import Missile from './missiles.js';
-import { playersSprites, missilesSprites } from './assetsLoader.js';
 
 export default class Player extends Entity {
-	constructor(name, x, y, speed, health) {
-		super(x, y, speed, health, playersSprites);
+	constructor(name, x, y, properties) {
+		super(x, y, properties);
 		this.name = name;
+
 		this.speedX = 0;
 		this.speedY = 0;
 		this.direction = {
@@ -14,26 +14,28 @@ export default class Player extends Entity {
 			left: false,
 			right: false,
 		};
+
 		this.missiles = [];
-		this.fireOn = false;
-		this.fireRate = 25;
+		this.missileType = properties.missileType;
+
+		this.fireIsOn = false;
+		this.fireRate = properties.fireRate;
 		this.fireNextShotIn = 0;
-		this.width = this.sprite.neutral.width;
-		this.height = this.sprite.neutral.height;
 	}
 
 	// The following methods are used to handle the player's rendering and update
 	render(context) {
-		if (this.speedX === 0) {
-			context.drawImage(this.sprite.neutral, this.posX, this.posY);
+		const img = new Image();
+		if (this.speedX == 0) {
+			img.src = this.sprite.idle;
 		} else if (this.speedX > 0) {
-			context.drawImage(this.sprite.right, this.posX, this.posY);
+			img.src = this.sprite.right;
 		} else if (this.speedX < 0) {
-			context.drawImage(this.sprite.left, this.posX, this.posY);
+			img.src = this.sprite.left;
 		}
+		context.drawImage(img, this.posX, this.posY);
 		this.missiles.forEach(missile => missile.render(context));
 	}
-
 	renderHealthBar(context, canvas) {
 		let healthBarWidth = (this.health / this.maxHealth) * 100;
 		context.beginPath();
@@ -44,15 +46,15 @@ export default class Player extends Entity {
 		context.fillStyle = this.calculateCurrentColorBasedOnHealth();
 		context.fillRect(10, 10, healthBarWidth, 10);
 	}
-
 	calculateCurrentColorBasedOnHealth() {
-		let red = Math.floor((this.health / this.maxHealth) * 255);
-		let green = 255 - red;
+		let green = Math.floor((this.health / this.maxHealth) * 255);
+		let red = 255 - green;
 		return `rgb(${red}, ${green}, 0)`;
 	}
-	update(canvas) {
-		if (this.canMoveOnAxis(canvas, 'X')) this.posX += this.speedX;
-		if (this.canMoveOnAxis(canvas, 'Y')) this.posY += this.speedY;
+
+	update(width, height) {
+		if (this.canMoveOnAxis(width, 'X')) this.posX += this.speedX;
+		if (this.canMoveOnAxis(height, 'Y')) this.posY += this.speedY;
 
 		if (this.direction.up) this.accelerateUpOrLeft('Y');
 		else this.decelerateUpOrLeft('Y');
@@ -64,9 +66,9 @@ export default class Player extends Entity {
 		else this.decelerateDownOrRight('X');
 
 		this.missiles = this.missiles.filter(missile => missile.health > 0);
-		this.missiles.forEach(missile => missile.update(canvas));
+		this.missiles.forEach(missile => missile.update(width, height));
 
-		if (this.fireOn) {
+		if (this.fireIsOn) {
 			if (this.fireNextShotIn <= 0) {
 				this.fire();
 				this.fireNextShotIn = this.fireRate;
@@ -77,27 +79,24 @@ export default class Player extends Entity {
 
 	// This method is used to handle the player's shooting
 	fire() {
-		let missileType = missilesSprites.card;
 		let missileX = this.posX + this.width;
 		let missileY = this.posY + this.height / 2 - missileType.height / 2;
-		let speed = 10;
 
 		this.missiles.push(
-			new Missile(missileX, missileY, speed, missilesSprites.card)
+			Missile.createMissile(missileX, missileY, this.missileType)
 		);
 	}
 
 	// The following methods are used to handle the player's movement
 	// pos${axis} is the current position of the player on the axis X or Y
 	// speed${axis} is the current speed with which the player is moving on the axis X or Y
-	// this[bound] is the width or height of the player
-	// canvas[bound] is the width or height of the canvas
-	canMoveOnAxis(canvas, axis) {
-		let bound = axis === 'X' ? 'width' : 'height';
-		return (
-			this[`pos${axis}`] + this[`speed${axis}`] > 0 &&
-			this[`pos${axis}`] + this[`speed${axis}`] + this[bound] < canvas[bound]
-		);
+	// width or height is the width or height of the player depending of the axis
+	// bound is the maximum value of the axis X or Y
+	canMoveOnAxis(bound, axis) {
+		let position = this[`pos${axis}`];
+		let speed = this[`speed${axis}`];
+		let widthOrHeight = this[axis === 'X' ? 'width' : 'height'];
+		return position + speed > 0 && position + speed + widthOrHeight < bound;
 	}
 	accelerateUpOrLeft(axis) {
 		if (this[`speed${axis}`] > -this.speed) this[`speed${axis}`]--;
@@ -126,9 +125,9 @@ export default class Player extends Entity {
 		if (key === 'ArrowRight' || key === 'd') this.direction.right = false;
 	}
 	onMouseDown(event) {
-		this.fireOn = true;
+		this.fireIsOn = true;
 	}
 	onMouseUp(event) {
-		this.fireOn = false;
+		this.fireIsOn = false;
 	}
 }
