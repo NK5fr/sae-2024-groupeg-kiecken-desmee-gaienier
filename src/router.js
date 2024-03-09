@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import startGame from './game.js';
+
 export default class Router {
 
 	static routes = [];
@@ -7,14 +10,10 @@ export default class Router {
 
 	static setInnerLinks(setInnerLinks) {
 		this.#setInnerLinks = setInnerLinks;
-		const links = this.#setInnerLinks.querySelectorAll('.innerLink');
-		links.forEach(link =>
-			link.addEventListener('click', event => {
+		$('.innerLink', this.#setInnerLinks).on('click', event => {
 				event.preventDefault();
-				const linkHref = event.currentTarget.getAttribute('href');
-				Router.navigate(linkHref);
-			})
-		);
+				Router.navigate($(event.currentTarget).attr('href'));
+		});
 	}
 
 	static navigate(path, skipPushState = false) {
@@ -25,7 +24,7 @@ export default class Router {
 			}
 			this.currentRoute = route;
 			route.view.show();
-
+			if(path === '/jeu') startGame();
 			if (!skipPushState) {
 				window.history.pushState(null, null, path);
 			}

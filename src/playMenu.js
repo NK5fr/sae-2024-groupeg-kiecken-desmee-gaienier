@@ -2,13 +2,15 @@ import $ from 'jquery';
 
 export default class PlayMenu{
 
-    constructor(element){
+    static showed = false;
+    static element;
+
+    static setMenu(element){
         this.element = element;
-        this.showed = false;
         $(".jouer", element).on('click', event => this.handleMenu(event));
     }
 
-    handleMenu(event){
+    static handleMenu(event){
         event.preventDefault();
         if(this.showed) $(".menu", this.element).hide();
         else $(".menu", this.element).show();
