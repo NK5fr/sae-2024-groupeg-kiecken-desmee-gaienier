@@ -16,6 +16,7 @@ function resampleCanvas() {
 
 let gameUpdater;
 let angelsSpawner;
+let gameRenderer;
 
 const playerProperties = {
 	health: 5,
@@ -52,7 +53,7 @@ function renderGame() {
 
 		if (debug) drawAllHitboxes();
 	}
-	requestAnimationFrame(renderGame);
+	gameRenderer = requestAnimationFrame(renderGame);
 }
 
 function updateGame() {
@@ -60,14 +61,14 @@ function updateGame() {
 		alert('Stage Clear!');
 		clearInterval(gameUpdater);
 		clearInterval(angelsSpawner);
-		cancelAnimationFrame(renderGame);
+		cancelAnimationFrame(gameRenderer);
 		Router.navigate('/rejouer');
 	}
 	if (player.health <= 0) {
 		alert('Game Over');
 		clearInterval(gameUpdater);
 		clearInterval(angelsSpawner);
-		cancelAnimationFrame(renderGame);
+		cancelAnimationFrame(gameRenderer);
 		Router.navigate('/rejouer');
 	}
 	if (gameNotFocused) return;
@@ -100,7 +101,7 @@ export default function startGame() {
 		console.log('Assets loaded');
 		player = new Player(100, 100, playerProperties);
 		stage = new Mars(player);
-		requestAnimationFrame(renderGame);
+		gameRenderer = requestAnimationFrame(renderGame);
 		gameUpdater = setInterval(updateGame, 1000 / 60);
 		angelsSpawner = setInterval(
 			() => stage.spawnAngels(canvas, gameNotFocused),
@@ -115,9 +116,7 @@ export default function startGame() {
 				player.onKeyDown(e.key);
 			}
 		});
-
 		document.addEventListener('keyup', e => player.onKeyUp(e.key));
-
 		document.addEventListener('mousedown', e => player.onMouseDown(e));
 		document.addEventListener('mouseup', () => player.onMouseUp());
 		document.addEventListener('mousemove', e => player.onMouseMove(e));

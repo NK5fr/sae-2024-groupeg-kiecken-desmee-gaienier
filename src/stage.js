@@ -12,6 +12,7 @@ export default class Stage {
 	}
 
 	renderBackground(context) {
+		console.log(this.backgroundX);
 		this.backgroundX -= 1.5;
 		if (this.backgroundX <= -this.background.width) {
 			this.backgroundX = -1;
