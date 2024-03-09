@@ -1,0 +1,14 @@
+{
+    "health": 5,
+    "speed": 10,
+    "damage": 10,
+    "sprite": {
+        "left": "assets/player/left.png",
+        "idle": "assets/player/idle.png",
+        "right": "assets/player/right.png"
+    },
+    "width": 48,
+    "height": 96,
+    "missileType": "card",
+    "fireRate": 25
+}

@@ -3,24 +3,36 @@
         "one": {
             "speed": 5,
             "health": 2,
-            "damage": 1
+            "damage": 1,
+            "sprite": "assets/angels/puissances/one.png",
+            "width": 48,
+            "height": 48
         },
         "two": {
             "speed": 7,
             "health": 1,
-            "damage": 3
+            "damage": 3,
+            "sprite": "assets/angels/puissances/two.png",
+            "width": 48,
+            "height": 48
         },
         "three": {
             "speed": 3,
             "health": 3,
-            "damage": 2
+            "damage": 2,
+            "sprite": "assets/angels/puissances/three.png",
+            "width": 48,
+            "height": 48
         }
     },
     "archanges": {
         "camael": {
             "speed": 10,
             "health": 10,
-            "damage": 5
+            "damage": 5,
+            "sprite": "assets/angels/archanges/camael.png",
+            "width": 144,
+            "height": 144
         }
     }
     

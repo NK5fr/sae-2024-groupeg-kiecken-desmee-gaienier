@@ -2,7 +2,6 @@ import $ from 'jquery';
 import startGame from './game.js';
 
 export default class Router {
-
 	static routes = [];
 	static currentRoute;
 
@@ -11,8 +10,8 @@ export default class Router {
 	static setInnerLinks(setInnerLinks) {
 		this.#setInnerLinks = setInnerLinks;
 		$('.innerLink', this.#setInnerLinks).on('click', event => {
-				event.preventDefault();
-				Router.navigate($(event.currentTarget).attr('href'));
+			event.preventDefault();
+			Router.navigate($(event.currentTarget).attr('href'));
 		});
 	}
 
@@ -24,7 +23,7 @@ export default class Router {
 			}
 			this.currentRoute = route;
 			route.view.show();
-			if(path === '/jeu') startGame();
+			if (path === '/jeu') startGame();
 			if (!skipPushState) {
 				window.history.pushState(null, null, path);
 			}

@@ -1,17 +1,9 @@
 import Entity from './entity.js';
-import Missile from './missiles.js';
-import { angelsSprites, angelsData } from './assetsLoader.js';
+import { angelsData } from './assetsLoader.js';
 
 export class Wanderer extends Entity {
-	constructor(x, y, species, type) {
-		super(
-			x,
-			y,
-			angelsData[species][type].speed,
-			angelsData[species][type].health,
-			angelsSprites[species][type]
-		);
-		this.damage = angelsData[species][type].damage;
+	constructor(x, y, species, name) {
+		super(x, y, angelsData[species][name]);
 	}
 
 	update(canvas) {

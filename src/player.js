@@ -2,9 +2,8 @@ import Entity from './entity.js';
 import Missile from './missiles.js';
 
 export default class Player extends Entity {
-	constructor(name, x, y, properties) {
+	constructor(x, y, properties) {
 		super(x, y, properties);
-		this.name = name;
 
 		this.speedX = 0;
 		this.speedY = 0;
@@ -19,11 +18,15 @@ export default class Player extends Entity {
 		this.missileType = properties.missileType;
 
 		this.fireIsOn = false;
+		this.fireAngle = 0;
 		this.fireRate = properties.fireRate;
 		this.fireNextShotIn = 0;
 	}
 
-	// The following methods are used to handle the player's rendering and update
+	/**
+	 * Méthode qui affiche le joueur sur le canvas
+	 * @param {*} context Le contexte du canvas
+	 */
 	render(context) {
 		const img = new Image();
 		if (this.speedX == 0) {
@@ -36,26 +39,39 @@ export default class Player extends Entity {
 		context.drawImage(img, this.posX, this.posY);
 		this.missiles.forEach(missile => missile.render(context));
 	}
-	renderHealthBar(context, canvas) {
+
+	/**
+	 * Méthode qui affiche la barre de vie du joueur sur le canvas
+	 * @param {*} context Le contexte du canvas
+	 * @param {*} height La hauteur du canvas
+	 */
+	renderHealthBar(context, height) {
 		let healthBarWidth = (this.health / this.maxHealth) * 100;
 		context.beginPath();
-		context.rect(10, 10, 100, 10);
+		context.rect(10, height - 20, 100, 10);
 		context.strokeStyle = 'black';
 		context.lineWidth = 2;
 		context.stroke();
 		context.fillStyle = this.calculateCurrentColorBasedOnHealth();
-		context.fillRect(10, 10, healthBarWidth, 10);
+		context.fillRect(10, height - 20, healthBarWidth, 10);
 	}
+
+	/**
+	 * Méthode qui calcule la couleur actuelle de la barre de vie du joueur
+	 * @returns La couleur actuelle de la barre de vie du joueur représentée en rgb
+	 */
 	calculateCurrentColorBasedOnHealth() {
 		let green = Math.floor((this.health / this.maxHealth) * 255);
 		let red = 255 - green;
 		return `rgb(${red}, ${green}, 0)`;
 	}
 
+	/**
+	 * Méthode qui met à jour la position du joueur sur le canvas et celle de ses missiles
+	 * @param {*} width La largeur du canvas
+	 * @param {*} height La hauteur du canvas
+	 */
 	update(width, height) {
-		if (this.canMoveOnAxis(width, 'X')) this.posX += this.speedX;
-		if (this.canMoveOnAxis(height, 'Y')) this.posY += this.speedY;
-
 		if (this.direction.up) this.accelerateUpOrLeft('Y');
 		else this.decelerateUpOrLeft('Y');
 		if (this.direction.down) this.accelerateDownOrRight('Y');
@@ -64,6 +80,9 @@ export default class Player extends Entity {
 		else this.decelerateUpOrLeft('X');
 		if (this.direction.right) this.accelerateDownOrRight('X');
 		else this.decelerateDownOrRight('X');
+
+		if (this.canMoveOnAxis('X', width)) this.posX += this.speedX;
+		if (this.canMoveOnAxis('Y', height)) this.posY += this.speedY;
 
 		this.missiles = this.missiles.filter(missile => missile.health > 0);
 		this.missiles.forEach(missile => missile.update(width, height));
@@ -77,57 +96,105 @@ export default class Player extends Entity {
 		this.fireNextShotIn--;
 	}
 
-	// This method is used to handle the player's shooting
+	/**
+	 * Méthode qui gère le tir du joueur
+	 */
 	fire() {
-		let missileX = this.posX + this.width;
-		let missileY = this.posY + this.height / 2 - missileType.height / 2;
-
 		this.missiles.push(
-			Missile.createMissile(missileX, missileY, this.missileType)
+			Missile.createMissile(
+				this.posX,
+				this.posY,
+				this.width,
+				this.height,
+				this.missileType,
+				this.fireAngle
+			)
 		);
 	}
 
-	// The following methods are used to handle the player's movement
-	// pos${axis} is the current position of the player on the axis X or Y
-	// speed${axis} is the current speed with which the player is moving on the axis X or Y
-	// width or height is the width or height of the player depending of the axis
-	// bound is the maximum value of the axis X or Y
-	canMoveOnAxis(bound, axis) {
+	/**
+	 * Méthode qui gère les collisions entre le joueur et les bordures du canvas
+	 * @param {*} axis L'axe sur lequel on veut vérifier la collision
+	 * @param {*} bound La limite du canvas au niveau de l'axe sur lequel on veut vérifier la collision
+	 * @returns true si le joueur peut se déplacer sur l'axe donné, false sinon
+	 */
+	canMoveOnAxis(axis, bound) {
 		let position = this[`pos${axis}`];
 		let speed = this[`speed${axis}`];
 		let widthOrHeight = this[axis === 'X' ? 'width' : 'height'];
 		return position + speed > 0 && position + speed + widthOrHeight < bound;
 	}
+
+	/**
+	 * Méthode qui gère l'accélération du joueur vers le haut ou la gauche
+	 * @param {*} axis L'axe sur lequel on veut accélérer le joueur
+	 */
 	accelerateUpOrLeft(axis) {
 		if (this[`speed${axis}`] > -this.speed) this[`speed${axis}`]--;
 	}
+
+	/**
+	 * Méthode qui gère l'accélération du joueur vers le bas ou la droite
+	 * @param {*} axis L'axe sur lequel on veut accélérer le joueur
+	 */
 	accelerateDownOrRight(axis) {
 		if (this[`speed${axis}`] < this.speed) this[`speed${axis}`]++;
 	}
+
+	/**
+	 * Méthode qui gère la décélération du joueur vers le haut ou la gauche
+	 * @param {*} axis L'axe sur lequel on veut décélérer le joueur
+	 */
 	decelerateUpOrLeft(axis) {
 		if (this[`speed${axis}`] < 0) this[`speed${axis}`]++;
 	}
+
+	/**
+	 * Méthode qui gère la décélération du joueur vers le bas ou la droite
+	 * @param {*} axis L'axe sur lequel on veut décélérer le joueur
+	 */
 	decelerateDownOrRight(axis) {
 		if (this[`speed${axis}`] > 0) this[`speed${axis}`]--;
 	}
 
-	// The following methods are used to handle the player's input
+	/**
+	 * Méthode qui gère l'événement de pression d'une touche du clavier
+	 * @param {*} key La touche du clavier qui a été pressée
+	 */
 	onKeyDown(key) {
 		if (key === 'ArrowUp' || key === 'z') this.direction.up = true;
 		if (key === 'ArrowDown' || key === 's') this.direction.down = true;
 		if (key === 'ArrowLeft' || key === 'q') this.direction.left = true;
 		if (key === 'ArrowRight' || key === 'd') this.direction.right = true;
 	}
+
+	/**
+	 * Méthode qui gère l'événement de relâchement d'une touche du clavier
+	 * @param {*} key La touche du clavier qui a été relâchée
+	 */
 	onKeyUp(key) {
 		if (key === 'ArrowUp' || key === 'z') this.direction.up = false;
 		if (key === 'ArrowDown' || key === 's') this.direction.down = false;
 		if (key === 'ArrowLeft' || key === 'q') this.direction.left = false;
 		if (key === 'ArrowRight' || key === 'd') this.direction.right = false;
 	}
+
+	/**
+	 * Méthode qui gère l'événement de pression du bouton de la souris
+	 * @param {*} event L'événement de pression du bouton de la souris
+	 */
 	onMouseDown(event) {
 		this.fireIsOn = true;
+		this.fireAngle = Math.atan2(
+			event.clientY - this.posY - this.height / 2,
+			event.clientX - this.posX - this.width / 2
+		);
 	}
-	onMouseUp(event) {
+
+	/**
+	 * Méthode qui gère l'événement de relâchement du bouton de la souris
+	 */
+	onMouseUp() {
 		this.fireIsOn = false;
 	}
 }

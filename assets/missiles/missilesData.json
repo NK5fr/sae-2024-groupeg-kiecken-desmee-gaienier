@@ -1,0 +1,10 @@
+{
+    "card" : {
+        "health" : 1,
+        "speed" : 10,
+        "damage" : 2,
+        "sprite" : "assets/missiles/card.png",
+        "width" : 24,
+        "height" : 24
+    }
+}

@@ -1,6 +1,7 @@
 import Player from './player.js';
 import { Mars } from './stage.js';
 import Router from './router.js';
+import loadAssets from './assetsLoader.js';
 
 const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d'),
@@ -16,21 +17,22 @@ function resampleCanvas() {
 let gameUpdater;
 let angelsSpawner;
 
-const playerName = 'Player';
-const playerHealth = 3;
-const playerMaxSpeed = 10;
-const playerSpawnPoint = {
-	x: canvas.width / 2,
-	y: canvas.height / 2,
+const playerProperties = {
+	health: 5,
+	speed: 10,
+	damage: 10,
+	sprite: {
+		left: 'assets/player/left.png',
+		idle: 'assets/player/idle.png',
+		right: 'assets/player/right.png',
+	},
+	width: 48,
+	height: 96,
+	missileType: 'card',
+	fireRate: 25,
 };
 
-let player = new Player(
-	playerName,
-	playerSpawnPoint.x,
-	playerSpawnPoint.y,
-	playerMaxSpeed,
-	playerHealth
-);
+let player = new Player(100, 100, playerProperties);
 
 let stage = new Mars(player);
 
@@ -42,7 +44,7 @@ function renderGame() {
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		stage.renderBackground(context);
 		stage.renderProgressionBar(context, canvas);
-		player.renderHealthBar(context, canvas);
+		player.renderHealthBar(context, canvas.height);
 		stage.renderAngels(context);
 		if (player.health > 0) {
 			player.render(context);
@@ -55,7 +57,6 @@ function renderGame() {
 }
 
 function updateGame() {
-	console.log(player.health);
 	if (stage.stageIsClear()) {
 		alert('Stage Clear!');
 		clearInterval(gameUpdater);
@@ -71,7 +72,7 @@ function updateGame() {
 		Router.navigate('/rejouer');
 	}
 	if (gameNotFocused) return;
-	player.update(canvas);
+	player.update(canvas.width, canvas.height);
 	stage.update(canvas);
 	player.missiles.forEach(missile => missile.checkCollisions(stage.angels));
 	player.checkCollisions(stage.angels);
@@ -108,13 +109,16 @@ document.addEventListener('keydown', e => {
 document.addEventListener('keyup', e => player.onKeyUp(e.key));
 
 document.addEventListener('mousedown', e => player.onMouseDown(e));
-document.addEventListener('mouseup', e => player.onMouseUp(e));
+document.addEventListener('mouseup', () => player.onMouseUp());
 
 export default function startGame() {
-	requestAnimationFrame(renderGame);
-	gameUpdater = setInterval(updateGame, 1000 / 60);
-	angelsSpawner = setInterval(
-		() => stage.spawnAngels(canvas, gameNotFocused),
-		1000
-	);
+	loadAssets().then(() => {
+		console.log('Assets loaded');
+		requestAnimationFrame(renderGame);
+		gameUpdater = setInterval(updateGame, 1000 / 60);
+		angelsSpawner = setInterval(
+			() => stage.spawnAngels(canvas, gameNotFocused),
+			1000
+		);
+	});
 }
