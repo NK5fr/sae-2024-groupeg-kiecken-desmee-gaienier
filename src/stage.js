@@ -77,7 +77,7 @@ export class Mars extends Stage {
 
 		if (gameNotFocused) return;
 		if (this.numberOfAngelsSpawned < this.numberOfAngels) {
-			this.angels.push(new Wanderer(x, y, 'archanges', 'camael'));
+			this.angels.push(new Wanderer(x, y, 'puissances', 'one'));
 			this.numberOfAngelsSpawned++;
 		}
 	}

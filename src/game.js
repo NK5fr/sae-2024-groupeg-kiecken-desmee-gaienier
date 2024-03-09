@@ -32,9 +32,8 @@ const playerProperties = {
 	fireRate: 25,
 };
 
-let player = new Player(100, 100, playerProperties);
-
-let stage = new Mars(player);
+let player;
+let stage;
 
 let gameNotFocused = false;
 let debug = false;
@@ -96,29 +95,31 @@ function drawAllHitboxes() {
 window.addEventListener('blur', () => (gameNotFocused = true));
 window.addEventListener('focus', () => (gameNotFocused = false));
 
-document.addEventListener('keydown', e => {
-	if (e.key === 'Escape') {
-		gameNotFocused = !gameNotFocused;
-	} else if (e.key === 'g') {
-		debug = !debug;
-	} else {
-		player.onKeyDown(e.key);
-	}
-});
-
-document.addEventListener('keyup', e => player.onKeyUp(e.key));
-
-document.addEventListener('mousedown', e => player.onMouseDown(e));
-document.addEventListener('mouseup', () => player.onMouseUp());
-
 export default function startGame() {
 	loadAssets().then(() => {
 		console.log('Assets loaded');
+		player = new Player(100, 100, playerProperties);
+		stage = new Mars(player);
 		requestAnimationFrame(renderGame);
 		gameUpdater = setInterval(updateGame, 1000 / 60);
 		angelsSpawner = setInterval(
 			() => stage.spawnAngels(canvas, gameNotFocused),
 			1000
 		);
+		document.addEventListener('keydown', e => {
+			if (e.key === 'Escape') {
+				gameNotFocused = !gameNotFocused;
+			} else if (e.key === 'g') {
+				debug = !debug;
+			} else {
+				player.onKeyDown(e.key);
+			}
+		});
+
+		document.addEventListener('keyup', e => player.onKeyUp(e.key));
+
+		document.addEventListener('mousedown', e => player.onMouseDown(e));
+		document.addEventListener('mouseup', () => player.onMouseUp());
+		document.addEventListener('mousemove', e => player.onMouseMove(e));
 	});
 }

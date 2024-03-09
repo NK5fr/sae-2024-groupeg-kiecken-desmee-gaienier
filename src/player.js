@@ -185,10 +185,6 @@ export default class Player extends Entity {
 	 */
 	onMouseDown(event) {
 		this.fireIsOn = true;
-		this.fireAngle = Math.atan2(
-			event.clientY - this.posY - this.height / 2,
-			event.clientX - this.posX - this.width / 2
-		);
 	}
 
 	/**
@@ -196,5 +192,12 @@ export default class Player extends Entity {
 	 */
 	onMouseUp() {
 		this.fireIsOn = false;
+	}
+
+	onMouseMove(event) {
+		this.fireAngle = Math.atan2(
+			event.clientY - this.posY - this.height / 2,
+			event.clientX - this.posX - this.width / 2
+		);
 	}
 }
