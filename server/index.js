@@ -3,6 +3,7 @@ import express from 'express';
 import addWebpackMiddleware from './middlewares/addWebpackMiddleware.js';
 import { Server as IOServer } from 'socket.io';
 import expressStatusMonitor from 'express-status-monitor';
+import connexion from './connexion.js';
 
 const fileOptions = { root: process.cwd() };
 const app = express();
@@ -12,7 +13,9 @@ const io = new IOServer(httpServer, {
 });
 
 io.on('connection', socket => {
-	console.log(`Nouvelle connexion du client ${socket.id}`);
+	socket.on('login', data => {
+		connexion(data);
+	});
 
 	socket.on('disconnect', () => {
 		console.log(`Déconnexion du client ${socket.id}`);

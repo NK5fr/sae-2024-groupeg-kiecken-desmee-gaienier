@@ -1,0 +1,8 @@
+[
+    {
+        "login": "admin",
+    "password": "admin",
+    "recovery_phrase": "Quel est le nom de votre ville natale ?",
+    "response": "lille"
+    }
+]
