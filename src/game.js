@@ -74,11 +74,24 @@ function updateGame() {
 	if (gameNotFocused) return;
 	player.update(canvas.width, canvas.height);
 	stage.update(canvas);
-	player.missiles.forEach(missile => missile.checkCollisions(stage.angels));
-	player.checkCollisions(stage.angels);
 	stage.angels.forEach(angel => {
+		if (player.checkCollision(angel)) {
+			player.health -= angel.damage;
+			angel.health = 0;
+		}
+		player.missiles.forEach(missile => {
+			if (missile.checkCollision(angel)) {
+				angel.health -= missile.damage;
+				missile.health = 0;
+			}
+		});
 		if (angel.missiles) {
-			player.checkCollisions(angel.missiles);
+			angel.missiles.forEach(missile => {
+				if (player.checkCollision(missile)) {
+					player.health -= missile.damage;
+					missile.health = 0;
+				}
+			});
 		}
 	});
 }

@@ -16,12 +16,18 @@ export default class Missile extends Entity {
 	update(width, height) {
 		this.posX += this.speed * Math.cos(this.fireAngle);
 		this.posY += this.speed * Math.sin(this.fireAngle);
-		if (this.posX == 0 || this.posX + this.width == width) {
+		if (this.isOutOfCanvas(width, height)) {
 			this.health = 0;
 		}
-		if (this.posY == 0 || this.posY + this.height == height) {
-			this.health = 0;
-		}
+	}
+
+	isOutOfCanvas(width, height) {
+		return (
+			this.posX + this.width < 0 ||
+			this.posX > width ||
+			this.posY + this.height < 0 ||
+			this.posY > height
+		);
 	}
 
 	static createMissile(

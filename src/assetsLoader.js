@@ -2,9 +2,8 @@
 
 //Load background images
 const backgrounds = {
-	stageOne: new Image(),
+	stageOne: '/assets/stages/background/five.png',
 };
-backgrounds.stageOne.src = '/assets/stages/background/five.png';
 
 //Load data
 

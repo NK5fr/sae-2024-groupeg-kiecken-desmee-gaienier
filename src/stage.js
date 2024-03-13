@@ -12,17 +12,16 @@ export default class Stage {
 	}
 
 	renderBackground(context) {
-		console.log(this.backgroundX);
-		this.backgroundX -= 1.5;
-		if (this.backgroundX <= -this.background.width) {
+		const img = new Image();
+		img.src = this.background;
+		console.log('rendering background');
+		this.backgroundX -= 1;
+		if (this.backgroundX <= -img.width) {
+			console.log('reset');
 			this.backgroundX = -1;
 		}
-		context.drawImage(this.background, this.backgroundX, 0);
-		context.drawImage(
-			this.background,
-			this.backgroundX + this.background.width,
-			0
-		);
+		context.drawImage(img, this.backgroundX, 0);
+		context.drawImage(img, this.backgroundX + img.width, 0);
 	}
 
 	renderAngels(context) {

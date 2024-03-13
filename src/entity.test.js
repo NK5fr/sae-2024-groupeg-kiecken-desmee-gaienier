@@ -25,29 +25,15 @@ describe('Entity', () => {
 		assert.equal(entity.height, 32);
 	});
 
-	it('should destroy on collision', () => {
+	it('should detect collision', () => {
 		const entity = new Entity(0, 0, entityProperties);
-		const entity2 = new Entity(30, 0, entityProperties);
-		entity.checkCollision(entity2);
-		assert.equal(entity.health, 0);
-		assert.equal(entity2.health, 0);
+		const otherEntity = new Entity(0, 0, entityProperties);
+		assert.equal(entity.checkCollision(otherEntity), true);
 	});
 
-	it('should not destroy on collision', () => {
+	it('should not detect collision', () => {
 		const entity = new Entity(0, 0, entityProperties);
-		const entity2 = new Entity(33, 0, entityProperties);
-		entity.checkCollision(entity2);
-		assert.equal(entity.health, 1);
-		assert.equal(entity2.health, 1);
-	});
-
-	it('should destroy with all entities colliding', () => {
-		const entity = new Entity(0, 0, entityProperties);
-		const entity2 = new Entity(10, 0, entityProperties);
-		const entity3 = new Entity(20, 0, entityProperties);
-		entity.checkCollisions([entity2, entity3]);
-		assert.equal(entity.health, 0);
-		assert.equal(entity2.health, 0);
-		assert.equal(entity3.health, 0);
+		const otherEntity = new Entity(100, 100, entityProperties);
+		assert.equal(entity.checkCollision(otherEntity), false);
 	});
 });

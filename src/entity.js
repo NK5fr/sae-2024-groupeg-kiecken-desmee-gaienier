@@ -27,24 +27,11 @@ export default class Entity {
 	}
 
 	checkCollision(entity) {
-		if (
+		return (
 			this.posX < entity.posX + entity.width &&
 			this.posX + this.width > entity.posX &&
 			this.posY < entity.posY + entity.height &&
 			this.posY + this.height > entity.posY
-		) {
-			if (this.health > 0) {
-				this.health -= entity.damage;
-			}
-			if (entity.health > 0) {
-				entity.health -= this.damage;
-			}
-		}
-	}
-
-	checkCollisions(entities) {
-		entities.forEach(entity => {
-			this.checkCollision(entity);
-		});
+		);
 	}
 }
