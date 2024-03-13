@@ -34,7 +34,7 @@ export default {
 				ignored: 'node_modules',
 			},
 		},
-		port: 8000,
+		port: 8080,
 		historyApiFallback: true, // gestion deeplinking
 	},
 };

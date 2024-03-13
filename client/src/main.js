@@ -23,6 +23,8 @@ Router.routes = routes;
 
 Router.setInnerLinks($('main'));
 
+console.log(window.location.pathname);
+
 Router.navigate(window.location.pathname, true);
 
 window.onpopstate = () => Router.navigate(document.location.pathname, true);
