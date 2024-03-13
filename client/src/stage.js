@@ -1,12 +1,16 @@
-import { Wanderer } from './angels.js';
+import { Wanderer } from './angel.js';
 import { backgrounds } from './assetsLoader.js';
 
-export default class Stage {
-	constructor(background) {
+export class Stage {
+	constructor(stageData) {
+		this.angelsSpecies = 'puissance';
+		this.archangel = 'camael';
 		this.angels = [];
-		this.background = background;
+
+		this.background = backgrounds.stageOne;
 		this.backgroundX = 0;
-		this.numberOfAngels = 0;
+
+		this.numberOfAngels = 10;
 		this.numberOfAngelsSpawned = 0;
 		this.numberOfAngelsKilled = 0;
 	}
@@ -14,7 +18,6 @@ export default class Stage {
 	renderBackground(context) {
 		const img = new Image();
 		img.src = this.background;
-		console.log('rendering background');
 		this.backgroundX -= 1;
 		if (this.backgroundX <= -img.width) {
 			console.log('reset');
@@ -55,30 +58,21 @@ export default class Stage {
 		this.angels.forEach(angel => angel.update(canvas));
 	}
 
-	stageIsClear() {
-		return (
-			this.numberOfAngelsSpawned === this.numberOfAngels &&
-			this.angels.length === 0
-		);
-	}
-}
-
-export class Mars extends Stage {
-	constructor() {
-		super(backgrounds.stageOne);
-		this.numberOfAngels = 10;
-		this.numberOfAngelsSpawned = 0;
-		this.numberOfAngelsKilled = 0;
-	}
-
 	spawnAngels(canvas, gameNotFocused) {
 		let x = canvas.width;
 		let y = Math.floor(Math.random() * canvas.height);
 
 		if (gameNotFocused) return;
 		if (this.numberOfAngelsSpawned < this.numberOfAngels) {
-			this.angels.push(new Wanderer(x, y, 'puissances', 'one'));
+			this.angels.push(new Wanderer(x, y, this.angelsSpecies, 'one'));
 			this.numberOfAngelsSpawned++;
 		}
+	}
+
+	stageIsClear() {
+		return (
+			this.numberOfAngelsSpawned === this.numberOfAngels &&
+			this.angels.length === 0
+		);
 	}
 }

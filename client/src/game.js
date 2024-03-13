@@ -1,5 +1,5 @@
 import Player from './player.js';
-import { Mars } from './stage.js';
+import { Stage } from './stage.js';
 import Router from './router.js';
 import loadAssets from './assetsLoader.js';
 
@@ -113,7 +113,7 @@ export default function startGame() {
 	loadAssets().then(() => {
 		console.log('Assets loaded');
 		player = new Player(100, 100, playerProperties);
-		stage = new Mars(player);
+		stage = new Stage();
 		gameRenderer = requestAnimationFrame(renderGame);
 		gameUpdater = setInterval(updateGame, 1000 / 60);
 		angelsSpawner = setInterval(

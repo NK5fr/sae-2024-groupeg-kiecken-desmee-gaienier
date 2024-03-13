@@ -1,10 +1,10 @@
 {
-    "puissances": {
+    "puissance": {
         "one": {
             "speed": 5,
             "health": 2,
             "damage": 1,
-            "sprite": "assets/angels/puissances/one.png",
+            "sprite": "assets/angel/puissance/one.png",
             "width": 48,
             "height": 48
         },
@@ -12,7 +12,7 @@
             "speed": 7,
             "health": 1,
             "damage": 3,
-            "sprite": "assets/angels/puissances/two.png",
+            "sprite": "assets/angel/puissance/two.png",
             "width": 48,
             "height": 48
         },
@@ -20,17 +20,17 @@
             "speed": 3,
             "health": 3,
             "damage": 2,
-            "sprite": "assets/angels/puissances/three.png",
+            "sprite": "assets/angel/puissance/three.png",
             "width": 48,
             "height": 48
         }
     },
-    "archanges": {
+    "archange": {
         "camael": {
             "speed": 10,
             "health": 10,
             "damage": 5,
-            "sprite": "assets/angels/archanges/camael.png",
+            "sprite": "assets/angel/archange/camael.png",
             "width": 144,
             "height": 144
         }
