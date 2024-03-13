@@ -2,14 +2,16 @@
   "name": "sae-2024-groupeg-kiecken-desmee-gaienier",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server/index.js",
   "type": "module",
   "scripts": {
     "test": "node --test",
     "test:watch": "node --test --watch",
-    "build": "webpack --mode=production",
-    "watch": "webpack --mode=development --watch",
-    "start": "webpack serve --mode=development"
+    "client:build": "webpack --mode=production",
+    "client:watch": "webpack --mode=development --watch",
+    "client:start": "webpack serve --mode=development",
+    "server": "node .",
+    "server:watch": "node --watch ."
   },
   "author": "Raphaël Kiecken <raphael.kiecken.etu@univ-lille.fr> Nathan Desmee <nathan.desmee.etu@univ-lille.fr> Antoine Gaienier <antoine.gaienier.etu@univ-lille.fr>",
   "homepage": "https://gitlab.univ-lille.fr/raphael.kiecken.etu/sae-2024-groupeg-kiecken-desmee-gaienier",
@@ -22,9 +24,15 @@
     "prettier": "^3.2.5",
     "webpack": "^5.90.2",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.2"
+    "webpack-dev-middleware": "^7.0.0",
+    "webpack-dev-server": "^5.0.2",
+    "webpack-hot-middleware": "^2.26.1"
   },
   "dependencies": {
-    "jquery": "^3.7.1"
+    "express": "^4.18.3",
+    "express-status-monitor": "^1.3.4",
+    "jquery": "^3.7.1",
+    "socket.io": "^4.7.4",
+    "socket.io-client": "^4.7.4"
   }
 }
