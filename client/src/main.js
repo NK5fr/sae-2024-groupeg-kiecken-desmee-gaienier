@@ -23,6 +23,7 @@ const routes = [
 ];
 
 Router.routes = routes;
+Router.notFound = $('.notFound');
 
 Router.setInnerLinks($('main'));
 
