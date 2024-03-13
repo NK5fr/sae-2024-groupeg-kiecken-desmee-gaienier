@@ -1,12 +1,12 @@
 {
     "mars": {
-        "background": "/assets/stages/background/five.png",
+        "background": "/assets/stage/background/five.png",
         "numberOfAngels": 10,
         "angelsSpecies": "puissance",
         "archangel": "camael"
     },
     "venus": {
-        "background": "/assets/stages/background/four.png",
+        "background": "/assets/stage/background/four.png",
         "numberOfAngels": 10,
         "angelsSpecies": "puissance",
         "archangel": "raphael"
