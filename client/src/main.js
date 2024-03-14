@@ -3,8 +3,9 @@ import PlayMenu from './playMenu.js';
 import $ from 'jquery';
 import { io } from 'socket.io-client';
 import LoginMenu from './LoginMenu.js';
+import renderGame from './renderGame.js';
 
-const socket = io();
+export const socket = io();
 
 PlayMenu.setMenu($('.menuJouer'));
 
@@ -13,6 +14,7 @@ LoginMenu.setMenu($('.login'), socket);
 const routes = [
 	{ path: '/', view: $('.accueil') },
 	{ path: '/jeu', view: $('.jeu') },
+	{ path: '/join', view: $('.join') },
 	{ path: '/login', view: $('.login') },
 	{ path: '/signin', view: $('.signin') },
 	{ path: '/mdp_oublie', view: $('.mdp_oublie') },
@@ -21,6 +23,12 @@ const routes = [
 	{ path: '/personnalisation', view: $('.personnalisation') },
 	{ path: '/rejouer', view: $('.rejouer') },
 ];
+
+socket.on('gameStart', data => {
+	requestAnimationFrame(() => {
+		renderGame(data.game);
+	});
+});
 
 Router.routes = routes;
 Router.notFound = $('.notFound');

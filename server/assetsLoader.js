@@ -1,8 +1,10 @@
+import readFileSync from 'fs';
+
 // Purpose: Load images, sprites and data for use in the game.
 
 //Load background images
 const backgrounds = {
-	stageOne: '/assets/stage/background/five.png',
+	stageOne: 'client/public/assets/stage/background/five.png',
 };
 
 //Load data
@@ -12,7 +14,11 @@ let playerData;
 let missilesData;
 
 export default async function loadAssets() {
-	fetch('/assets/angel/angelData.json')
+	readFileSync('angelData.json', (err, data) => {
+		if (err) throw err;
+		angelsData = JSON.parse(data);
+	});
+	fetch('angelData.json')
 		.then(response => response.json())
 		.then(data => (angelsData = data));
 

@@ -3,6 +3,10 @@ import express from 'express';
 import addWebpackMiddleware from './middlewares/addWebpackMiddleware.js';
 import { Server as IOServer } from 'socket.io';
 import connexion from './connexion.js';
+import Game from './game.js';
+import { readFileSync } from 'fs';
+
+let currentGame = [];
 
 const fileOptions = { root: process.cwd() };
 const app = express();
@@ -12,8 +16,45 @@ const io = new IOServer(httpServer, {
 });
 
 io.on('connection', socket => {
+	console.log(`user connected with id ${socket.id}`);
 	socket.on('login', data => {
 		connexion(data);
+	});
+
+	socket.on('gameStart', () => {
+		console.log(`user ${socket.id} started the game`);
+		const angelData = readFileSync('server/angelData.json', 'utf8');
+		const playerData = readFileSync('server/playerData.json', 'utf8');
+		const missileData = readFileSync('server/missileData.json', 'utf8');
+		const game = new Game(angelData, playerData, missileData);
+		game.startGame();
+		currentGame.push({ socketId: socket.id, game: game });
+	});
+
+	socket.on('canvasResize', data => {
+		console.log(`user ${socket.id} resized the canvas`);
+		if (currentGame.length === 0) return;
+		const game = currentGame.find(game => game.socketId === socket.id);
+		game.width = data.width;
+		game.height = data.height;
+	});
+
+	socket.on('gameJoin', data => {
+		if (currentGame.length === 0) return;
+		const game = currentGame[0].game;
+		socket.emit('gameJoin', { socketId: currentGame[0].socketId, game: game });
+	});
+
+	socket.on('gameStop', data => {
+		console.log(`user ${data.socketId} stopped the game`);
+		currentGame = currentGame.filter(game => game.socketId !== data.socketId);
+		console.log(currentGame);
+	});
+
+	socket.on('disconnect', () => {
+		console.log(`user ${socket.id} disconnected`);
+		currentGame = currentGame.filter(game => game.socketId !== socket.id);
+		console.log(currentGame);
 	});
 });
 

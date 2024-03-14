@@ -2,13 +2,17 @@ import { Wanderer } from './angel.js';
 import { backgrounds } from './assetsLoader.js';
 
 export class Stage {
-	constructor(stageData) {
+	constructor(angelData, width, height) {
+		this.angelData = angelData;
 		this.angelsSpecies = 'puissance';
 		this.archangel = 'camael';
 		this.angels = [];
 
 		this.background = backgrounds.stageOne;
 		this.backgroundX = 0;
+
+		this.width = width;
+		this.height = height;
 
 		this.numberOfAngels = 10;
 		this.numberOfAngelsSpawned = 0;
@@ -58,9 +62,9 @@ export class Stage {
 		this.angels.forEach(angel => angel.update(canvas));
 	}
 
-	spawnAngels(canvas, gameNotFocused) {
-		let x = canvas.width;
-		let y = Math.floor(Math.random() * canvas.height);
+	spawnAngels(width, height, gameNotFocused) {
+		let x = width;
+		let y = Math.floor(Math.random() * height);
 
 		if (gameNotFocused) return;
 		if (this.numberOfAngelsSpawned < this.numberOfAngels) {

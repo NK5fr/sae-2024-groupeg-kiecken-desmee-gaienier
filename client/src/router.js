@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import startGame from './game.js';
+import { socket } from './main.js';
 
 export default class Router {
 	static routes = [];
@@ -25,11 +25,29 @@ export default class Router {
 			}
 			this.currentRoute = route;
 			route.view.show();
-			if (path === '/jeu') startGame();
+			if (path === '/jeu') {
+				socket.emit('gameStart', data => {
+					canvas.width = canvas.clientWidth;
+					canvas.height = canvas.clientHeight;
+				});
+			}
+			if (path === '/join') {
+				socket.emit('gameJoin', { socketId: socket.id });
+				socket.on('gameJoin', data => {
+					console.log(
+						`user ${socket.id} joined the game of user ${data.socketId}`
+					);
+					console.log(data.game);
+					data.game.player.push(new Player(100, 100, playerProperties));
+				});
+			}
+			if (path === '/rejouer') {
+				socket.emit('gameStop', { socketId: socket.id });
+			}
 			if (!skipPushState) {
 				window.history.pushState(null, null, path);
 			}
-		}else{
+		} else {
 			this.notFound.show();
 		}
 	}
