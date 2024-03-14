@@ -10,6 +10,10 @@ PlayMenu.setMenu($('.menuJouer'));
 
 LoginMenu.setLogin($('.login'), socket);
 LoginMenu.setSignin($('.signin'), socket);
+LoginMenu.setMdp_oublie($('.mdp_oublie'), socket);
+
+//LoginMenu.resetPassword($('.resetPassword'), socket);
+
 const routes = [
 	{ path: '/', view: $('.accueil') },
 	{ path: '/jeu', view: $('.jeu') },
@@ -20,14 +24,13 @@ const routes = [
 	{ path: '/credits', view: $('.credits') },
 	{ path: '/personnalisation', view: $('.personnalisation') },
 	{ path: '/rejouer', view: $('.rejouer') },
+	{ path: '/resetPassword', view: $('.resetPassword') },
 ];
 
 Router.routes = routes;
 Router.notFound = $('.notFound');
 
-Router.setInnerLinks($('main'));
-
-//Router.navigate(window.location.pathname, true);
-Router.navigate('/signin', true);
+Router.navigate(window.location.pathname, true);
+//Router.navigate('/signin', true);
 
 window.onpopstate = () => Router.navigate(document.location.pathname, true);

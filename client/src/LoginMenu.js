@@ -27,4 +27,26 @@ export default class LoginMenu {
 			socket.emit('signin', { login, password, password2, question, reponse });
 		});
 	}
+	static setMdp_oublie(menu, socket) {
+		$('form', menu).on('submit', event => {
+			event.preventDefault();
+			const login = $('input[name=login]', menu).val();
+			const question = $('input[name=question]', menu).val();
+			const reponse = $('input[name=reponse]', menu).val();
+			$('input[name=login]', menu).val('');
+			$('input[name=question]', menu).val('');
+			$('input[name=reponse]', menu).val('');
+			socket.emit('mdp_oublie', { login, question, reponse });
+		});
+	}
+	static resetPassword(menu, socket) {
+		$('form', menu).on('submit', event => {
+			event.preventDefault();
+			const password = $('input[name=password]', menu).val();
+			const password2 = $('input[name=password2]', menu).val();
+			$('input[name=password]', menu).val('');
+			$('input[name=password2]', menu).val('');
+			socket.emit('resetPassword', { password, password2 });
+		});
+	}
 }

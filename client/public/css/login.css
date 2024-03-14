@@ -1,4 +1,4 @@
-.login, .signin, .mdp_oublie {
+.login, .signin, .mdp_oublie, .resetPassword {
   width: 100%;
   height: 100%;
   background-image: url("../assets/stage/background/one.png");
@@ -10,7 +10,7 @@
 	left: 0;
 }
 
-.login form, .signin form, .mdp_oublie form{
+.login form, .signin form, .mdp_oublie form, .resetPassword form{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,7 +26,7 @@
   opacity: 0.9;
 }
 
-.login a, .signin a, .mdp_oublie a{
+.login a, .signin a, .mdp_oublie a, .resetPassword a{
   display: flex;
   margin-top: 20px;
   text-align: center;
@@ -34,7 +34,7 @@
   color: #ffe600;
 }
 
-.login input[type=text], .login input[type=password], .signin input[type=text], .signin input[type=password], .mdp_oublie input[type=text], .mdp_oublie input[type=password]{
+.login input[type=text], .login input[type=password], .signin input[type=text], .signin input[type=password], .mdp_oublie input[type=text], .mdp_oublie input[type=password], .resetPassword input[type=text], .resetPassword input[type=password]{
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -45,7 +45,7 @@
   opacity: 1.2;
 }
 
-.login input[type=submit], .signin input[type=submit], .mdp_oublie input[type=submit]{
+.login input[type=submit], .signin input[type=submit], .mdp_oublie input[type=submit], .resetPassword input[type=submit]{
   width: 100%;
   background-color: #ffe600;
   color: white;
