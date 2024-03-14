@@ -1,16 +1,15 @@
 import Entity from './entity.js';
-import { angelsData } from './assetsLoader.js';
 
 export class Wanderer extends Entity {
-	constructor(x, y, species, name) {
-		super(x, y, angelsData[species][name]);
+	constructor(x, y, properties) {
+		super(x, y, properties);
 	}
 
-	update(canvas) {
+	update(width, height) {
 		this.posX -= this.speed;
 		if (this.posX <= 0) {
-			this.posX = canvas.width - this.width;
-			this.posY = Math.random() * (canvas.height - this.height);
+			this.posX = width - this.width;
+			this.posY = Math.random() * (height - this.height);
 		}
 	}
 }

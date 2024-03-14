@@ -1,16 +1,10 @@
 import Entity from './entity.js';
-import { missilesData } from './assetsLoader.js';
+import { missileData } from './index.js';
 
 export default class Missile extends Entity {
 	constructor(x, y, properties, fireAngle) {
 		super(x, y, properties);
 		this.fireAngle = fireAngle;
-	}
-
-	render(context) {
-		const img = new Image();
-		img.src = this.sprite;
-		context.drawImage(img, this.posX, this.posY);
 	}
 
 	update(width, height) {
@@ -30,16 +24,7 @@ export default class Missile extends Entity {
 		);
 	}
 
-	static createMissile(
-		playerX,
-		playerY,
-		playerWidth,
-		playerHeight,
-		missileType,
-		fireAngle
-	) {
-		const posX = playerX + playerWidth / 2;
-		const posY = playerY + playerHeight / 2;
-		return new Missile(posX, posY, missilesData[missileType], fireAngle);
+	static createMissile(posX, posY, missileType, fireAngle) {
+		return new Missile(posX, posY, missileData[missileType], fireAngle);
 	}
 }

@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { socket } from './main.js';
+import { canvas } from './renderGame.js';
 
 export default class Router {
 	static routes = [];
@@ -18,6 +19,7 @@ export default class Router {
 
 	static navigate(path, skipPushState = false) {
 		const route = this.routes.find(route => route.path === path);
+		console.log('route', this.#setInnerLinks);
 		if (route) {
 			this.notFound.hide();
 			if (this.currentRoute) {
@@ -26,19 +28,9 @@ export default class Router {
 			this.currentRoute = route;
 			route.view.show();
 			if (path === '/jeu') {
-				socket.emit('gameStart', data => {
-					canvas.width = canvas.clientWidth;
-					canvas.height = canvas.clientHeight;
-				});
-			}
-			if (path === '/join') {
-				socket.emit('gameJoin', { socketId: socket.id });
-				socket.on('gameJoin', data => {
-					console.log(
-						`user ${socket.id} joined the game of user ${data.socketId}`
-					);
-					console.log(data.game);
-					data.game.player.push(new Player(100, 100, playerProperties));
+				socket.emit('gameStart', {
+					width: canvas.width,
+					height: canvas.height,
 				});
 			}
 			if (path === '/rejouer') {

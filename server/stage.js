@@ -1,59 +1,25 @@
 import { Wanderer } from './angel.js';
-import { backgrounds } from './assetsLoader.js';
+import { stageData, angelData } from './index.js';
 
 export class Stage {
-	constructor(angelData, width, height) {
-		this.angelData = angelData;
-		this.angelsSpecies = 'puissance';
-		this.archangel = 'camael';
+	constructor(name, width, height) {
+		this.angelsSpecies = stageData[name].angelsSpecies;
+		this.archangel = stageData[name].archangel;
 		this.angels = [];
 
-		this.background = backgrounds.stageOne;
+		this.background = stageData[name].background;
 		this.backgroundX = 0;
 
 		this.width = width;
 		this.height = height;
 
-		this.numberOfAngels = 10;
+		this.numberOfAngels = stageData[name].numberOfAngels;
 		this.numberOfAngelsSpawned = 0;
 		this.numberOfAngelsKilled = 0;
 	}
 
-	renderBackground(context) {
-		const img = new Image();
-		img.src = this.background;
-		this.backgroundX -= 1;
-		if (this.backgroundX <= -img.width) {
-			console.log('reset');
-			this.backgroundX = -1;
-		}
-		context.drawImage(img, this.backgroundX, 0);
-		context.drawImage(img, this.backgroundX + img.width, 0);
-	}
-
 	renderAngels(context) {
 		this.angels.forEach(angel => angel.render(context));
-	}
-
-	renderProgressionBar(context, canvas) {
-		context.beginPath();
-		context.rect((canvas.width / 4) * 3 - 150, 10, 300, 20);
-		context.strokeStyle = 'black';
-		context.lineWidth = 2;
-		context.stroke();
-		context.fillStyle = this.calculateCurrentColorBasedOnProgression();
-		context.fillRect(
-			(canvas.width / 4) * 3 - 150,
-			10,
-			(this.numberOfAngelsKilled / this.numberOfAngels) * 300,
-			20
-		);
-	}
-
-	calculateCurrentColorBasedOnProgression() {
-		let green = (this.numberOfAngelsKilled / this.numberOfAngels) * 240;
-		let red = 240 - green;
-		return `rgb(${red}, ${green}, 0)`;
 	}
 
 	update(canvas) {
@@ -68,7 +34,9 @@ export class Stage {
 
 		if (gameNotFocused) return;
 		if (this.numberOfAngelsSpawned < this.numberOfAngels) {
-			this.angels.push(new Wanderer(x, y, this.angelsSpecies, 'one'));
+			this.angels.push(
+				new Wanderer(x, y, angelData[this.angelsSpecies]['one'])
+			);
 			this.numberOfAngelsSpawned++;
 		}
 	}

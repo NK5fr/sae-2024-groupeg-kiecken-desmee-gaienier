@@ -13,12 +13,25 @@ let currentGame = [];
 const fileOptions = { root: process.cwd() };
 const app = express();
 const httpServer = http.createServer(app);
-const io = new IOServer(httpServer, {
+export const io = new IOServer(httpServer, {
 	allowEIO3: true,
 });
 
+export const angelData = JSON.parse(
+	readFileSync('server/angelData.json', 'utf8')
+);
+
+const playerData = JSON.parse(readFileSync('server/playerData.json', 'utf8'));
+
+export const missileData = JSON.parse(
+	readFileSync('server/missileData.json', 'utf8')
+);
+
+export const stageData = JSON.parse(
+	readFileSync('server/stageData.json', 'utf8')
+);
+
 io.on('connection', socket => {
-	console.log(`user connected with id ${socket.id}`);
 	socket.on('login', data => {
 		connexion(data);
 	});
@@ -32,18 +45,69 @@ io.on('connection', socket => {
 		console.log('resetPassword', data);
 	});
 
-	socket.on('gameStart', () => {
-		console.log(`user ${socket.id} started the game`);
-		const angelData = readFileSync('server/angelData.json', 'utf8');
-		const playerData = readFileSync('server/playerData.json', 'utf8');
-		const missileData = readFileSync('server/missileData.json', 'utf8');
-		const game = new Game(angelData, playerData, missileData);
+	socket.on('gameStart', data => {
+		const game = new Game(data.width, data.height, socket.id);
+		game.addNewPlayer(socket.id, playerData);
 		game.startGame();
-		currentGame.push({ socketId: socket.id, game: game });
+		socket.emit('gameStart', game);
+		currentGame.push(game);
 	});
 
-	socket.on('canvasResize', data => {
-		console.log(`user ${socket.id} resized the canvas`);
+	socket.on('playerKeyDown', data => {
+		if (currentGame.length === 0) return;
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (game.mainPlayer.socketId === data.socketId)
+			game.mainPlayer.onKeyDown(data.key);
+		else
+			game.otherPlayers
+				.filter(player => player.socketId === data.socketId)
+				.forEach(player => player.onKeyDown(data.key));
+	});
+
+	socket.on('playerKeyUp', data => {
+		if (currentGame.length === 0) return;
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (game.mainPlayer.socketId === data.socketId)
+			game.mainPlayer.onKeyUp(data.key);
+		else
+			game.otherPlayers
+				.filter(player => player.socketId === data.socketId)
+				.forEach(player => player.onKeyUp(data.key));
+	});
+
+	socket.on('playerMouseDown', data => {
+		if (currentGame.length === 0) return;
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (game.mainPlayer.socketId === data.socketId)
+			game.mainPlayer.onMouseDown(data.x, data.y);
+		else
+			game.otherPlayers
+				.filter(player => player.socketId === data.socketId)
+				.forEach(player => player.onMouseDown(data.x, data.y));
+	});
+
+	socket.on('playerMouseUp', data => {
+		if (currentGame.length === 0) return;
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (game.mainPlayer.socketId === data.socketId) game.mainPlayer.onMouseUp();
+		else
+			game.otherPlayers
+				.filter(player => player.socketId === data.socketId)
+				.forEach(player => player.onMouseUp());
+	});
+
+	socket.on('playerMouseMove', data => {
+		if (currentGame.length === 0) return;
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (game.mainPlayer.socketId === data.socketId)
+			game.mainPlayer.onMouseMove(data.x, data.y);
+		else
+			game.otherPlayers
+				.filter(player => player.socketId === data.socketId)
+				.forEach(player => player.onMouseMove(data.x, data.y));
+	});
+
+	socket.on('canvasResampled', data => {
 		if (currentGame.length === 0) return;
 		const game = currentGame.find(game => game.socketId === socket.id);
 		game.width = data.width;
@@ -57,15 +121,11 @@ io.on('connection', socket => {
 	});
 
 	socket.on('gameStop', data => {
-		console.log(`user ${data.socketId} stopped the game`);
 		currentGame = currentGame.filter(game => game.socketId !== data.socketId);
-		console.log(currentGame);
 	});
 
 	socket.on('disconnect', () => {
-		console.log(`user ${socket.id} disconnected`);
 		currentGame = currentGame.filter(game => game.socketId !== socket.id);
-		console.log(currentGame);
 	});
 });
 

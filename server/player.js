@@ -2,8 +2,13 @@ import Entity from './entity.js';
 import Missile from './missile.js';
 
 export default class Player extends Entity {
-	constructor(x, y, properties) {
+	constructor(socketId, x, y, properties) {
 		super(x, y, properties);
+
+		this.socketId = socketId;
+
+		this.sprites = properties.sprite;
+		this.sprite = this.sprites.idle;
 
 		this.speedX = 0;
 		this.speedY = 0;
@@ -18,52 +23,10 @@ export default class Player extends Entity {
 		this.missileType = properties.missileType;
 
 		this.fireIsOn = false;
-		this.fireAngle = 0;
+		this.fireX = 0;
+		this.fireY = 0;
 		this.fireRate = properties.fireRate;
 		this.fireNextShotIn = 0;
-	}
-
-	/**
-	 * Méthode qui affiche le joueur sur le canvas
-	 * @param {*} context Le contexte du canvas
-	 */
-	render(context) {
-		const img = new Image();
-		if (this.speedX == 0) {
-			img.src = this.sprite.idle;
-		} else if (this.speedX > 0) {
-			img.src = this.sprite.right;
-		} else if (this.speedX < 0) {
-			img.src = this.sprite.left;
-		}
-		context.drawImage(img, this.posX, this.posY);
-		this.missiles.forEach(missile => missile.render(context));
-	}
-
-	/**
-	 * Méthode qui affiche la barre de vie du joueur sur le canvas
-	 * @param {*} context Le contexte du canvas
-	 * @param {*} height La hauteur du canvas
-	 */
-	renderHealthBar(context, height) {
-		let healthBarWidth = (this.health / this.maxHealth) * 100;
-		context.beginPath();
-		context.rect(10, height - 20, 100, 10);
-		context.strokeStyle = 'black';
-		context.lineWidth = 2;
-		context.stroke();
-		context.fillStyle = this.calculateCurrentColorBasedOnHealth();
-		context.fillRect(10, height - 20, healthBarWidth, 10);
-	}
-
-	/**
-	 * Méthode qui calcule la couleur actuelle de la barre de vie du joueur
-	 * @returns La couleur actuelle de la barre de vie du joueur représentée en rgb
-	 */
-	calculateCurrentColorBasedOnHealth() {
-		let green = Math.floor((this.health / this.maxHealth) * 255);
-		let red = 255 - green;
-		return `rgb(${red}, ${green}, 0)`;
 	}
 
 	/**
@@ -80,6 +43,10 @@ export default class Player extends Entity {
 		else this.decelerateLeft();
 		if (this.direction.right) this.accelerateRight();
 		else this.decelerateRight();
+
+		if (this.speedX > 0) this.sprite = this.sprites.right;
+		else if (this.speedX < 0) this.sprite = this.sprites.left;
+		else this.sprite = this.sprites.idle;
 
 		if (this.canMoveOnX(width)) this.posX += this.speedX;
 		if (this.canMoveOnY(height)) this.posY += this.speedY;
@@ -100,15 +67,14 @@ export default class Player extends Entity {
 	 * Méthode qui gère le tir du joueur
 	 */
 	fire() {
+		const fireAngle = Math.atan2(
+			this.fireY - this.posY - this.height / 2,
+			this.fireX - this.posX - this.width / 2
+		);
+		const posX = this.posX + this.width / 2;
+		const posY = this.posY + this.height / 2;
 		this.missiles.push(
-			Missile.createMissile(
-				this.posX,
-				this.posY,
-				this.width,
-				this.height,
-				this.missileType,
-				this.fireAngle
-			)
+			Missile.createMissile(posX, posY, this.missileType, fireAngle)
 		);
 	}
 
@@ -178,8 +144,10 @@ export default class Player extends Entity {
 	 * Méthode qui gère l'événement de pression du bouton de la souris
 	 * @param {*} event L'événement de pression du bouton de la souris
 	 */
-	onMouseDown(event) {
+	onMouseDown(mouseX, mouseY) {
 		this.fireIsOn = true;
+		this.fireX = mouseX;
+		this.fireY = mouseY;
 	}
 
 	/**
@@ -189,10 +157,8 @@ export default class Player extends Entity {
 		this.fireIsOn = false;
 	}
 
-	onMouseMove(event) {
-		this.fireAngle = Math.atan2(
-			event.clientY - this.posY - this.height / 2,
-			event.clientX - this.posX - this.width / 2
-		);
+	onMouseMove(mouseX, mouseY) {
+		this.fireX = mouseX;
+		this.fireY = mouseY;
 	}
 }

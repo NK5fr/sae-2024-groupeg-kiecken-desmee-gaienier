@@ -1,50 +1,61 @@
 import { socket } from './main.js';
+import { renderEntities } from './renderEntity.js';
+import { renderMissilesHitbox } from './renderMissiles.js';
+import renderPlayer, { renderHealthBar } from './renderPlayer.js';
+import renderStage, { renderStageProgressionBar } from './renderStage.js';
 
-const canvas = document.querySelector('.gameCanvas'),
+export const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d'),
 	canvasResizeObserver = new ResizeObserver(() => {
-		socket.emit('canvasResize', {
-			width: canvas.width,
-			height: canvas.height,
-		});
 		resampleCanvas();
 	});
+
+let gameRenderer = null;
+let game = null;
 
 canvasResizeObserver.observe(canvas);
 
 function resampleCanvas() {
-	console.log('Resampling canvas');
 	canvas.width = canvas.clientWidth;
 	canvas.height = canvas.clientHeight;
+	socket.emit('canvasResampled', {
+		width: canvas.width,
+		height: canvas.height,
+	});
 }
 
-export default function renderGame(gameInstance) {
-	if (!gameInstance.gameNotFocused) {
-		console.log('Rendering game');
-		context.clearRect(
-			0,
-			0,
-			gameInstance.canvas.width,
-			gameInstance.canvas.height
-		);
-		gameInstance.stage.renderBackground(context);
-		gameInstance.stage.renderProgressionBar(
-			gameInstance.context,
-			gameInstance.canvas
-		);
-		gameInstance.player.forEach(player =>
-			player.renderHealthBar(context, canvas.height)
-		);
-		gameInstance.stage.renderAngels(context);
-		gameInstance.player.forEach(player => {
-			if (player.health > 0) {
-				player.render(context);
-				player.missiles.forEach(missile => missile.render(context));
-			}
+export default function startGameRenderer() {
+	gameRenderer = requestAnimationFrame(renderGame);
+}
+
+function renderGame() {
+	if (!game.gameNotFocused) {
+		context.clearRect(0, 0, game.width, game.height);
+		renderStage(game.stage, context, canvas);
+
+		//gameInstance.stage.renderAngels(context);
+		renderPlayer(game.mainPlayer, context);
+		game.otherPlayers.forEach(player => {
+			renderPlayer(player, context);
 		});
-		if (gameInstance.debug) gameInstance.drawAllHitboxes();
+
+		renderStageProgressionBar(game.stage, context, canvas);
+		renderHealthBar(game.mainPlayer, context, canvas);
+		socket.emit('gameRendered', game);
+		if (game.debug) {
+			renderMissilesHitbox(game.mainPlayer.missiles, context);
+			game.otherPlayers.forEach(player => {
+				renderMissilesHitbox(player.missiles, context);
+			});
+		}
 	}
-	gameInstance.gameRenderer = requestAnimationFrame(() => {
-		renderGame(gameInstance);
-	});
+	gameRenderer = requestAnimationFrame(renderGame);
+}
+
+export function setGame(gameInstance) {
+	game = gameInstance;
+}
+
+export function stopGameRenderer() {
+	cancelAnimationFrame(gameRenderer);
 }
