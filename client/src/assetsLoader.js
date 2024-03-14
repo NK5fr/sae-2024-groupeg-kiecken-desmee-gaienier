@@ -2,9 +2,8 @@
 
 //Load background images
 const backgrounds = {
-	stageOne: new Image(),
+	stageOne: '/assets/stage/background/five.png',
 };
-backgrounds.stageOne.src = '/assets/stages/background/five.png';
 
 //Load data
 
@@ -13,7 +12,7 @@ let playerData;
 let missilesData;
 
 export default async function loadAssets() {
-	fetch('/assets/angels/angelsData.json')
+	fetch('/assets/angel/angelData.json')
 		.then(response => response.json())
 		.then(data => (angelsData = data));
 
@@ -21,7 +20,7 @@ export default async function loadAssets() {
 		.then(response => response.json())
 		.then(data => (playerData = data));
 
-	fetch('/assets/missiles/missilesData.json')
+	fetch('/assets/missile/missileData.json')
 		.then(response => response.json())
 		.then(data => (missilesData = data));
 }

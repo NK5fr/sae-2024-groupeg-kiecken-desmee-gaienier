@@ -1,22 +1,7 @@
 import Player from './player.js';
-import { Mars } from './stage.js';
+import { Stage } from './stage.js';
 import Router from './router.js';
 import loadAssets from './assetsLoader.js';
-
-const canvas = document.querySelector('.gameCanvas'),
-	context = canvas.getContext('2d'),
-	canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
-
-canvasResizeObserver.observe(canvas);
-
-function resampleCanvas() {
-	canvas.width = canvas.clientWidth;
-	canvas.height = canvas.clientHeight;
-}
-
-let gameUpdater;
-let angelsSpawner;
-let gameRenderer;
 
 const playerProperties = {
 	health: 5,
@@ -33,64 +18,110 @@ const playerProperties = {
 	fireRate: 25,
 };
 
+class Game {
+	#gameUpdater;
+	#gameRenderer;
+	gameNotFocused = false;
+	debug = false;
+
+	constructor() {
+		this.canvas = document.querySelector('.gameCanvas');
+		this.context = this.canvas.getContext('2d');
+		this.canvasResizeObserver = new ResizeObserver(() => this.resampleCanvas());
+
+		this.player = new Player(100, 100, playerProperties);
+		this.stage = new Stage();
+	}
+
+	resampleCanvas() {
+		this.canvas.width = this.canvas.clientWidth;
+		this.canvas.height = this.canvas.clientHeight;
+	}
+
+	startGame() {
+		console.log('Game started');
+		this.#gameUpdater = setInterval(updateGame, 1000 / 60);
+		this.#gameRenderer = requestAnimationFrame(renderGame);
+	}
+
+	stopGame() {
+		console.log('Game stopped');
+		clearInterval(this.#gameUpdater);
+		cancelAnimationFrame(this.#gameRenderer);
+	}
+}
+
+const game = new Game();
+
+let angelsSpawner;
+
 let player;
 let stage;
 
-let gameNotFocused = false;
-let debug = false;
-
 function renderGame() {
-	if (!gameNotFocused) {
-		context.clearRect(0, 0, canvas.width, canvas.height);
-		stage.renderBackground(context);
-		stage.renderProgressionBar(context, canvas);
-		player.renderHealthBar(context, canvas.height);
-		stage.renderAngels(context);
+	if (!game.gameNotFocused) {
+		game.context.clearRect(0, 0, game.canvas.width, game.canvas.height);
+		stage.renderBackground(game.context);
+		stage.renderProgressionBar(game.context, game.canvas);
+		player.renderHealthBar(game.context, game.canvas.height);
+		stage.renderAngels(game.context);
 		if (player.health > 0) {
-			player.render(context);
-			player.missiles.forEach(missile => missile.render(context));
+			player.render(game.context);
+			player.missiles.forEach(missile => missile.render(game.context));
 		}
 
-		if (debug) drawAllHitboxes();
+		if (game.debug) drawAllHitboxes();
 	}
-	gameRenderer = requestAnimationFrame(renderGame);
+	requestAnimationFrame(renderGame);
 }
 
 function updateGame() {
 	if (stage.stageIsClear()) {
 		alert('Stage Clear!');
-		clearInterval(gameUpdater);
+		game.stopGame();
 		clearInterval(angelsSpawner);
-		cancelAnimationFrame(gameRenderer);
 		Router.navigate('/rejouer');
 	}
 	if (player.health <= 0) {
 		alert('Game Over');
-		clearInterval(gameUpdater);
+		game.stopGame();
 		clearInterval(angelsSpawner);
-		cancelAnimationFrame(gameRenderer);
 		Router.navigate('/rejouer');
 	}
-	if (gameNotFocused) return;
-	player.update(canvas.width, canvas.height);
-	stage.update(canvas);
-	player.missiles.forEach(missile => missile.checkCollisions(stage.angels));
-	player.checkCollisions(stage.angels);
+	if (game.gameNotFocused) return;
+	console.log('Game updated');
+	player.update(game.canvas.width, game.canvas.height);
+	stage.update(game.canvas);
 	stage.angels.forEach(angel => {
+		if (player.checkCollision(angel)) {
+			player.health -= angel.damage;
+			angel.health = 0;
+		}
+		player.missiles.forEach(missile => {
+			if (missile.checkCollision(angel)) {
+				angel.health -= missile.damage;
+				missile.health = 0;
+			}
+		});
 		if (angel.missiles) {
-			player.checkCollisions(angel.missiles);
+			angel.missiles.forEach(missile => {
+				if (player.checkCollision(missile)) {
+					player.health -= missile.damage;
+					missile.health = 0;
+				}
+			});
 		}
 	});
 }
 
 function drawAllHitboxes() {
-	player.drawHitbox(context);
+	player.drawHitbox(game.context);
 	stage.angels.forEach(angel => {
-		angel.drawHitbox(context);
+		angel.drawHitbox(game.context);
 		if (angel.missiles)
-			angel.missiles.forEach(missile => missile.drawHitbox(context));
+			angel.missiles.forEach(missile => missile.drawHitbox(game.context));
 	});
-	player.missiles.forEach(missile => missile.drawHitbox(context));
+	player.missiles.forEach(missile => missile.drawHitbox(game.context));
 }
 
 window.addEventListener('blur', () => (gameNotFocused = true));
@@ -98,13 +129,12 @@ window.addEventListener('focus', () => (gameNotFocused = false));
 
 export default function startGame() {
 	loadAssets().then(() => {
+		game.startGame();
 		console.log('Assets loaded');
 		player = new Player(100, 100, playerProperties);
-		stage = new Mars(player);
-		gameRenderer = requestAnimationFrame(renderGame);
-		gameUpdater = setInterval(updateGame, 1000 / 60);
+		stage = new Stage();
 		angelsSpawner = setInterval(
-			() => stage.spawnAngels(canvas, gameNotFocused),
+			() => stage.spawnAngels(game.canvas, game.gameNotFocused),
 			1000
 		);
 		document.addEventListener('keydown', e => {

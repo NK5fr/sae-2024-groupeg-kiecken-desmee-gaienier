@@ -2,10 +2,13 @@ import Router from './router.js';
 import PlayMenu from './playMenu.js';
 import $ from 'jquery';
 import { io } from 'socket.io-client';
+import LoginMenu from './LoginMenu.js';
 
 const socket = io();
 
 PlayMenu.setMenu($('.menuJouer'));
+
+LoginMenu.setMenu($('.login'), socket);
 
 const routes = [
 	{ path: '/', view: $('.accueil') },
@@ -20,6 +23,7 @@ const routes = [
 ];
 
 Router.routes = routes;
+Router.notFound = $('.notFound');
 
 Router.setInnerLinks($('main'));
 

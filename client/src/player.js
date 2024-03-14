@@ -1,5 +1,5 @@
 import Entity from './entity.js';
-import Missile from './missiles.js';
+import Missile from './missile.js';
 
 export default class Player extends Entity {
 	constructor(x, y, properties) {
@@ -72,17 +72,17 @@ export default class Player extends Entity {
 	 * @param {*} height La hauteur du canvas
 	 */
 	update(width, height) {
-		if (this.direction.up) this.accelerateUpOrLeft('Y');
-		else this.decelerateUpOrLeft('Y');
-		if (this.direction.down) this.accelerateDownOrRight('Y');
-		else this.decelerateDownOrRight('Y');
-		if (this.direction.left) this.accelerateUpOrLeft('X');
-		else this.decelerateUpOrLeft('X');
-		if (this.direction.right) this.accelerateDownOrRight('X');
-		else this.decelerateDownOrRight('X');
+		if (this.direction.up) this.accelerateUp();
+		else this.decelerateUp();
+		if (this.direction.down) this.accelerateDown();
+		else this.decelerateDown();
+		if (this.direction.left) this.accelerateLeft();
+		else this.decelerateLeft();
+		if (this.direction.right) this.accelerateRight();
+		else this.decelerateRight();
 
-		if (this.canMoveOnAxis('X', width)) this.posX += this.speedX;
-		if (this.canMoveOnAxis('Y', height)) this.posY += this.speedY;
+		if (this.canMoveOnX(width)) this.posX += this.speedX;
+		if (this.canMoveOnY(height)) this.posY += this.speedY;
 
 		this.missiles = this.missiles.filter(missile => missile.health > 0);
 		this.missiles.forEach(missile => missile.update(width, height));
@@ -112,49 +112,44 @@ export default class Player extends Entity {
 		);
 	}
 
-	/**
-	 * Méthode qui gère les collisions entre le joueur et les bordures du canvas
-	 * @param {*} axis L'axe sur lequel on veut vérifier la collision
-	 * @param {*} bound La limite du canvas au niveau de l'axe sur lequel on veut vérifier la collision
-	 * @returns true si le joueur peut se déplacer sur l'axe donné, false sinon
-	 */
-	canMoveOnAxis(axis, bound) {
-		let position = this[`pos${axis}`];
-		let speed = this[`speed${axis}`];
-		let widthOrHeight = this[axis === 'X' ? 'width' : 'height'];
-		return position + speed > 0 && position + speed + widthOrHeight < bound;
+	canMoveOnX(width) {
+		return (
+			this.posX + this.speedX > 0 &&
+			this.posX + this.speedX + this.width < width
+		);
 	}
 
-	/**
-	 * Méthode qui gère l'accélération du joueur vers le haut ou la gauche
-	 * @param {*} axis L'axe sur lequel on veut accélérer le joueur
-	 */
-	accelerateUpOrLeft(axis) {
-		if (this[`speed${axis}`] > -this.speed) this[`speed${axis}`]--;
+	canMoveOnY(height) {
+		return (
+			this.posY + this.speedY > 0 &&
+			this.posY + this.speedY + this.height < height
+		);
 	}
 
-	/**
-	 * Méthode qui gère l'accélération du joueur vers le bas ou la droite
-	 * @param {*} axis L'axe sur lequel on veut accélérer le joueur
-	 */
-	accelerateDownOrRight(axis) {
-		if (this[`speed${axis}`] < this.speed) this[`speed${axis}`]++;
+	accelerateUp() {
+		if (this.speedY > -this.speed) this.speedY--;
+	}
+	accelerateDown() {
+		if (this.speedY < this.speed) this.speedY++;
+	}
+	accelerateLeft() {
+		if (this.speedX > -this.speed) this.speedX--;
+	}
+	accelerateRight() {
+		if (this.speedX < this.speed) this.speedX++;
 	}
 
-	/**
-	 * Méthode qui gère la décélération du joueur vers le haut ou la gauche
-	 * @param {*} axis L'axe sur lequel on veut décélérer le joueur
-	 */
-	decelerateUpOrLeft(axis) {
-		if (this[`speed${axis}`] < 0) this[`speed${axis}`]++;
+	decelerateUp() {
+		if (this.speedY < 0) this.speedY++;
 	}
-
-	/**
-	 * Méthode qui gère la décélération du joueur vers le bas ou la droite
-	 * @param {*} axis L'axe sur lequel on veut décélérer le joueur
-	 */
-	decelerateDownOrRight(axis) {
-		if (this[`speed${axis}`] > 0) this[`speed${axis}`]--;
+	decelerateDown() {
+		if (this.speedY > 0) this.speedY--;
+	}
+	decelerateLeft() {
+		if (this.speedX < 0) this.speedX++;
+	}
+	decelerateRight() {
+		if (this.speedX > 0) this.speedX--;
 	}
 
 	/**

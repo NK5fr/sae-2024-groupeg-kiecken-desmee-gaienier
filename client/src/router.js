@@ -3,6 +3,7 @@ import startGame from './game.js';
 
 export default class Router {
 	static routes = [];
+	static notFound;
 	static currentRoute;
 
 	static #setInnerLinks;
@@ -18,6 +19,7 @@ export default class Router {
 	static navigate(path, skipPushState = false) {
 		const route = this.routes.find(route => route.path === path);
 		if (route) {
+			this.notFound.hide();
 			if (this.currentRoute) {
 				this.currentRoute.view.hide();
 			}
@@ -27,6 +29,8 @@ export default class Router {
 			if (!skipPushState) {
 				window.history.pushState(null, null, path);
 			}
+		}else{
+			this.notFound.show();
 		}
 	}
 }
