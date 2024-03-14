@@ -3,6 +3,8 @@ import express from 'express';
 import addWebpackMiddleware from './middlewares/addWebpackMiddleware.js';
 import { Server as IOServer } from 'socket.io';
 import connexion from './connexion.js';
+import signin from './signin.js';
+import mdp_oublie from './mdp_oublie.js';
 import Game from './game.js';
 import { readFileSync } from 'fs';
 
@@ -19,6 +21,15 @@ io.on('connection', socket => {
 	console.log(`user connected with id ${socket.id}`);
 	socket.on('login', data => {
 		connexion(data);
+	});
+	socket.on('signin', data => {
+		signin(data);
+	});
+	socket.on('mdp_oublie', data => {
+		mdp_oublie(data);
+	});
+	socket.on('resetPassword', data => {
+		console.log('resetPassword', data);
 	});
 
 	socket.on('gameStart', () => {
