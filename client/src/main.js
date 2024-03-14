@@ -8,8 +8,8 @@ const socket = io();
 
 PlayMenu.setMenu($('.menuJouer'));
 
-LoginMenu.setMenu($('.login'), socket);
-
+LoginMenu.setLogin($('.login'), socket);
+LoginMenu.setSignin($('.signin'), socket);
 const routes = [
 	{ path: '/', view: $('.accueil') },
 	{ path: '/jeu', view: $('.jeu') },
@@ -27,6 +27,7 @@ Router.notFound = $('.notFound');
 
 Router.setInnerLinks($('main'));
 
-Router.navigate(window.location.pathname, true);
+//Router.navigate(window.location.pathname, true);
+Router.navigate('/signin', true);
 
 window.onpopstate = () => Router.navigate(document.location.pathname, true);

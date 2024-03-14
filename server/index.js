@@ -3,6 +3,7 @@ import express from 'express';
 import addWebpackMiddleware from './middlewares/addWebpackMiddleware.js';
 import { Server as IOServer } from 'socket.io';
 import connexion from './connexion.js';
+import signin from './signin.js';
 
 const fileOptions = { root: process.cwd() };
 const app = express();
@@ -14,6 +15,9 @@ const io = new IOServer(httpServer, {
 io.on('connection', socket => {
 	socket.on('login', data => {
 		connexion(data);
+	});
+	socket.on('signin', data => {
+		signin(data);
 	});
 });
 
