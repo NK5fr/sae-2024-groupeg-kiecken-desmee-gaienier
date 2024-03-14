@@ -3,6 +3,8 @@ import express from 'express';
 import addWebpackMiddleware from './middlewares/addWebpackMiddleware.js';
 import { Server as IOServer } from 'socket.io';
 import connexion from './connexion.js';
+import signin from './signin.js';
+import mdp_oublie from './mdp_oublie.js';
 
 const fileOptions = { root: process.cwd() };
 const app = express();
@@ -14,6 +16,15 @@ const io = new IOServer(httpServer, {
 io.on('connection', socket => {
 	socket.on('login', data => {
 		connexion(data);
+	});
+	socket.on('signin', data => {
+		signin(data);
+	});
+	socket.on('mdp_oublie', data => {
+		mdp_oublie(data);
+	});
+	socket.on('resetPassword', data => {
+		console.log('resetPassword', data);
 	});
 });
 
