@@ -6,7 +6,11 @@ const playerProperties = {
 	health: 5,
 	speed: 10,
 	damage: 10,
-	sprite: 'sprite',
+	sprite: {
+		idle: 'sprite',
+		left: 'sprite',
+		right: 'sprite',
+	},
 	width: 30,
 	height: 30,
 	missileType: 'card',
@@ -14,7 +18,7 @@ const playerProperties = {
 };
 
 describe('Player', () => {
-	const player = new Player(20, 20, playerProperties);
+	const player = new Player(0, 20, 20, playerProperties);
 
 	it('should has all properties', () => {
 		assert.strictEqual(player.posX, 20);
