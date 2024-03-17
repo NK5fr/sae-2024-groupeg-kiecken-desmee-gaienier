@@ -14,7 +14,6 @@ const playerProperties = {
 };
 
 describe('Player', () => {
-	console.log('Player', playerProperties);
 	const player = new Player(20, 20, playerProperties);
 
 	it('should has all properties', () => {
