@@ -4,7 +4,7 @@ export default function mdp_oublie(data) {
 	console.log('Données de connexion reçues', data);
 
 	// récupère les données de l'utilisateur dans la base de données avec le login reçu
-	let dataBase = fs.readFileSync('data/DataBase.json', 'utf-8');
+	let dataBase = fs.readFileSync('server/data/userData.json', 'utf8');
 	let dataBaseParsed = JSON.parse(dataBase);
 
 	// parcourir database pour trouver l'utilisateur

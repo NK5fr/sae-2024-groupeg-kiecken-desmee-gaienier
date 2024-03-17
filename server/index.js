@@ -2,10 +2,10 @@ import http from 'http';
 import express from 'express';
 import addWebpackMiddleware from './middlewares/addWebpackMiddleware.js';
 import { Server as IOServer } from 'socket.io';
-import connexion from './connexion.js';
-import signin from './signin.js';
-import mdp_oublie from './mdp_oublie.js';
-import Game from './game.js';
+import connexion from './login/connexion.js';
+import signin from './login/signin.js';
+import mdp_oublie from './login/mdp_oublie.js';
+import Game from './game/game.js';
 import { readFileSync } from 'fs';
 
 let currentGame = [];
@@ -18,17 +18,16 @@ export const io = new IOServer(httpServer, {
 });
 
 export const angelData = JSON.parse(
-	readFileSync('server/angelData.json', 'utf8')
+	readFileSync('server/data/angelData.json', 'utf8')
 );
-
-const playerData = JSON.parse(readFileSync('server/playerData.json', 'utf8'));
-
+const playerData = JSON.parse(
+	readFileSync('server/data/playerData.json', 'utf8')
+);
 export const missileData = JSON.parse(
-	readFileSync('server/missileData.json', 'utf8')
+	readFileSync('server/data/missileData.json', 'utf8')
 );
-
 export const stageData = JSON.parse(
-	readFileSync('server/stageData.json', 'utf8')
+	readFileSync('server/data/stageData.json', 'utf8')
 );
 
 io.on('connection', socket => {

@@ -4,7 +4,7 @@ export default function signin(data) {
 	console.log('Données de connexion reçues', data);
 
 	// récupère les données de l'utilisateur dans la base de données avec le login reçu
-	let dataBase = fs.readFileSync('data/DataBase.json', 'utf-8');
+	let dataBase = fs.readFileSync('server/data/userData.json', 'utf-8');
 	let dataBaseParsed = JSON.parse(dataBase);
 
 	// parcourir database pour trouver l'utilisateur
@@ -19,6 +19,9 @@ export default function signin(data) {
 	else {
 		console.log('Utilisateur non trouvé');
 		dataBaseParsed.push(data);
-		fs.writeFileSync('data/DataBase.json', JSON.stringify(dataBaseParsed));
+		fs.writeFileSync(
+			'server/data/userData.json',
+			JSON.stringify(dataBaseParsed)
+		);
 	}
 }

@@ -1,5 +1,5 @@
 import { Wanderer } from './angel.js';
-import { stageData, angelData } from './index.js';
+import { stageData, angelData } from '../index.js';
 
 export class Stage {
 	constructor(name, width, height) {

@@ -1,4 +1,4 @@
-import { io } from './index.js';
+import { io } from '../index.js';
 import Player from './player.js';
 import { Stage } from './stage.js';
 

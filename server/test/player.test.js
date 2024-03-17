@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import Player from './player.js';
+import Player from '../game/player.js';
 
 const playerProperties = {
 	health: 5,
@@ -14,6 +14,7 @@ const playerProperties = {
 };
 
 describe('Player', () => {
+	console.log('Player', playerProperties);
 	const player = new Player(20, 20, playerProperties);
 
 	it('should has all properties', () => {
