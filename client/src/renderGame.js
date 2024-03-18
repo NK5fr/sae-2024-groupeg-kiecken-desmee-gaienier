@@ -33,21 +33,26 @@ function renderGame() {
 		context.clearRect(0, 0, game.width, game.height);
 		renderStage(game.stage, context, canvas);
 
-		//gameInstance.stage.renderAngels(context);
 		renderPlayer(game.mainPlayer, context);
 		game.otherPlayers.forEach(player => {
 			renderPlayer(player, context);
 		});
 
+		renderEntities(game.stage.angels, context);
+
 		renderStageProgressionBar(game.stage, context, canvas);
-		renderHealthBar(game.mainPlayer, context, canvas);
-		socket.emit('gameRendered', game);
+		renderHealthBar(game.mainPlayer, 0, context, canvas);
+		game.otherPlayers.forEach((player, index) => {
+			renderHealthBar(player, index + 1, context, canvas);
+		});
+
 		if (game.debug) {
 			renderMissilesHitbox(game.mainPlayer.missiles, context);
 			game.otherPlayers.forEach(player => {
 				renderMissilesHitbox(player.missiles, context);
 			});
 		}
+		socket.emit('gameRendered', game);
 	}
 	gameRenderer = requestAnimationFrame(renderGame);
 }

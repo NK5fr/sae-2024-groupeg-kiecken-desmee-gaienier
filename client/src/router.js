@@ -33,8 +33,12 @@ export default class Router {
 					height: canvas.height,
 				});
 			}
+			if (path === '/join') {
+				socket.emit('gameJoin');
+				ss;
+			}
 			if (path === '/rejouer') {
-				socket.emit('gameStop', { socketId: socket.id });
+				socket.emit('gameEnd', { socketId: socket.id });
 			}
 			if (!skipPushState) {
 				window.history.pushState(null, null, path);

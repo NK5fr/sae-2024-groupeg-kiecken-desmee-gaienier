@@ -2,10 +2,21 @@ import Router from './router.js';
 import PlayMenu from './playMenu.js';
 import $ from 'jquery';
 import { io } from 'socket.io-client';
-import LoginMenu from './LoginMenu.js';
+import LoginMenu from './loginMenu.js';
 import startGameRenderer, { setGame, stopGameRenderer } from './renderGame.js';
 
 export const socket = io();
+
+const playerCommands = [
+	'ArrowUp',
+	'ArrowDown',
+	'ArrowLeft',
+	'ArrowRight',
+	'z',
+	's',
+	'q',
+	'd',
+];
 
 PlayMenu.setMenu($('.menuJouer'));
 
@@ -30,12 +41,14 @@ const routes = [
 
 socket.on('gameStart', game => {
 	document.addEventListener('keydown', e => {
+		if (!playerCommands.includes(e.key)) return;
 		socket.emit('playerKeyDown', {
 			socketId: socket.id,
 			key: e.key,
 		});
 	});
 	document.addEventListener('keyup', e => {
+		if (!playerCommands.includes(e.key)) return;
 		socket.emit('playerKeyUp', {
 			socketId: socket.id,
 			key: e.key,
@@ -68,6 +81,12 @@ socket.on('gameStart', game => {
 socket.on('gameUpdate', game => {
 	if (socket.id !== game.socketId) return;
 	setGame(game);
+});
+
+socket.on('gameEnd', () => {
+	stopGameRenderer();
+	Router.navigate('/rejouer');
+	socket.emit('gameEnd', { socketId: socket.id });
 });
 
 Router.routes = routes;
