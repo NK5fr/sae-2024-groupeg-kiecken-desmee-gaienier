@@ -2,16 +2,33 @@ import http from 'http';
 import express from 'express';
 import addWebpackMiddleware from './middlewares/addWebpackMiddleware.js';
 import { Server as IOServer } from 'socket.io';
-import connexion from './connexion.js';
-import signin from './signin.js';
-import mdp_oublie from './mdp_oublie.js';
+import connexion from './login/connexion.js';
+import signin from './login/signin.js';
+import mdp_oublie from './login/mdp_oublie.js';
+import Game from './game/game.js';
+import { readFileSync } from 'fs';
+
+let currentGame = [];
 
 const fileOptions = { root: process.cwd() };
 const app = express();
 const httpServer = http.createServer(app);
-const io = new IOServer(httpServer, {
+export const io = new IOServer(httpServer, {
 	allowEIO3: true,
 });
+
+export const angelData = JSON.parse(
+	readFileSync('server/data/angelData.json', 'utf8')
+);
+const playerData = JSON.parse(
+	readFileSync('server/data/playerData.json', 'utf8')
+);
+export const missileData = JSON.parse(
+	readFileSync('server/data/missileData.json', 'utf8')
+);
+export const stageData = JSON.parse(
+	readFileSync('server/data/stageData.json', 'utf8')
+);
 
 io.on('connection', socket => {
 	socket.on('login', data => {
@@ -25,6 +42,89 @@ io.on('connection', socket => {
 	});
 	socket.on('resetPassword', data => {
 		console.log('resetPassword', data);
+	});
+
+	socket.on('gameStart', data => {
+		const game = new Game(data.width, data.height, socket.id);
+		game.addNewPlayer(socket.id, playerData);
+		game.startGame();
+		socket.emit('gameStart', game);
+		currentGame.push(game);
+	});
+
+	socket.on('playerKeyDown', data => {
+		if (currentGame.length === 0) return;
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (game.mainPlayer.socketId === data.socketId)
+			game.mainPlayer.onKeyDown(data.key);
+		else
+			game.otherPlayers
+				.filter(player => player.socketId === data.socketId)
+				.forEach(player => player.onKeyDown(data.key));
+	});
+
+	socket.on('playerKeyUp', data => {
+		if (currentGame.length === 0) return;
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (game.mainPlayer.socketId === data.socketId)
+			game.mainPlayer.onKeyUp(data.key);
+		else
+			game.otherPlayers
+				.filter(player => player.socketId === data.socketId)
+				.forEach(player => player.onKeyUp(data.key));
+	});
+
+	socket.on('playerMouseDown', data => {
+		if (currentGame.length === 0) return;
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (game.mainPlayer.socketId === data.socketId)
+			game.mainPlayer.onMouseDown(data.x, data.y);
+		else
+			game.otherPlayers
+				.filter(player => player.socketId === data.socketId)
+				.forEach(player => player.onMouseDown(data.x, data.y));
+	});
+
+	socket.on('playerMouseUp', data => {
+		if (currentGame.length === 0) return;
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (game.mainPlayer.socketId === data.socketId) game.mainPlayer.onMouseUp();
+		else
+			game.otherPlayers
+				.filter(player => player.socketId === data.socketId)
+				.forEach(player => player.onMouseUp());
+	});
+
+	socket.on('playerMouseMove', data => {
+		if (currentGame.length === 0) return;
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (game.mainPlayer.socketId === data.socketId)
+			game.mainPlayer.onMouseMove(data.x, data.y);
+		else
+			game.otherPlayers
+				.filter(player => player.socketId === data.socketId)
+				.forEach(player => player.onMouseMove(data.x, data.y));
+	});
+
+	socket.on('canvasResampled', data => {
+		if (currentGame.length === 0) return;
+		const game = currentGame.find(game => game.socketId === socket.id);
+		game.width = data.width;
+		game.height = data.height;
+	});
+
+	socket.on('gameJoin', data => {
+		if (currentGame.length === 0) return;
+		const game = currentGame[0].game;
+		socket.emit('gameJoin', { socketId: currentGame[0].socketId, game: game });
+	});
+
+	socket.on('gameStop', data => {
+		currentGame = currentGame.filter(game => game.socketId !== data.socketId);
+	});
+
+	socket.on('disconnect', () => {
+		currentGame = currentGame.filter(game => game.socketId !== socket.id);
 	});
 });
 

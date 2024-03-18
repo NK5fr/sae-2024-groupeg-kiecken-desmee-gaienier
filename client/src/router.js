@@ -1,5 +1,6 @@
 import $ from 'jquery';
-import startGame from './game.js';
+import { socket } from './main.js';
+import { canvas } from './renderGame.js';
 
 export default class Router {
 	static routes = [];
@@ -18,6 +19,7 @@ export default class Router {
 
 	static navigate(path, skipPushState = false) {
 		const route = this.routes.find(route => route.path === path);
+		console.log('route', this.#setInnerLinks);
 		if (route) {
 			this.notFound.hide();
 			if (this.currentRoute) {
@@ -25,11 +27,19 @@ export default class Router {
 			}
 			this.currentRoute = route;
 			route.view.show();
-			if (path === '/jeu') startGame();
+			if (path === '/jeu') {
+				socket.emit('gameStart', {
+					width: canvas.width,
+					height: canvas.height,
+				});
+			}
+			if (path === '/rejouer') {
+				socket.emit('gameStop', { socketId: socket.id });
+			}
 			if (!skipPushState) {
 				window.history.pushState(null, null, path);
 			}
-		}else{
+		} else {
 			this.notFound.show();
 		}
 	}

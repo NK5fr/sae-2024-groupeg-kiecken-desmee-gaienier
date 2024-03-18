@@ -13,19 +13,6 @@ export default class Entity {
 		this.height = properties.height;
 	}
 
-	render(context) {
-		const img = new Image();
-		img.src = this.sprite;
-		context.drawImage(img, this.posX, this.posY);
-	}
-
-	drawHitbox(context) {
-		context.beginPath();
-		context.rect(this.posX, this.posY, this.width, this.height);
-		context.strokeStyle = 'red';
-		context.stroke();
-	}
-
 	checkCollision(entity) {
 		return (
 			this.posX < entity.posX + entity.width &&

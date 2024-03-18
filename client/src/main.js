@@ -3,8 +3,9 @@ import PlayMenu from './playMenu.js';
 import $ from 'jquery';
 import { io } from 'socket.io-client';
 import LoginMenu from './LoginMenu.js';
+import startGameRenderer, { setGame, stopGameRenderer } from './renderGame.js';
 
-const socket = io();
+export const socket = io();
 
 PlayMenu.setMenu($('.menuJouer'));
 
@@ -27,8 +28,52 @@ const routes = [
 	{ path: '/resetPassword', view: $('.resetPassword') },
 ];
 
+socket.on('gameStart', game => {
+	document.addEventListener('keydown', e => {
+		socket.emit('playerKeyDown', {
+			socketId: socket.id,
+			key: e.key,
+		});
+	});
+	document.addEventListener('keyup', e => {
+		socket.emit('playerKeyUp', {
+			socketId: socket.id,
+			key: e.key,
+		});
+	});
+	document.addEventListener('mousedown', event => {
+		socket.emit('playerMouseDown', {
+			socketId: socket.id,
+			x: event.clientX,
+			y: event.clientY,
+		});
+	});
+	document.addEventListener('mouseup', () => {
+		socket.emit('playerMouseUp', {
+			socketId: socket.id,
+		});
+	});
+	document.addEventListener('mousemove', event => {
+		socket.emit('playerMouseMove', {
+			socketId: socket.id,
+			x: event.clientX,
+			y: event.clientY,
+		});
+	});
+
+	setGame(game);
+	startGameRenderer();
+});
+
+socket.on('gameUpdate', game => {
+	if (socket.id !== game.socketId) return;
+	setGame(game);
+});
+
 Router.routes = routes;
 Router.notFound = $('.notFound');
+
+Router.setInnerLinks(document.body);
 
 Router.navigate(window.location.pathname, true);
 //Router.navigate('/signin', true);
