@@ -2,10 +2,10 @@ import http from 'http';
 import express from 'express';
 import addWebpackMiddleware from './middlewares/addWebpackMiddleware.js';
 import { Server as IOServer } from 'socket.io';
-import connexion from './connexion.js';
-import signin from './signin.js';
-import mdp_oublie from './mdp_oublie.js';
-import Game from './game.js';
+import connexion from './login/connexion.js';
+import signin from './login/signin.js';
+import mdp_oublie from './login/mdp_oublie.js';
+import Game from './game/game.js';
 import { readFileSync } from 'fs';
 
 let currentGame = [];
@@ -15,18 +15,17 @@ const app = express();
 const httpServer = http.createServer(app);
 export const io = new IOServer(httpServer);
 
-export const angelData = JSON.parse(
-	readFileSync('server/angelData.json', 'utf8')
+export let angelData = JSON.parse(
+	readFileSync('server/data/angelData.json', 'utf8')
 );
-
-const playerData = JSON.parse(readFileSync('server/playerData.json', 'utf8'));
-
-export const missileData = JSON.parse(
-	readFileSync('server/missileData.json', 'utf8')
+let playerData = JSON.parse(
+	readFileSync('server/data/playerData.json', 'utf8')
 );
-
-export const stageData = JSON.parse(
-	readFileSync('server/stageData.json', 'utf8')
+export let missileData = JSON.parse(
+	readFileSync('server/data/missileData.json', 'utf8')
+);
+export let stageData = JSON.parse(
+	readFileSync('server/data/stageData.json', 'utf8')
 );
 
 io.on('connection', socket => {
@@ -44,11 +43,15 @@ io.on('connection', socket => {
 	});
 
 	socket.on('gameStart', data => {
-		const game = new Game(data.width, data.height, socket.id);
-		game.addNewPlayer(socket.id, playerData);
-		game.startGame();
+		let game = currentGame.find(game => game.socketId === socket.id);
+		if (!game) {
+			game = new Game(data.width, data.height, socket.id);
+			game.addNewPlayer(socket.id, playerData);
+			game.startGame();
+			currentGame.push(game);
+		}
 		socket.emit('gameStart', game);
-		currentGame.push(game);
+		console.log(currentGame);
 	});
 
 	socket.on('playerKeyDown', data => {
@@ -108,18 +111,22 @@ io.on('connection', socket => {
 	socket.on('canvasResampled', data => {
 		if (currentGame.length === 0) return;
 		const game = currentGame.find(game => game.socketId === socket.id);
-		game.width = data.width;
-		game.height = data.height;
+		if (game) {
+			game.width = data.width;
+			game.height = data.height;
+		}
 	});
 
 	socket.on('gameJoin', data => {
 		if (currentGame.length === 0) return;
-		const game = currentGame[0].game;
-		socket.emit('gameJoin', { socketId: currentGame[0].socketId, game: game });
+		currentGame[0].addNewPlayer(socket.id, playerData);
+		socket.emit('gameStart', currentGame[0]);
 	});
 
-	socket.on('gameStop', data => {
+	socket.on('gameEnd', data => {
+		console.log('gameEnd', data);
 		currentGame = currentGame.filter(game => game.socketId !== data.socketId);
+		console.log(currentGame);
 	});
 
 	socket.on('disconnect', () => {

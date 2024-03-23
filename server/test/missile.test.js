@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import Missile from './missile.js';
+import Missile from '../game/missile.js';
 
 const missileProperties = {
 	health: 1,

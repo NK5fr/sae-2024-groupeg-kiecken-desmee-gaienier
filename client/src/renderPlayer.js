@@ -9,15 +9,20 @@ export default function renderPlayer(player, context) {
 	renderMissiles(player.missiles, context);
 }
 
-export function renderHealthBar(player, context, canvas) {
-	let healthBarWidth = (player.health / player.maxHealth) * 100;
-	context.beginPath();
-	context.rect(10, canvas.height - 20, 100, 10);
+export function renderHealthBar(player, position, context, canvas) {
+	const startX = 10 + position * 110;
+	const startY = canvas.height - (position === 0 ? 20 : 15);
+
+	const healthBarWidth = (player.health / player.maxHealth) * 100;
+	const healthBarHeight = position === 0 ? 15 : 10;
+
+	context.fillStyle = calculateCurrentColorBasedOnHealth(player);
+	context.fillRect(startX, startY, healthBarWidth, healthBarHeight);
+
+	context.rect(startX, startY, 100, healthBarHeight);
 	context.strokeStyle = 'black';
 	context.lineWidth = 2;
 	context.stroke();
-	context.fillStyle = calculateCurrentColorBasedOnHealth(player);
-	context.fillRect(10, canvas.height - 20, healthBarWidth, 10);
 }
 
 function calculateCurrentColorBasedOnHealth(player) {

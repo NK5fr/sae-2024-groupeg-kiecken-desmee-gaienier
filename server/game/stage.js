@@ -1,8 +1,10 @@
 import { Wanderer } from './angel.js';
-import { stageData, angelData } from './index.js';
+import { stageData, angelData } from '../index.js';
 
 export class Stage {
 	constructor(name, width, height) {
+		this.name = name;
+
 		this.angelsSpecies = stageData[name].angelsSpecies;
 		this.archangel = stageData[name].archangel;
 		this.angels = [];
@@ -22,10 +24,10 @@ export class Stage {
 		this.angels.forEach(angel => angel.render(context));
 	}
 
-	update(canvas) {
+	update(width, height) {
 		this.angels = this.angels.filter(angel => angel.health > 0);
 		this.numberOfAngelsKilled = this.numberOfAngelsSpawned - this.angels.length;
-		this.angels.forEach(angel => angel.update(canvas));
+		this.angels.forEach(angel => angel.update(width, height));
 	}
 
 	spawnAngels(width, height, gameNotFocused) {

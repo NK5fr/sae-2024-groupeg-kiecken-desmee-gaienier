@@ -9,21 +9,33 @@ export default function renderStage(stage, context) {
 	}
 	context.drawImage(background, backgroundX, 0);
 	context.drawImage(background, backgroundX + background.width, 0);
-	//stage.angels.forEach(angel => angel.render(context));
 }
 
 export function renderStageProgressionBar(stage, context, canvas) {
+	const startX = 10;
+	const startY = (canvas.width / 4) * 3.5 - 150;
+
+	context.fillStyle = calculateCurrentColorBasedOnProgression(stage);
+	context.fillRect(
+		startY,
+		startX,
+		(stage.numberOfAngelsKilled / stage.numberOfAngels) * 300,
+		20
+	);
+
 	context.beginPath();
 	context.rect((canvas.width / 4) * 3.5 - 150, 10, 300, 20);
 	context.strokeStyle = 'black';
-	context.lineWidth = 2;
+	context.lineWidth = 3;
 	context.stroke();
-	context.fillStyle = calculateCurrentColorBasedOnProgression(stage);
-	context.fillRect(
-		(canvas.width / 4) * 3 - 150,
-		10,
-		(stage.numberOfAngelsKilled / stage.numberOfAngels) * 300,
-		20
+	context.closePath();
+
+	context.font = '20px Arial';
+	context.fillStyle = 'black';
+	context.fillText(
+		`${stage.numberOfAngelsKilled}/${stage.numberOfAngels}`,
+		(canvas.width / 4) * 3.5 - 20,
+		27
 	);
 }
 

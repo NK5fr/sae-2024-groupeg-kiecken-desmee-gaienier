@@ -1,0 +1,91 @@
+{
+    "puissance": {
+        "one": {
+            "speed": 5,
+            "health": 2,
+            "damage": 1,
+            "sprite": "assets/angel/puissance/one.png",
+            "width": 48,
+            "height": 48
+        },
+        "two": {
+            "speed": 7,
+            "health": 1,
+            "damage": 3,
+            "sprite": "assets/angel/puissance/two.png",
+            "width": 48,
+            "height": 48
+        },
+        "three": {
+            "speed": 3,
+            "health": 3,
+            "damage": 2,
+            "sprite": "assets/angel/puissance/three.png",
+            "width": 48,
+            "height": 48
+        }
+    },
+    "cherubin": {
+        "one" : {
+            "speed": 5,
+            "health": 2,
+            "damage": 1,
+            "sprite": "assets/angel/cherubin/one.png",
+            "width": 96,
+            "height": 96
+        },
+        "two" : {
+            "speed": 7,
+            "health": 1,
+            "damage": 3,
+            "sprite": "assets/angel/cherubin/two.png",
+            "width": 96,
+            "height": 96
+        },
+        "three" : {
+            "speed": 3,
+            "health": 3,
+            "damage": 2,
+            "sprite": "assets/angel/cherubin/three.png",
+            "width": 96,
+            "height": 96
+        }
+    },
+    "seraphin": {
+        "one" : {
+            "speed": 5,
+            "health": 2,
+            "damage": 1,
+            "sprite": "assets/angel/seraphin/one.png",
+            "width": 96,
+            "height": 96
+        },
+        "two" : {
+            "speed": 7,
+            "health": 1,
+            "damage": 3,
+            "sprite": "assets/angel/seraphin/two.png",
+            "width": 96,
+            "height": 96
+        },
+        "three" : {
+            "speed": 3,
+            "health": 3,
+            "damage": 2,
+            "sprite": "assets/angel/seraphin/three.png",
+            "width": 96,
+            "height": 96
+        }
+    },
+    "archange": {
+        "camael": {
+            "speed": 10,
+            "health": 10,
+            "damage": 5,
+            "sprite": "assets/angel/archange/camael.png",
+            "width": 144,
+            "height": 144
+        }
+    }
+    
+}

@@ -2,7 +2,7 @@
     "health": 5,
     "speed": 10,
     "damage": 10,
-    "sprites": {
+    "sprite": {
         "left": "assets/player/left.png",
         "idle": "assets/player/idle.png",
         "right": "assets/player/right.png"

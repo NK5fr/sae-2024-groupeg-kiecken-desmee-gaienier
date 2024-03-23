@@ -1,21 +1,8 @@
-import { io } from './index.js';
+import { io } from '../index.js';
 import Player from './player.js';
 import { Stage } from './stage.js';
 
-const playerProperties = {
-	health: 5,
-	speed: 10,
-	damage: 10,
-	sprite: {
-		left: 'assets/player/left.png',
-		idle: 'assets/player/idle.png',
-		right: 'assets/player/right.png',
-	},
-	width: 48,
-	height: 96,
-	missileType: 'card',
-	fireRate: 25,
-};
+const stage = ['jupiter', 'saturn', 'uranus', 'sun'];
 
 export default class Game {
 	#gameUpdater;
@@ -33,16 +20,15 @@ export default class Game {
 
 		this.socketId = socketId;
 
-		this.stage = new Stage('mars', width, height);
-
-		//this.addListeners();
+		this.stages = ['venus', 'earth', 'mars'];
+		this.stage = new Stage(this.stages[0], width, height);
 	}
 
 	addNewPlayer(socketId, playerData) {
 		if (socketId === this.socketId) {
-			this.mainPlayer = new Player(socketId, 100, 100, playerProperties);
+			this.mainPlayer = new Player(socketId, 100, 100, playerData);
 		} else {
-			this.otherPlayers.push(new Player(socketId, 100, 100, playerProperties));
+			this.otherPlayers.push(new Player(socketId, 100, 100, playerData));
 		}
 	}
 
@@ -54,11 +40,7 @@ export default class Game {
 		this.#gameUpdater = setInterval(() => {
 			updateGame(this);
 		}, 1000 / 60);
-		this.#angelsSpawner = setInterval(
-			() =>
-				this.stage.spawnAngels(this.width, this.height, this.gameNotFocused),
-			1000
-		);
+		this.#angelsSpawner = setInterval(() => spawnAngels(this), 1000);
 	}
 
 	stopGame() {
@@ -74,11 +56,25 @@ function updateGame(gameInstance) {
 
 	if (stage.stageIsClear()) {
 		gameInstance.stopGame();
-		Router.navigate('/rejouer');
+		if (
+			gameInstance.stages.indexOf(stage.name) ===
+			gameInstance.stages.length - 1
+		) {
+			io.to(gameInstance.socketId).emit('gameEnd');
+			return;
+		}
+
+		gameInstance.stage = new Stage(
+			gameInstance.stages[gameInstance.stages.indexOf(stage.name) + 1],
+			gameInstance.width,
+			gameInstance.height
+		);
+
+		gameInstance.startGame();
 	}
 	if (mainPlayer.health <= 0) {
 		gameInstance.stopGame();
-		Router.navigate('/rejouer');
+		io.to(gameInstance.socketId).emit('gameEnd');
 	}
 	if (gameInstance.gameNotFocused) return;
 	mainPlayer.update(gameInstance.width, gameInstance.height);
@@ -91,9 +87,21 @@ function updateGame(gameInstance) {
 			missile.update(gameInstance.width, gameInstance.height)
 		);
 	});
-	/*gameInstance.stage.update(gameInstance.canvas);
-	gameInstance.stage.angels.forEach(angel => {
-		gameInstance.player.forEach(player => {
+	stage.update(gameInstance.width, gameInstance.height);
+
+	stage.angels.forEach(angel => {
+		if (mainPlayer.checkCollision(angel)) {
+			mainPlayer.health -= angel.damage;
+			angel.health = 0;
+		}
+		mainPlayer.missiles.forEach(missile => {
+			if (missile.checkCollision(angel)) {
+				angel.health -= missile.damage;
+				missile.health = 0;
+			}
+		});
+
+		otherPlayers.forEach(player => {
 			if (player.checkCollision(angel)) {
 				player.health -= angel.damage;
 				angel.health = 0;
@@ -107,12 +115,26 @@ function updateGame(gameInstance) {
 		});
 		if (angel.missiles) {
 			angel.missiles.forEach(missile => {
-				if (gameInstance.player.checkCollision(missile)) {
-					gameInstance.player.health -= missile.damage;
+				if (mainPlayer.checkCollision(missile)) {
+					mainPlayer.health -= missile.damage;
 					missile.health = 0;
 				}
+				otherPlayers.forEach(player => {
+					if (player.checkCollision(missile)) {
+						player.health -= missile.damage;
+						missile.health = 0;
+					}
+				});
 			});
 		}
-	});*/
+	});
 	io.emit('gameUpdate', gameInstance);
+}
+
+function spawnAngels(gameInstance) {
+	gameInstance.stage.spawnAngels(
+		gameInstance.width,
+		gameInstance.height,
+		gameInstance.gameNotFocused
+	);
 }

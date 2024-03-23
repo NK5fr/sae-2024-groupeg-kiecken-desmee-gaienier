@@ -1,5 +1,5 @@
 import Entity from './entity.js';
-import { missileData } from './index.js';
+import { missileData } from '../index.js';
 
 export default class Missile extends Entity {
 	constructor(x, y, properties, fireAngle) {
