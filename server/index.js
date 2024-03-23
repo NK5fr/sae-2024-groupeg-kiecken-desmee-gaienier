@@ -13,9 +13,7 @@ let currentGame = [];
 const fileOptions = { root: process.cwd() };
 const app = express();
 const httpServer = http.createServer(app);
-export const io = new IOServer(httpServer, {
-	allowEIO3: true,
-});
+export const io = new IOServer(httpServer);
 
 export const angelData = JSON.parse(
 	readFileSync('server/angelData.json', 'utf8')
