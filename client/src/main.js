@@ -8,6 +8,7 @@ import startGameRenderer, {
 	stopGameRenderer,
 } from './game/renderGame.js';
 import CarouselStat from './carousel/carouselStat.js';
+import CarouselSkin from './carousel/carouselSkin.js';
 
 export const socket = io();
 
@@ -98,6 +99,7 @@ let connection = false;
 socket.on('user', user => {
 	connection = true;
 });
+
 socket.on('path', path => {
 	Router.navigate(path, true);
 });
@@ -107,12 +109,22 @@ Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
+/*
 if (connection === true) {
 	Router.navigate(window.location.pathname, true);
 	console.log('connection', connection);
 } else {
 	Router.navigate('/login', true);
 }
+*/
+
+Router.navigate(window.location.pathname, true);
+
 window.onpopstate = () => Router.navigate(document.location.pathname, true);
 
-const carouselLife = new CarouselStat($(".personnalisation .life"));
+const carouselLife = new CarouselStat($('.personnalisation .life'), 1);
+const carouselDamage = new CarouselStat($('.personnalisation .damage'), 1);
+const carouselFireRate = new CarouselStat($('.personnalisation .fire-rate'), 1);
+const carouselSpeed = new CarouselStat($('.personnalisation .speed'), 1);
+const carouselSkin = new CarouselSkin($('.personnalisation .skin'), [""], [""], "", false);
+const carouselProjSkin = new CarouselSkin($('.personnalisation .proj-skin'), ["card"], ["card"], "card", true);
