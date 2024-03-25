@@ -13,6 +13,7 @@
     },
     "mars": {
         "background": "/assets/stage/background/four.png",
+        "nameImage": "/assets/stage/background/marsName.png",
         "numberOfAngels": 10,
         "angelsSpecies": "puissance",
         "archangel": "camael"

@@ -1,4 +1,5 @@
 const background = new Image();
+const nameImage = new Image();
 let backgroundX = 0;
 
 export default function renderStage(stage, context) {
@@ -9,6 +10,14 @@ export default function renderStage(stage, context) {
 	}
 	context.drawImage(background, backgroundX, 0);
 	context.drawImage(background, backgroundX + background.width, 0);
+	if (stage.nameImage) {
+		nameImage.src = stage.nameImage;
+		context.save();
+		context.globalAlpha = stage.nameOpacity;
+		context.drawImage(nameImage, 10, 10);
+		context.restore();
+		stage.nameOpacity -= 0.01;
+	}
 }
 
 export function renderStageProgressionBar(stage, context, canvas) {
