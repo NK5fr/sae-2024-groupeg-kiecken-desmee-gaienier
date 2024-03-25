@@ -4,8 +4,9 @@
 // quand le client envoie les données du formulaire de connexion
 
 import fs from 'fs';
+import { io } from '../index.js';
 
-export default function connexion(data) {
+export default function connexion(data, socket) {
 	console.log('Données de connexion reçues', data);
 
 	// récupère les données de l'utilisateur dans la base de données avec le login reçu
@@ -22,9 +23,8 @@ export default function connexion(data) {
 	console.log('User', user);
 	if (user != undefined) {
 		console.log('Utilisateur trouvé');
-		/*
-        socket.emit('loginSuccess', user);
-        */
+		io.to(socket).emit('user', user.login);
+		io.to(socket).emit('path', '/');
 	}
 	// si l'utilisateur n'est pas trouvé
 	else {
