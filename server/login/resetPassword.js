@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-export default function resetPassword(data) {
+export default function resetPassword(data, socket) {
 	console.log('Données de réinitialisation de mot de passe reçues', data);
 
 	// récupère les données de l'utilisateur dans la base de données avec le login reçu

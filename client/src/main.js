@@ -28,7 +28,7 @@ LoginMenu.setLogin($('.login'), socket);
 LoginMenu.setSignin($('.signin'), socket);
 LoginMenu.setMdp_oublie($('.mdp_oublie'), socket);
 
-//LoginMenu.resetPassword($('.resetPassword'), socket);
+LoginMenu.resetPassword($('.resetPassword'), socket);
 
 const routes = [
 	{ path: '/', view: $('.accueil') },
@@ -93,14 +93,26 @@ socket.on('gameEnd', () => {
 	socket.emit('gameEnd', { socketId: socket.id });
 });
 
+let connection = false;
+
+socket.on('user', user => {
+	connection = true;
+});
+socket.on('path', path => {
+	Router.navigate(path, true);
+});
+
 Router.routes = routes;
 Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
-Router.navigate(window.location.pathname, true);
-//Router.navigate('/signin', true);
-
+if (connection === true) {
+	Router.navigate(window.location.pathname, true);
+	console.log('connection', connection);
+} else {
+	Router.navigate('/login', true);
+}
 window.onpopstate = () => Router.navigate(document.location.pathname, true);
 
 const carouselLife = new CarouselStat($(".personnalisation .life"));

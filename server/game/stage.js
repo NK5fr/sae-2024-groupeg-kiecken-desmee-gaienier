@@ -12,16 +12,15 @@ export class Stage {
 		this.background = stageData[name].background;
 		this.backgroundX = 0;
 
+		this.nameImage = stageData[name].nameImage;
+		this.nameOpacity = 1;
+
 		this.width = width;
 		this.height = height;
 
 		this.numberOfAngels = stageData[name].numberOfAngels;
 		this.numberOfAngelsSpawned = 0;
 		this.numberOfAngelsKilled = 0;
-	}
-
-	renderAngels(context) {
-		this.angels.forEach(angel => angel.render(context));
 	}
 
 	update(width, height) {

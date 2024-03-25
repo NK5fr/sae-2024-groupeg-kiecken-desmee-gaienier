@@ -7,6 +7,7 @@ import signin from './login/signin.js';
 import mdp_oublie from './login/mdp_oublie.js';
 import Game from './game/game.js';
 import { readFileSync } from 'fs';
+import resetPassword from './login/resetPassword.js';
 
 let currentGame = [];
 
@@ -30,16 +31,16 @@ export let stageData = JSON.parse(
 
 io.on('connection', socket => {
 	socket.on('login', data => {
-		connexion(data);
+		connexion(data, socket.id);
 	});
 	socket.on('signin', data => {
-		signin(data);
+		signin(data, socket.id);
 	});
 	socket.on('mdp_oublie', data => {
-		mdp_oublie(data);
+		mdp_oublie(data, socket);
 	});
 	socket.on('resetPassword', data => {
-		console.log('resetPassword', data);
+		//resetPassword(data, socket);
 	});
 
 	socket.on('gameStart', data => {
