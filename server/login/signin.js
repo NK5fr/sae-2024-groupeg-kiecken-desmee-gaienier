@@ -1,6 +1,7 @@
 import fs from 'fs';
+import { io } from '../index.js';
 
-export default function signin(data) {
+export default function signin(data, socket) {
 	console.log('Données de connexion reçues', data);
 
 	// récupère les données de l'utilisateur dans la base de données avec le login reçu
@@ -15,13 +16,16 @@ export default function signin(data) {
 	if (user != undefined) {
 		console.log('cette utilisateur existe déjà');
 	}
-	// si l'utilisateur n'est pas trouvé
+	// si l'utilisateur n'est pas trouvé donc on l'ajoute à la base de données et on le connecte
 	else {
-		console.log('Utilisateur non trouvé');
 		dataBaseParsed.push(data);
 		fs.writeFileSync(
 			'server/data/userData.json',
 			JSON.stringify(dataBaseParsed)
 		);
+		console.log('Utilisateur ajouté');
+
+		io.to(socket).emit('path', '/');
+		io.to(socket).emit('user', user.login);
 	}
 }

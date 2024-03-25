@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-export default function mdp_oublie(data) {
+export default function mdp_oublie(data, socket) {
 	console.log('Données de connexion reçues', data);
 
 	// récupère les données de l'utilisateur dans la base de données avec le login reçu
