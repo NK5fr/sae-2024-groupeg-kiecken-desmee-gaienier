@@ -1,9 +1,13 @@
 import Router from './router.js';
-import PlayMenu from './playMenu.js';
+import PlayMenu from './menu/playMenu.js';
 import $ from 'jquery';
 import { io } from 'socket.io-client';
-import LoginMenu from './loginMenu.js';
-import startGameRenderer, { setGame, stopGameRenderer } from './renderGame.js';
+import LoginMenu from './menu/loginMenu.js';
+import startGameRenderer, {
+	setGame,
+	stopGameRenderer,
+} from './game/renderGame.js';
+import CarouselStat from './carousel/carouselStat.js';
 
 export const socket = io();
 
@@ -98,3 +102,5 @@ Router.navigate(window.location.pathname, true);
 //Router.navigate('/signin', true);
 
 window.onpopstate = () => Router.navigate(document.location.pathname, true);
+
+const carouselLife = new CarouselStat($(".personnalisation .life"));

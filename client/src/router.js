@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { socket } from './main.js';
-import { canvas } from './renderGame.js';
+import { canvas } from './game/renderGame.js';
 
 export default class Router {
 	static routes = [];
