@@ -1,43 +1,43 @@
 {
     "venus": {
-        "background": "/assets/stage/background/one.png",
-        "numberOfAngels": 10,
+        "background": "/assets/stage/background/1.png",
+        "numberOfAngels": 1100,
         "angelsSpecies": "cherubin",
         "archangel": "anael"
     },
     "earth": {
-        "background": "/assets/stage/background/two.png",
+        "background": "/assets/stage/background/2.png",
         "numberOfAngels": 10,
         "angelsSpecies": "seraphin",
         "archangel": "zadkiel"
     },
-    "mars": {
-        "background": "/assets/stage/background/four.png",
-        "nameImage": "/assets/stage/background/marsName.png",
-        "numberOfAngels": 10,
-        "angelsSpecies": "puissance",
-        "archangel": "camael"
-    },
     "jupiter": {
-        "background": "/assets/stage/background/three.png",
+        "background": "/assets/stage/background/3.png",
         "numberOfAngels": 10,
         "angelsSpecies": "vertu",
         "archangel": "michael"
     },
-    "saturn": {
-        "background": "/assets/stage/background/six.png",
+    "mars": {
+        "background": "/assets/stage/background/4.png",
+        "name": "/assets/stage/background/4.png",
         "numberOfAngels": 10,
-        "angelsSpecies": "domination",
-        "archangel": "uriel"
+        "angelsSpecies": "puissance",
+        "archangel": "camael"
     },
     "uranus": {
-        "background": "/assets/stage/background/five.png",
+        "background": "/assets/stage/background/5.png",
         "numberOfAngels": 10,
         "angelsSpecies": "principaute",
         "archangel": "jophiel"
     },
+    "saturn": {
+        "background": "/assets/stage/background/6.png",
+        "numberOfAngels": 10,
+        "angelsSpecies": "domination",
+        "archangel": "uriel"
+    },
     "sun" : {
-        "background": "/assets/stage/background/seven.png",
+        "background": "/assets/stage/background/7.png",
         "numberOfAngels": 10,
         "angelsSpecies": "archange",
         "archangel": "gabriel"

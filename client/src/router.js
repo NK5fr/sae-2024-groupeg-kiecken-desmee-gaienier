@@ -31,6 +31,7 @@ export default class Router {
 				socket.emit('gameStart', {
 					width: canvas.width,
 					height: canvas.height,
+					user: window.sessionStorage.getItem('user'),
 				});
 			}
 			if (path === '/join') {

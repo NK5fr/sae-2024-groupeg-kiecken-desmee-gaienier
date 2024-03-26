@@ -24,11 +24,23 @@ export default class Game {
 		this.stage = new Stage(this.stages[0], width, height);
 	}
 
-	addNewPlayer(socketId, playerData) {
+	addNewPlayer(socketId, playerData, user) {
 		if (socketId === this.socketId) {
-			this.mainPlayer = new Player(socketId, 100, 100, playerData);
+			this.mainPlayer = new Player(
+				socketId,
+				100,
+				100,
+				playerData.find(p => p.user === user)
+			);
 		} else {
-			this.otherPlayers.push(new Player(socketId, 100, 100, playerData));
+			this.otherPlayers.push(
+				new Player(
+					socketId,
+					100,
+					100,
+					playerData.find(p => p.user === user)
+				)
+			);
 		}
 	}
 

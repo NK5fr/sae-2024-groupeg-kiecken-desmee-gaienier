@@ -7,6 +7,8 @@ import startGameRenderer, { setGame, stopGameRenderer } from './renderGame.js';
 
 export const socket = io();
 
+export const user = window.sessionStorage.getItem('user');
+
 const playerCommands = [
 	'ArrowUp',
 	'ArrowDown',
@@ -89,10 +91,8 @@ socket.on('gameEnd', () => {
 	socket.emit('gameEnd', { socketId: socket.id });
 });
 
-let connection = false;
-
 socket.on('user', user => {
-	connection = true;
+	window.sessionStorage.setItem('user', user);
 });
 socket.on('path', path => {
 	Router.navigate(path, true);
@@ -103,9 +103,8 @@ Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
-if (connection === true) {
+if (user) {
 	Router.navigate(window.location.pathname, true);
-	console.log('connection', connection);
 } else {
 	Router.navigate('/login', true);
 }

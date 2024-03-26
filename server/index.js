@@ -47,7 +47,7 @@ io.on('connection', socket => {
 		let game = currentGame.find(game => game.socketId === socket.id);
 		if (!game) {
 			game = new Game(data.width, data.height, socket.id);
-			game.addNewPlayer(socket.id, playerData);
+			game.addNewPlayer(socket.id, playerData, data.user);
 			game.startGame();
 			currentGame.push(game);
 		}
