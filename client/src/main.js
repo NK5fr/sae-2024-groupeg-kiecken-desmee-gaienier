@@ -30,6 +30,11 @@ LoginMenu.setSignin($('.signin'), socket);
 LoginMenu.setMdp_oublie($('.mdp_oublie'), socket);
 
 LoginMenu.resetPassword($('.resetPassword'), socket);
+LoginMenu.setLogout(
+	$('.logout'),
+	socket,
+	window.sessionStorage.getItem('user')
+);
 
 const routes = [
 	{ path: '/', view: $('.accueil') },
@@ -118,7 +123,12 @@ if (connection === true) {
 }
 */
 
-Router.navigate(window.location.pathname, true);
+//Router.navigate(window.location.pathname, true);
+Router.navigate('/login', true);
+
+socket.on('alert', message => {
+	alert(message);
+});
 
 window.onpopstate = () => Router.navigate(document.location.pathname, true);
 
@@ -126,5 +136,17 @@ const carouselLife = new CarouselStat($('.personnalisation .life'), 1);
 const carouselDamage = new CarouselStat($('.personnalisation .damage'), 1);
 const carouselFireRate = new CarouselStat($('.personnalisation .fire-rate'), 1);
 const carouselSpeed = new CarouselStat($('.personnalisation .speed'), 1);
-const carouselSkin = new CarouselSkin($('.personnalisation .skin'), [""], [""], "", false);
-const carouselProjSkin = new CarouselSkin($('.personnalisation .proj-skin'), ["card"], ["card"], "card", true);
+const carouselSkin = new CarouselSkin(
+	$('.personnalisation .skin'),
+	[''],
+	[''],
+	'',
+	false
+);
+const carouselProjSkin = new CarouselSkin(
+	$('.personnalisation .proj-skin'),
+	['card'],
+	['card'],
+	'card',
+	true
+);

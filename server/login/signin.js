@@ -14,18 +14,18 @@ export default function signin(data, socket) {
 	let user = dataBaseParsed.find(user => user.login == data.login);
 	console.log('User', user);
 	if (user != undefined) {
-		console.log('cette utilisateur existe déjà');
+		io.to(socket).emit('alert', 'Utilisateur déjà existant');
 	}
 	// si l'utilisateur n'est pas trouvé donc on l'ajoute à la base de données et on le connecte
 	else {
+		data.connexion = 1;
+		console.log(data);
 		dataBaseParsed.push(data);
 		fs.writeFileSync(
 			'server/data/userData.json',
 			JSON.stringify(dataBaseParsed)
 		);
-		console.log('Utilisateur ajouté');
-
 		io.to(socket).emit('path', '/');
-		io.to(socket).emit('user', user.login);
+		io.to(socket).emit('user', data.login);
 	}
 }

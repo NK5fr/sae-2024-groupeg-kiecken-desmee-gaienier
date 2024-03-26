@@ -18,9 +18,10 @@ export default class LoginMenu {
 			const login = $('input[name=login]', menu).val();
 			const password = $('input[name=password]', menu).val();
 			const password2 = $('input[name=password2]', menu).val();
-			const recovery_phrase = $('input[name=question]', menu).val();
+			const recovery_phrase = $('select[name=recovery_phrase]', menu).val();
 			const reponse = $('input[name=reponse]', menu).val();
 
+			console.log(recovery_phrase);
 			if (password != password2) {
 				alert('Les mots de passe ne correspondent pas');
 				return;
@@ -65,8 +66,9 @@ export default class LoginMenu {
 
 	static setLogout(menu, socket, user) {
 		$('.deconnexion', menu).on('click', event => {
+			console.log('Déconnexion');
 			event.preventDefault();
-			socket.emit('logout' , user);
+			socket.emit('logout', user);
 		});
 	}
 }
