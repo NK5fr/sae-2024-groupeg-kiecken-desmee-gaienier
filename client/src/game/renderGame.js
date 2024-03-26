@@ -1,4 +1,4 @@
-import { socket } from './main.js';
+import { socket } from '../main.js';
 import { renderEntities } from './renderEntity.js';
 import { renderMissilesHitbox } from './renderMissiles.js';
 import renderPlayer, { renderHealthBar } from './renderPlayer.js';

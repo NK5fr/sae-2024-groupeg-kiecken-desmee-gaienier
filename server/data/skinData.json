@@ -1,0 +1,10 @@
+{
+    "skins":[
+        "base",
+        "reverse"
+    ],
+    "proj-skin":[
+        "card",
+        "energy-ball"
+    ]
+}

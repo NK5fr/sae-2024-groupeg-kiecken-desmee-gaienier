@@ -1,5 +1,4 @@
 .rejouer{
-    margin-top: 20px;
     margin-bottom: 20px;
     padding: 20px;
     background-color: #f5f5f5;
@@ -21,4 +20,6 @@
     cursor: pointer;
     opacity: 1.2;
     text-size-adjust: 50px;
+    margin-left: 10%;
+    margin-right: 10%;
 }

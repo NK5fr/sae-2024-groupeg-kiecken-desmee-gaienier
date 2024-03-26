@@ -42,6 +42,9 @@ io.on('connection', socket => {
 	socket.on('resetPassword', data => {
 		//resetPassword(data, socket);
 	});
+	socket.on('logout', data => {
+		deconnexion(data, socket.id);
+	});
 
 	socket.on('gameStart', data => {
 		let game = currentGame.find(game => game.socketId === socket.id);

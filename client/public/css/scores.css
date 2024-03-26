@@ -1,4 +1,4 @@
-.regles{
+.scores{
     margin-top: 10%;
     margin-bottom: 20px;
     padding: 20px;
@@ -10,7 +10,7 @@
     margin-left: 10%;
 }
 
-.regles button{
+.scores button{
     width: 30%;
     background-color: #c4b31f;
     color: white;

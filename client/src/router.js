@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { socket } from './main.js';
-import { canvas } from './renderGame.js';
+import { canvas } from './game/renderGame.js';
 
 export default class Router {
 	static routes = [];
@@ -36,7 +36,6 @@ export default class Router {
 			}
 			if (path === '/join') {
 				socket.emit('gameJoin');
-				ss;
 			}
 			if (path === '/rejouer') {
 				socket.emit('gameEnd', { socketId: socket.id });
