@@ -28,11 +28,27 @@
 }
 
 .credits section {
-    background: radial-gradient(#184656, #203255, #1b2838 70% ) no-repeat;
+    background-color: #10303b;
     color: whitesmoke;
     border: #000000;
     border-style: solid;
-    padding: 5%;
+    padding: 3%;
     border-radius: 5%;
     margin: 2%;
+    width: 33%;
+    text-align: left;
+}
+
+.credits section h2 {
+    text-align: center;
+}
+
+.credits section h4 {
+    margin-top: 10%;
+}
+
+.credits section img {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    width: 75%;
 }
