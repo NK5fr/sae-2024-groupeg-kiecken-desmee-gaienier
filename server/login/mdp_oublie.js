@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { io } from '../index.js';
 
 export default function mdp_oublie(data, socket) {
 	console.log('Données de connexion reçues', data);
@@ -8,24 +9,24 @@ export default function mdp_oublie(data, socket) {
 	let dataBaseParsed = JSON.parse(dataBase);
 
 	// parcourir database pour trouver l'utilisateur
-	console.log('database', dataBaseParsed);
+	console.log('database', dataBaseParsed[0]);
 
 	let user = dataBaseParsed.find(
 		user =>
-			user.login == data.login &&
-			user.question == data.question &&
-			user.reponse == data.reponse
+			user.login === data.login &&
+			user.recovery_phrase === data.recovery_phrase &&
+			user.response === data.response
 	);
 
 	console.log('User', user);
-	if (user != undefined) {
-		//chemin vers la page de réinitialisation du mot de passe
-		console.log('réinitialisation du mot de passe');
 
-		//socket.emit('resetPassword', { login: user.login });
+	if (user != undefined) {
+		io.to(socket).emit('resetLogPass', user.login);
+		io.to(socket).emit('path', '/resetPassword');
 	} else {
-		console.log(
-			'Utilisateur non trouvé ou mauvaise réponse à la question secrète'
+		io.to(socket).emit(
+			'alert',
+			'Utilisateur non trouvé ou mauvaise question ou mauvaise réponse à la question'
 		);
 	}
 }

@@ -11,15 +11,15 @@ export default function deconnexion(data, socket) {
 
 	let user = dataBaseParsed.find(user => user.login == data.login);
 	console.log('User', user);
-	if (user != undefined && user.connexion == 1) {
+	if (user != undefined && user.connexion == true) {
 		io.to(socket).emit('user', user.login);
 		io.to(socket).emit('path', '/');
-		user.connexion = 0;
+		user.connexion = false;
 		fs.writeFileSync(
 			'server/data/userData.json',
 			JSON.stringify(dataBaseParsed)
 		);
-	} else if (user != undefined && user.connexion == 0) {
+	} else if (user != undefined && user.connexion == false) {
 		io.to(socket).emit('alert', 'Utilisateur déjà déconnecté');
 	} else {
 		io.to(socket).emit('alert', 'Utilisateur non trouvé');
