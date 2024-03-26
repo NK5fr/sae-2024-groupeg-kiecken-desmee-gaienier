@@ -21,16 +21,19 @@ export default function connexion(data, socket) {
 		user => user.login == data.login && user.password == data.password
 	);
 	console.log('User', user);
-	if (user != undefined) {
-		console.log('Utilisateur trouvé');
+	if (user != undefined && user.connexion == 0) {
 		io.to(socket).emit('user', user.login);
 		io.to(socket).emit('path', '/');
-	}
-	// si l'utilisateur n'est pas trouvé
-	else {
-		console.log('Utilisateur non trouvé');
-		/*
-        socket.emit('loginFail');
-        */
+		user.connexion = 1;
+		// enregistre la connexion de l'utilisateur dans la base de données
+		fs.writeFileSync(
+			'server/data/userData.json',
+			JSON.stringify(dataBaseParsed)
+		);
+	} else if (user != undefined && user.connexion == 1) {
+		io.to(socket).emit('alert', 'Utilisateur déjà connecté');
+	} else {
+		io.to(socket).emit('alert', 'Mot de passe ou login incorrect');
 	}
 }
+

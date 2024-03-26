@@ -42,12 +42,15 @@ io.on('connection', socket => {
 	socket.on('resetPassword', data => {
 		//resetPassword(data, socket);
 	});
+	socket.on('logout', data => {
+		deconnexion(data, socket.id);
+	});
 
 	socket.on('gameStart', data => {
 		let game = currentGame.find(game => game.socketId === socket.id);
 		if (!game) {
 			game = new Game(data.width, data.height, socket.id);
-			game.addNewPlayer(socket.id, playerData);
+			game.addNewPlayer(socket.id, playerData, data.user);
 			game.startGame();
 			currentGame.push(game);
 		}

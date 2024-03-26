@@ -1,14 +1,1 @@
-{
-    "health": 5,
-    "speed": 10,
-    "damage": 10,
-    "sprite": {
-        "left": "assets/player/left.png",
-        "idle": "assets/player/idle.png",
-        "right": "assets/player/right.png"
-    },
-    "width": 48,
-    "height": 96,
-    "missileType": "card",
-    "fireRate": 25
-}
+[{"user":"default","health":5,"speed":10,"damage":10,"sprite":{"left":"assets/player/left.png","idle":"assets/player/idle.png","right":"assets/player/right.png"},"width":48,"height":96,"missileType":"card","fireRate":25},{"user":"raph","health":5,"speed":10,"damage":10,"sprite":{"left":"assets/player/left.png","idle":"assets/player/idle.png","right":"assets/player/right.png"},"width":48,"height":96,"missileType":"card","fireRate":25}]

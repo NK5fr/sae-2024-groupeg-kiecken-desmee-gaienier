@@ -13,6 +13,8 @@ import ScoreMenu from './menu/scoreMenu.js';
 
 export const socket = io();
 
+export const user = window.sessionStorage.getItem('user');
+
 const playerCommands = [
 	'ArrowUp',
 	'ArrowDown',
@@ -31,18 +33,25 @@ LoginMenu.setSignin($('.signin'), socket);
 LoginMenu.setMdp_oublie($('.mdp_oublie'), socket);
 
 LoginMenu.resetPassword($('.resetPassword'), socket);
+LoginMenu.setLogout(
+	$('.logout'),
+	socket,
+	window.sessionStorage.getItem('user')
+);
 
-ScoreMenu.setTable($(".scores"), [{"name": "Nathan", "value": 1},
-								{"name": "Nathan", "value": 2},
-								{"name": "Nathan", "value": 3},
-								{"name": "Nathan", "value": 4},
-								{"name": "Nathan", "value": 5},
-								{"name": "Nathan", "value": 6},
-								{"name": "Nathan", "value": 7},
-								{"name": "Nathan", "value": 8},
-								{"name": "Nathan", "value": 9},
-								{"name": "Nathan", "value": 10},
-								{"name": "Nathan", "value": 11}])
+ScoreMenu.setTable($('.scores'), [
+	{ name: 'Nathan', value: 1 },
+	{ name: 'Nathan', value: 2 },
+	{ name: 'Nathan', value: 3 },
+	{ name: 'Nathan', value: 4 },
+	{ name: 'Nathan', value: 5 },
+	{ name: 'Nathan', value: 6 },
+	{ name: 'Nathan', value: 7 },
+	{ name: 'Nathan', value: 8 },
+	{ name: 'Nathan', value: 9 },
+	{ name: 'Nathan', value: 10 },
+	{ name: 'Nathan', value: 11 },
+]);
 
 const routes = [
 	{ path: '/', view: $('.accueil') },
@@ -108,6 +117,9 @@ socket.on('gameEnd', () => {
 	socket.emit('gameEnd', { socketId: socket.id });
 });
 
+socket.on('user', user => {
+	window.sessionStorage.setItem('user', user);
+});
 socket.on('path', path => {
 	Router.navigate(path, true);
 });
@@ -117,13 +129,35 @@ Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
-Router.navigate(window.location.pathname, true);
+//Router.navigate(window.location.pathname, true);
+Router.navigate('/login', true);
 
+socket.on('alert', message => {
+	alert(message);
+});
+
+if (user) {
+	Router.navigate(window.location.pathname, true);
+} else {
+	Router.navigate('/login', true);
+}
 window.onpopstate = () => Router.navigate(document.location.pathname, true);
 
 const carouselLife = new CarouselStat($('.personnalisation .life'), 1);
 const carouselDamage = new CarouselStat($('.personnalisation .damage'), 1);
 const carouselFireRate = new CarouselStat($('.personnalisation .fire-rate'), 1);
 const carouselSpeed = new CarouselStat($('.personnalisation .speed'), 1);
-const carouselSkin = new CarouselSkin($('.personnalisation .skin'), ["base", "reverse"], ["base"], "base", false);
-const carouselProjSkin = new CarouselSkin($('.personnalisation .proj-skin'), ["card", "energy-ball"], ["card"], "card", true);
+const carouselSkin = new CarouselSkin(
+	$('.personnalisation .skin'),
+	['base', 'reverse'],
+	['base'],
+	'base',
+	false
+);
+const carouselProjSkin = new CarouselSkin(
+	$('.personnalisation .proj-skin'),
+	['card', 'energy-ball'],
+	['card'],
+	'card',
+	true
+);
