@@ -129,18 +129,12 @@ Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
-//Router.navigate(window.location.pathname, true);
-Router.navigate('/login', true);
+Router.navigate(window.location.pathname, true);
 
 socket.on('alert', message => {
 	alert(message);
 });
 
-if (user) {
-	Router.navigate(window.location.pathname, true);
-} else {
-	Router.navigate('/login', true);
-}
 window.onpopstate = () => Router.navigate(document.location.pathname, true);
 
 const carouselLife = new CarouselStat($('.personnalisation .life'), 1);
