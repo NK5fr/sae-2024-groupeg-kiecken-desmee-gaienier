@@ -68,38 +68,22 @@ const routes = [
 ];
 
 socket.on('gameStart', game => {
-	document.addEventListener('keydown', e => {
-		if (!playerCommands.includes(e.key)) return;
-		socket.emit('playerKeyDown', {
-			socketId: socket.id,
-			key: e.key,
-		});
+	document.addEventListener('keydown', ({ key }) => {
+		if (!playerCommands.includes(key)) return;
+		socket.emit('playerKeyDown', key);
 	});
-	document.addEventListener('keyup', e => {
-		if (!playerCommands.includes(e.key)) return;
-		socket.emit('playerKeyUp', {
-			socketId: socket.id,
-			key: e.key,
-		});
+	document.addEventListener('keyup', ({ key }) => {
+		if (!playerCommands.includes(key)) return;
+		socket.emit('playerKeyUp', key);
 	});
-	document.addEventListener('mousedown', event => {
-		socket.emit('playerMouseDown', {
-			socketId: socket.id,
-			x: event.clientX,
-			y: event.clientY,
-		});
+	document.addEventListener('mousedown', ({ clientX, clientY }) => {
+		socket.emit('playerMouseDown', { clientX, clientY });
 	});
 	document.addEventListener('mouseup', () => {
-		socket.emit('playerMouseUp', {
-			socketId: socket.id,
-		});
+		socket.emit('playerMouseUp');
 	});
-	document.addEventListener('mousemove', event => {
-		socket.emit('playerMouseMove', {
-			socketId: socket.id,
-			x: event.clientX,
-			y: event.clientY,
-		});
+	document.addEventListener('mousemove', ({ clientX, clientY }) => {
+		socket.emit('playerMouseMove', { clientX, clientY });
 	});
 
 	setGame(game);
@@ -107,14 +91,13 @@ socket.on('gameStart', game => {
 });
 
 socket.on('gameUpdate', game => {
-	if (socket.id !== game.socketId) return;
 	setGame(game);
 });
 
-socket.on('gameEnd', () => {
+socket.on('gameStop', () => {
 	stopGameRenderer();
 	Router.navigate('/rejouer');
-	socket.emit('gameEnd', { socketId: socket.id });
+	socket.emit('gameStop');
 });
 
 socket.on('user', user => {
@@ -156,7 +139,7 @@ const carouselSkin = new CarouselSkin(
 );
 const carouselProjSkin = new CarouselSkin(
 	$('.personnalisation .proj-skin'),
-	['card', 'energy-ball'],
+	['card', 'sphere'],
 	['card'],
 	'card',
 	true
