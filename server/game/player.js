@@ -2,7 +2,7 @@ import Entity from './entity.js';
 import Missile from './missile.js';
 
 export default class Player extends Entity {
-	constructor(socketId, x, y, properties) {
+	constructor(x, y, properties, socketId) {
 		super(x, y, properties);
 
 		this.socketId = socketId;
