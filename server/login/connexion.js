@@ -21,19 +21,18 @@ export default function connexion(data, socket) {
 		user => user.login == data.login && user.password == data.password
 	);
 	console.log('User', user);
-	if (user != undefined && user.connexion == 0) {
+	if (user != undefined && user.connexion == false) {
 		io.to(socket).emit('user', user.login);
 		io.to(socket).emit('path', '/');
-		user.connexion = 1;
+		user.connexion = true;
 		// enregistre la connexion de l'utilisateur dans la base de données
 		fs.writeFileSync(
 			'server/data/userData.json',
 			JSON.stringify(dataBaseParsed)
 		);
-	} else if (user != undefined && user.connexion == 1) {
+	} else if (user != undefined && user.connexion == true) {
 		io.to(socket).emit('alert', 'Utilisateur déjà connecté');
 	} else {
 		io.to(socket).emit('alert', 'Mot de passe ou login incorrect');
 	}
 }
-

@@ -38,10 +38,10 @@ io.on('connection', socket => {
 		signin(data, socket.id);
 	});
 	socket.on('mdp_oublie', data => {
-		mdp_oublie(data, socket);
+		mdp_oublie(data, socket.id);
 	});
 	socket.on('resetPassword', data => {
-		//resetPassword(data, socket);
+		resetPassword(data, socket.id);
 	});
 	socket.on('logout', data => {
 		deconnexion(data, socket.id);

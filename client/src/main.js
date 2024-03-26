@@ -113,6 +113,8 @@ Router.notFound = $('.notFound');
 Router.setInnerLinks(document.body);
 
 Router.navigate(window.location.pathname, true);
+Router.navigate(window.location.pathname, true);
+//Router.navigate('/login', true);
 
 socket.on('alert', message => {
 	alert(message);
@@ -134,6 +136,20 @@ const carouselSkin = new CarouselSkin(
 const carouselProjSkin = new CarouselSkin(
 	$('.personnalisation .proj-skin'),
 	['card', 'sphere'],
+	['card'],
+	'card',
+	true
+);
+const carouselSkin = new CarouselSkin(
+	$('.personnalisation .skin'),
+	['base', 'reverse'],
+	['base'],
+	'base',
+	false
+);
+const carouselProjSkin = new CarouselSkin(
+	$('.personnalisation .proj-skin'),
+	['card', 'energy-ball'],
 	['card'],
 	'card',
 	true
