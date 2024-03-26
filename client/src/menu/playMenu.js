@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import $, { event } from 'jquery';
 
 export default class PlayMenu{
 
@@ -7,7 +7,13 @@ export default class PlayMenu{
 
     static setMenu(element){
         this.element = element;
-        $(".jouer", element).on('click', event => this.handleMenu(event));
+        $(".jouer", this.element).on('click', event => this.handleMenu(event));
+        $(".diff button", this.element).on('click', event => {
+            event.preventDefault();
+            $(".diff .active", this.element).removeClass("active");
+            $(event.currentTarget).addClass("active");
+        });
+        $(".diff .normal").addClass("active");
     }
 
     static handleMenu(event){
@@ -16,4 +22,6 @@ export default class PlayMenu{
         else $(".menu", this.element).show();
         this.showed = !this.showed;
     }
+
+
 }

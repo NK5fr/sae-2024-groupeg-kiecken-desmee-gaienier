@@ -1,8 +1,10 @@
 {
     "skins":[
-        ""
+        "base",
+        "reverse"
     ],
     "proj-skin":[
-        "card"
+        "card",
+        "energy-ball"
     ]
 }
