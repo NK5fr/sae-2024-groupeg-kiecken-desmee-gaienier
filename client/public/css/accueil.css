@@ -7,26 +7,12 @@
     justify-content: center;
     margin-left: 10%;
     margin-top:10% ;
-    width: 25%;
+    width: 30%;
     border: 3px solid #ffe600;
     text-align: center;
     height: 60%;
     background-color: #fff;
     border-radius: 20px;
-}
-
-.menu{
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
-    margin-top:5% ;
-    width: 50%;
-    padding: 10px;
-    text-align: center;
-    height: 60%;
-    background-color: #fff;
 }
 
 .menuJouer{
@@ -66,4 +52,20 @@
     color: #fff;
     font-size: 20px;
     cursor: pointer;
+}
+
+.menuAccueil .diff button{
+    margin: 10px;
+    padding: 10px;
+    width: 45%;
+    border: 2px solid #6b6b6b;
+    background-color: #6b6b6b;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.menuAccueil .diff .active{
+    border: 2px solid #c46a16;
+    background-color: #c46a16;
 }

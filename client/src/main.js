@@ -9,6 +9,7 @@ import startGameRenderer, {
 } from './game/renderGame.js';
 import CarouselStat from './carousel/carouselStat.js';
 import CarouselSkin from './carousel/carouselSkin.js';
+import ScoreMenu from './menu/scoreMenu.js';
 
 export const socket = io();
 
@@ -36,6 +37,18 @@ LoginMenu.setLogout(
 	window.sessionStorage.getItem('user')
 );
 
+ScoreMenu.setTable($(".scores"), [{"name": "Nathan", "value": 1},
+								{"name": "Nathan", "value": 2},
+								{"name": "Nathan", "value": 3},
+								{"name": "Nathan", "value": 4},
+								{"name": "Nathan", "value": 5},
+								{"name": "Nathan", "value": 6},
+								{"name": "Nathan", "value": 7},
+								{"name": "Nathan", "value": 8},
+								{"name": "Nathan", "value": 9},
+								{"name": "Nathan", "value": 10},
+								{"name": "Nathan", "value": 11}])
+
 const routes = [
 	{ path: '/', view: $('.accueil') },
 	{ path: '/jeu', view: $('.jeu') },
@@ -47,6 +60,7 @@ const routes = [
 	{ path: '/personnalisation', view: $('.personnalisation') },
 	{ path: '/rejouer', view: $('.rejouer') },
 	{ path: '/resetPassword', view: $('.resetPassword') },
+	{ path: '/scores', view: $('.scores') },
 ];
 
 socket.on('gameStart', game => {
@@ -99,12 +113,6 @@ socket.on('gameEnd', () => {
 	socket.emit('gameEnd', { socketId: socket.id });
 });
 
-let connection = false;
-
-socket.on('user', user => {
-	connection = true;
-});
-
 socket.on('path', path => {
 	Router.navigate(path, true);
 });
@@ -113,15 +121,6 @@ Router.routes = routes;
 Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
-
-/*
-if (connection === true) {
-	Router.navigate(window.location.pathname, true);
-	console.log('connection', connection);
-} else {
-	Router.navigate('/login', true);
-}
-*/
 
 //Router.navigate(window.location.pathname, true);
 Router.navigate('/login', true);
@@ -136,17 +135,5 @@ const carouselLife = new CarouselStat($('.personnalisation .life'), 1);
 const carouselDamage = new CarouselStat($('.personnalisation .damage'), 1);
 const carouselFireRate = new CarouselStat($('.personnalisation .fire-rate'), 1);
 const carouselSpeed = new CarouselStat($('.personnalisation .speed'), 1);
-const carouselSkin = new CarouselSkin(
-	$('.personnalisation .skin'),
-	[''],
-	[''],
-	'',
-	false
-);
-const carouselProjSkin = new CarouselSkin(
-	$('.personnalisation .proj-skin'),
-	['card'],
-	['card'],
-	'card',
-	true
-);
+const carouselSkin = new CarouselSkin($('.personnalisation .skin'), ["base", "reverse"], ["base"], "base", false);
+const carouselProjSkin = new CarouselSkin($('.personnalisation .proj-skin'), ["card", "energy-ball"], ["card"], "card", true);

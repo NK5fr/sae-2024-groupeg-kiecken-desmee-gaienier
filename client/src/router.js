@@ -35,7 +35,6 @@ export default class Router {
 			}
 			if (path === '/join') {
 				socket.emit('gameJoin');
-				ss;
 			}
 			if (path === '/rejouer') {
 				socket.emit('gameEnd', { socketId: socket.id });
