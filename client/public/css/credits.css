@@ -1,5 +1,4 @@
 .credits{
-    margin-top: 20px;
     margin-bottom: 20px;
     padding: 20px;
     background-color: #f5f5f5;
@@ -21,4 +20,19 @@
     cursor: pointer;
     opacity: 1.2;
     text-size-adjust: 50px;
+}
+
+.credits > div {
+    display: flex;
+    justify-content: space-around;
+}
+
+.credits section {
+    background: radial-gradient(#184656, #203255, #1b2838 70% ) no-repeat;
+    color: whitesmoke;
+    border: #000000;
+    border-style: solid;
+    padding: 5%;
+    border-radius: 5%;
+    margin: 2%;
 }
