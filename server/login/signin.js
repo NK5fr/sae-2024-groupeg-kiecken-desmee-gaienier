@@ -25,6 +25,16 @@ export default function signin(data, socket) {
 			'server/data/userData.json',
 			JSON.stringify(dataBaseParsed)
 		);
+		const players = JSON.parse(fs.readFileSync('server/data/playerData.json'));
+		const newPlayer = Object.assign(
+			{},
+			players.find(player => player.user == 'default')
+		);
+		newPlayer.user = data.login;
+		players.push(newPlayer);
+		fs.writeFileSync('server/data/playerData.json', JSON.stringify(players));
+		console.log('Utilisateur ajouté');
+
 		io.to(socket).emit('path', '/');
 		io.to(socket).emit('user', data.login);
 	}

@@ -13,6 +13,8 @@ import ScoreMenu from './menu/scoreMenu.js';
 
 export const socket = io();
 
+export const user = window.sessionStorage.getItem('user');
+
 const playerCommands = [
 	'ArrowUp',
 	'ArrowDown',
@@ -66,38 +68,22 @@ const routes = [
 ];
 
 socket.on('gameStart', game => {
-	document.addEventListener('keydown', e => {
-		if (!playerCommands.includes(e.key)) return;
-		socket.emit('playerKeyDown', {
-			socketId: socket.id,
-			key: e.key,
-		});
+	document.addEventListener('keydown', ({ key }) => {
+		if (!playerCommands.includes(key)) return;
+		socket.emit('playerKeyDown', key);
 	});
-	document.addEventListener('keyup', e => {
-		if (!playerCommands.includes(e.key)) return;
-		socket.emit('playerKeyUp', {
-			socketId: socket.id,
-			key: e.key,
-		});
+	document.addEventListener('keyup', ({ key }) => {
+		if (!playerCommands.includes(key)) return;
+		socket.emit('playerKeyUp', key);
 	});
-	document.addEventListener('mousedown', event => {
-		socket.emit('playerMouseDown', {
-			socketId: socket.id,
-			x: event.clientX,
-			y: event.clientY,
-		});
+	document.addEventListener('mousedown', ({ clientX, clientY }) => {
+		socket.emit('playerMouseDown', { clientX, clientY });
 	});
 	document.addEventListener('mouseup', () => {
-		socket.emit('playerMouseUp', {
-			socketId: socket.id,
-		});
+		socket.emit('playerMouseUp');
 	});
-	document.addEventListener('mousemove', event => {
-		socket.emit('playerMouseMove', {
-			socketId: socket.id,
-			x: event.clientX,
-			y: event.clientY,
-		});
+	document.addEventListener('mousemove', ({ clientX, clientY }) => {
+		socket.emit('playerMouseMove', { clientX, clientY });
 	});
 
 	setGame(game);
@@ -105,16 +91,18 @@ socket.on('gameStart', game => {
 });
 
 socket.on('gameUpdate', game => {
-	if (socket.id !== game.socketId) return;
 	setGame(game);
 });
 
-socket.on('gameEnd', () => {
+socket.on('gameStop', () => {
 	stopGameRenderer();
 	Router.navigate('/rejouer');
-	socket.emit('gameEnd', { socketId: socket.id });
+	socket.emit('gameStop');
 });
 
+socket.on('user', user => {
+	window.sessionStorage.setItem('user', user);
+});
 socket.on('path', path => {
 	Router.navigate(path, true);
 });
@@ -124,6 +112,7 @@ Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
+Router.navigate(window.location.pathname, true);
 Router.navigate(window.location.pathname, true);
 //Router.navigate('/login', true);
 
@@ -137,6 +126,20 @@ const carouselLife = new CarouselStat($('.personnalisation .life'), 1);
 const carouselDamage = new CarouselStat($('.personnalisation .damage'), 1);
 const carouselFireRate = new CarouselStat($('.personnalisation .fire-rate'), 1);
 const carouselSpeed = new CarouselStat($('.personnalisation .speed'), 1);
+const carouselSkin = new CarouselSkin(
+	$('.personnalisation .skin'),
+	['base', 'reverse'],
+	['base'],
+	'base',
+	false
+);
+const carouselProjSkin = new CarouselSkin(
+	$('.personnalisation .proj-skin'),
+	['card', 'sphere'],
+	['card'],
+	'card',
+	true
+);
 const carouselSkin = new CarouselSkin(
 	$('.personnalisation .skin'),
 	['base', 'reverse'],

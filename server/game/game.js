@@ -14,26 +14,21 @@ export default class Game {
 	mainPlayer;
 	otherPlayers = [];
 
-	constructor(width, height, socketId) {
+	constructor(width, height, playerData, socketId) {
 		this.width = width;
 		this.height = height;
 
+		this.owner = playerData.user;
 		this.socketId = socketId;
+
+		this.mainPlayer = new Player(100, 100, playerData, socketId);
 
 		this.stages = ['venus', 'earth', 'mars'];
 		this.stage = new Stage(this.stages[0], width, height);
 	}
 
 	addNewPlayer(socketId, playerData) {
-		if (socketId === this.socketId) {
-			this.mainPlayer = new Player(socketId, 100, 100, playerData);
-		} else {
-			this.otherPlayers.push(new Player(socketId, 100, 100, playerData));
-		}
-	}
-
-	removePlayer(player) {
-		this.player = this.player.filter(p => p !== player);
+		this.otherPlayers.push(new Player(100, 100, playerData, socketId));
 	}
 
 	startGame() {
@@ -60,7 +55,7 @@ function updateGame(gameInstance) {
 			gameInstance.stages.indexOf(stage.name) ===
 			gameInstance.stages.length - 1
 		) {
-			io.to(gameInstance.socketId).emit('gameEnd');
+			io.to(gameInstance.socketId).emit('gameStop');
 			return;
 		}
 
@@ -74,7 +69,7 @@ function updateGame(gameInstance) {
 	}
 	if (mainPlayer.health <= 0) {
 		gameInstance.stopGame();
-		io.to(gameInstance.socketId).emit('gameEnd');
+		io.to(gameInstance.socketId).emit('gameStop');
 	}
 	if (gameInstance.gameNotFocused) return;
 	mainPlayer.update(gameInstance.width, gameInstance.height);
@@ -128,7 +123,7 @@ function updateGame(gameInstance) {
 			});
 		}
 	});
-	io.emit('gameUpdate', gameInstance);
+	io.to(gameInstance.socketId).emit('gameUpdate', gameInstance);
 }
 
 function spawnAngels(gameInstance) {
