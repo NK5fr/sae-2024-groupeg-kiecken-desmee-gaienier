@@ -46,8 +46,10 @@ export default class CarouselSkin {
 			else
 				html += `<img src="assets/player/${skin}/${skin}idle.png" name="${skin}">`;
 
-			if (this.ownedSkins.includes(skin)) html += `<p>Cliquez pour équiper</p>`;
-			else if (this.actualSkin === skin) html += `<p>Equipé</p>`;
+			if (this.actualSkin === skin) 
+                html += `<p>Equipé</p>`;
+			else if (this.ownedSkins.includes(skin))
+				html += `<p>Cliquez pour équiper</p>`;
 			else html += `<p>Cliquez pour débloquer à 100 pièces</p>`;
 
 			html += `</div>`;
