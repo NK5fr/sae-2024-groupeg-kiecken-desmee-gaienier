@@ -17,10 +17,10 @@ export default function mdp_oublie(data, socket) {
 			user.recovery_phrase === data.recovery_phrase &&
 			user.response === data.response
 	);
-
 	console.log('User', user);
 
 	if (user != undefined) {
+		console.log('User trouvé', user.login);
 		io.to(socket).emit('resetLogPass', user.login);
 		io.to(socket).emit('path', '/resetPassword');
 	} else {

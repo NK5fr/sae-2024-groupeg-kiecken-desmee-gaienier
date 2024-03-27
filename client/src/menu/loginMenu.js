@@ -9,7 +9,6 @@ export default class LoginMenu {
 			socket.emit('login', { login, password });
 		});
 	}
-
 	static setSignin(menu, socket) {
 		$('form', menu).on('submit', event => {
 			event.preventDefault();
@@ -43,14 +42,11 @@ export default class LoginMenu {
 			socket.emit('mdp_oublie', { login, recovery_phrase, response });
 		});
 	}
-	static resetPassword(menu, socket) {
+	static resetPassword(menu, socket, login) {
 		$('form', menu).on('submit', event => {
 			event.preventDefault();
-			let login = null;
-			socket.on('resetLogPass', data => {
-				console.log('resetLogPass', data);
-				login = data;
-			});
+			login = login;
+			console.log('login', login);
 
 			const password = $('input[name=password]', menu).val();
 			const password2 = $('input[name=password2]', menu).val();
@@ -58,9 +54,11 @@ export default class LoginMenu {
 				alert('Les mots de passe ne correspondent pas');
 				return;
 			} else if (login === null) {
+				console.log(login);
 				alert('Erreur lors de la réinitialisation du mot de passe');
 				return;
 			} else {
+				console.log('resetPassword', login, password);
 				socket.emit('resetPassword', { login, password });
 			}
 		});

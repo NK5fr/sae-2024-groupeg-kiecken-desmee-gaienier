@@ -1,1 +1,1 @@
-[{"login":"admin","password":"admin","recovery_phrase":"3","response":"lille","connexion":true}]
+[{"login":"admin","password":"admin","recovery_phrase":"3","response":"lille","connexion":false},{"login":"superadmin","password":"a","recovery_phrase":"1","reponse":"raphael","connexion":true},{"login":"a","password":"a","recovery_phrase":"1","reponse":"a","connexion":false}]
