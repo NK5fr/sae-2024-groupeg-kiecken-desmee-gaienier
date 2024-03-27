@@ -66,10 +66,11 @@ export default class LoginMenu {
 		});
 	}
 
-	static setLogout(menu, socket, user) {
-		$('.deconnexion', menu).on('click', event => {
-			console.log('Déconnexion');
+	static setLogout(button, socket, user) {
+		// si l'utilisateur clique sur le bouton de déconnexion alors on envoie un message au serveur pour lui dire de déconnecter l'utilisateur
+		button.on('click', event => {
 			event.preventDefault();
+			console.log("Déconnexion de l'utilisateur", user);
 			socket.emit('logout', user);
 		});
 	}
