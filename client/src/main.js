@@ -40,7 +40,7 @@ LoginMenu.setLogout(
 );
 
 ScoreMenu.setTable($('.scores'), [
-	{ name: 'Nathan', value: 1 },
+	{ name: 'Nathan', value: 12 },
 	{ name: 'Nathan', value: 2 },
 	{ name: 'Nathan', value: 3 },
 	{ name: 'Nathan', value: 4 },
