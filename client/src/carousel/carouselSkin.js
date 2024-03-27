@@ -43,8 +43,7 @@ export default class CarouselSkin {
 
 			if (this.isProj)
 				html += `<img src="assets/missile/${skin}.png" name="${skin}">`;
-			else
-				html += `<img src="assets/player/${skin}/${skin}idle.png" name="${skin}">`;
+			else html += `<img src="assets/player/${skin}/idle.png" name="${skin}">`;
 
 			if (this.actualSkin === skin) 
                 html += `<p>Equipé</p>`;

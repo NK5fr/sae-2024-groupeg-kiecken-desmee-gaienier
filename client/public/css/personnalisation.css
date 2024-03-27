@@ -7,13 +7,14 @@
     text-align: center;
     width: 80%;
     margin-left: 10%;
-    margin-top: 10%;
+    margin-top: 4%;
 }
 
 .personnalisation > .carousels {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 50px;
+    margin: 3%;
 }
 
 .personnalisation > button{
@@ -34,8 +35,13 @@
     border-radius: 10px;
     border-color: black;
     border-style: groove;
-    background-color: rgb(177, 177, 177);
+    background: radial-gradient(#c5c5c5, #757575) no-repeat;
     padding: 10px;
+}
+
+.carousels .carousel-item h1 {
+    margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 .skin {

@@ -35,10 +35,10 @@ LoginMenu.setMdp_oublie($('.mdp_oublie'), socket);
 socket.on('resetLogPass', login => {
 	LoginMenu.resetPassword($('.resetPassword'), socket, login);
 });
-//LoginMenu.setLogout($('.logout'), socket, user);
+LoginMenu.setLogout($('.logout'), socket, user);
 
 ScoreMenu.setTable($('.scores'), [
-	{ name: 'Nathan', value: 1 },
+	{ name: 'Nathan', value: 12 },
 	{ name: 'Nathan', value: 2 },
 	{ name: 'Nathan', value: 3 },
 	{ name: 'Nathan', value: 4 },
@@ -65,6 +65,13 @@ const routes = [
 	{ path: '/scores', view: $('.scores') },
 ];
 
+let carouselLife;
+let carouselDamage;
+let carouselFireRate;
+let carouselSpeed;
+let carouselSkin;
+let carouselProjSkin;
+
 socket.on('gameStart', game => {
 	document.addEventListener('keydown', ({ key }) => {
 		if (!playerCommands.includes(key)) return;
@@ -83,7 +90,6 @@ socket.on('gameStart', game => {
 	document.addEventListener('mousemove', ({ clientX, clientY }) => {
 		socket.emit('playerMouseMove', { clientX, clientY });
 	});
-
 	setGame(game);
 	startGameRenderer();
 });
@@ -98,10 +104,41 @@ socket.on('gameStop', () => {
 	socket.emit('gameStop');
 });
 
-socket.on('user', user => {
-	console.log(user);
+socket.on('connexion', ({ user, playerData, playerSkins, weaponSkins }) => {
 	window.sessionStorage.setItem('user', user);
+	console.log(user, playerData, playerSkins, weaponSkins);
+	carouselLife = new CarouselStat(
+		$('.personnalisation .life'),
+		playerData.health
+	);
+	carouselDamage = new CarouselStat(
+		$('.personnalisation .damage'),
+		playerData.damage
+	);
+	carouselSpeed = new CarouselStat(
+		$('.personnalisation .speed'),
+		playerData.speed
+	);
+	carouselFireRate = new CarouselStat(
+		$('.personnalisation .fire-rate'),
+		playerData.fireSpeed
+	);
+	carouselSkin = new CarouselSkin(
+		$('.personnalisation .skin'),
+		playerSkins,
+		playerData.skinsPool,
+		playerData.currentSkin,
+		false
+	);
+	carouselProjSkin = new CarouselSkin(
+		$('.personnalisation .proj-skin'),
+		weaponSkins,
+		playerData.weaponsPool,
+		playerData.currentWeapon,
+		true
+	);
 });
+
 socket.on('path', path => {
 	Router.navigate(path, true);
 });
@@ -111,24 +148,12 @@ Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
-//Router.navigate(window.location.pathname, true);
-
-Router.navigate('/login', true);
+Router.navigate(window.location.pathname, true);
+if (user) Router.navigate('/', true);
+else Router.navigate('/login', true);
 
 socket.on('alert', message => {
 	alert(message);
 });
 
 window.onpopstate = () => Router.navigate(document.location.pathname, true);
-
-const carouselLife = new CarouselStat($('.personnalisation .life'), 1);
-const carouselDamage = new CarouselStat($('.personnalisation .damage'), 1);
-const carouselFireRate = new CarouselStat($('.personnalisation .fire-rate'), 1);
-const carouselSpeed = new CarouselStat($('.personnalisation .speed'), 1);
-const carouselSkin = new CarouselSkin(
-	$('.personnalisation .skin'),
-	['base', 'reverse'],
-	['base'],
-	'base',
-	false
-);
