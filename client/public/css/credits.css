@@ -7,7 +7,7 @@
     text-align: center;
     width: 80%;
     margin-left: 10%;
-    margin-top: 10%;
+    margin-top: 5%;
 }
 
 .credits button{
@@ -43,7 +43,7 @@
     text-align: center;
 }
 
-.credits section h4 {
+.credits section h4, .credits section h5 {
     margin-top: 10%;
 }
 

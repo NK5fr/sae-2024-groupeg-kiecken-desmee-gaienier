@@ -140,17 +140,3 @@ const carouselProjSkin = new CarouselSkin(
 	'card',
 	true
 );
-const carouselSkin = new CarouselSkin(
-	$('.personnalisation .skin'),
-	['base', 'reverse'],
-	['base'],
-	'base',
-	false
-);
-const carouselProjSkin = new CarouselSkin(
-	$('.personnalisation .proj-skin'),
-	['card', 'energy-ball'],
-	['card'],
-	'card',
-	true
-);
