@@ -1,14 +1,19 @@
+const missileSkinPath = 'assets/missile';
 const missileImage = new Image();
 
 function renderMissile(missile, context) {
-	missileImage.src = missile.sprite;
+	missileImage.src = `${missileSkinPath}/${missile.type}.png`;
 	context.save();
 	context.translate(
-		missile.posX + missile.width / 2,
-		missile.posY + missile.height / 2
+		missile.posX + missile.hitboxWidth / 2,
+		missile.posY + missile.hitboxHeight / 2
 	);
 	context.rotate(missile.fireAngle);
-	context.drawImage(missileImage, -missile.width / 2, -missile.height / 2);
+	context.drawImage(
+		missileImage,
+		-missile.hitboxWidth / 2,
+		-missile.hitboxHeight / 2
+	);
 	context.restore();
 }
 

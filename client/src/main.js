@@ -33,11 +33,7 @@ LoginMenu.setSignin($('.signin'), socket);
 LoginMenu.setMdp_oublie($('.mdp_oublie'), socket);
 
 LoginMenu.resetPassword($('.resetPassword'), socket);
-LoginMenu.setLogout(
-	$('.logout'),
-	socket,
-	window.sessionStorage.getItem('user')
-);
+LoginMenu.setLogout($('.logout'), socket, user);
 
 ScoreMenu.setTable($('.scores'), [
 	{ name: 'Nathan', value: 1 },
@@ -103,6 +99,7 @@ socket.on('gameStop', () => {
 socket.on('user', user => {
 	window.sessionStorage.setItem('user', user);
 });
+
 socket.on('path', path => {
 	Router.navigate(path, true);
 });

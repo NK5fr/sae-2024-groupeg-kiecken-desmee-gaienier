@@ -19,7 +19,7 @@ export const io = new IOServer(httpServer);
 export let angelData = JSON.parse(
 	readFileSync('server/data/angelData.json', 'utf8')
 );
-let playersData = JSON.parse(
+export let playersData = JSON.parse(
 	readFileSync('server/data/playerData.json', 'utf8')
 );
 export let missileData = JSON.parse(
@@ -48,6 +48,9 @@ io.on('connection', socket => {
 	});
 
 	socket.on('gameStart', ({ user, width, height }) => {
+		playersData = JSON.parse(
+			readFileSync('server/data/playerData.json', 'utf8')
+		);
 		let game = currentGame.find(game => game.user === user);
 		if (game) return;
 		let playerData = playersData.find(player => player.user === user);

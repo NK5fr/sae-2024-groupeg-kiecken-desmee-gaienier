@@ -1,5 +1,5 @@
 import { socket } from '../main.js';
-import { renderEntities } from './renderEntity.js';
+import { renderAngels } from './renderAngel.js';
 import { renderMissilesHitbox } from './renderMissiles.js';
 import renderPlayer, { renderHealthBar } from './renderPlayer.js';
 import renderStage, { renderStageProgressionBar } from './renderStage.js';
@@ -38,7 +38,7 @@ function renderGame() {
 			renderPlayer(player, context);
 		});
 
-		renderEntities(game.stage.angels, context);
+		renderAngels(game.stage.angels, context);
 
 		renderStageProgressionBar(game.stage, context, canvas);
 		renderHealthBar(game.mainPlayer, 0, context, canvas);

@@ -1,10 +1,10 @@
 {
-    "skins":[
+    "playerSkin":[
         "base",
         "reverse"
     ],
-    "proj-skin":[
+    "weaponSkin":[
         "card",
-        "energy-ball"
+        "sphere"
     ]
 }

@@ -5,10 +5,11 @@ export default class Player extends Entity {
 	constructor(x, y, properties, socketId) {
 		super(x, y, properties);
 
+		this.user = properties.user;
 		this.socketId = socketId;
 
-		this.sprites = properties.sprite;
-		this.sprite = this.sprites.idle;
+		this.currentSkin = properties.currentSkin;
+		this.currentWeapon = properties.currentWeapon;
 
 		this.speedX = 0;
 		this.speedY = 0;
@@ -20,13 +21,12 @@ export default class Player extends Entity {
 		};
 
 		this.missiles = [];
-		this.missileType = properties.missileType;
 
 		this.fireIsOn = false;
 		this.fireX = 0;
 		this.fireY = 0;
-		this.fireRate = properties.fireRate;
-		this.fireNextShotIn = 0;
+		this.fireRate = 75 * (1 - (7 * this.fireSpeed) / 100);
+		this.nextShotIn = this.fireRate;
 	}
 
 	/**
@@ -44,10 +44,6 @@ export default class Player extends Entity {
 		if (this.direction.right) this.accelerateRight();
 		else this.decelerateRight();
 
-		if (this.speedX > 0) this.sprite = this.sprites.right;
-		else if (this.speedX < 0) this.sprite = this.sprites.left;
-		else this.sprite = this.sprites.idle;
-
 		if (this.canMoveOnX(width)) this.posX += this.speedX;
 		if (this.canMoveOnY(height)) this.posY += this.speedY;
 
@@ -55,12 +51,12 @@ export default class Player extends Entity {
 		this.missiles.forEach(missile => missile.update(width, height));
 
 		if (this.fireIsOn) {
-			if (this.fireNextShotIn <= 0) {
+			if (this.nextShotIn <= 0) {
 				this.fire();
-				this.fireNextShotIn = this.fireRate;
+				this.nextShotIn = this.fireRate;
 			}
 		}
-		this.fireNextShotIn--;
+		this.nextShotIn--;
 	}
 
 	/**
@@ -68,27 +64,33 @@ export default class Player extends Entity {
 	 */
 	fire() {
 		const fireAngle = Math.atan2(
-			this.fireY - this.posY - this.height / 2,
-			this.fireX - this.posX - this.width / 2
+			this.fireY - this.posY - this.hitboxHeight / 2,
+			this.fireX - this.posX - this.hitboxWidth / 2
 		);
-		const posX = this.posX + this.width / 2;
-		const posY = this.posY + this.height / 2;
+		const posX = this.posX + this.hitboxWidth / 2;
+		const posY = this.posY + this.hitboxHeight / 2;
 		this.missiles.push(
-			Missile.createMissile(posX, posY, this.missileType, fireAngle)
+			Missile.createMissile(
+				posX,
+				posY,
+				fireAngle,
+				this.damage,
+				this.currentWeapon
+			)
 		);
 	}
 
 	canMoveOnX(width) {
 		return (
 			this.posX + this.speedX > 0 &&
-			this.posX + this.speedX + this.width < width
+			this.posX + this.speedX + this.hitboxWidth < width
 		);
 	}
 
 	canMoveOnY(height) {
 		return (
 			this.posY + this.speedY > 0 &&
-			this.posY + this.speedY + this.height < height
+			this.posY + this.speedY + this.hitboxHeight < height
 		);
 	}
 
