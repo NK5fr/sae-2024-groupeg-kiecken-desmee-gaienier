@@ -19,7 +19,7 @@ export default function signin(data, socket) {
 	// si l'utilisateur n'est pas trouvé donc on l'ajoute à la base de données et on le connecte
 	else {
 		data.connexion = true;
-		console.log(data);
+		console.log('signin', data);
 		dataBaseParsed.push(data);
 		fs.writeFileSync(
 			'server/data/userData.json',
@@ -37,5 +37,6 @@ export default function signin(data, socket) {
 
 		io.to(socket).emit('path', '/');
 		io.to(socket).emit('user', data.login);
+		
 	}
 }
