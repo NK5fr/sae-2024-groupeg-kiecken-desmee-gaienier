@@ -1,9 +1,9 @@
 {
-    "playerSkin":[
+    "playerSkins":[
         "base",
         "reverse"
     ],
-    "weaponSkin":[
+    "weaponSkins":[
         "card",
         "sphere"
     ]

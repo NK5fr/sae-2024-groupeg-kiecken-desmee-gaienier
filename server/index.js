@@ -29,6 +29,9 @@ export let missileData = JSON.parse(
 export let stageData = JSON.parse(
 	readFileSync('server/data/stageData.json', 'utf8')
 );
+export let skinData = JSON.parse(
+	readFileSync('server/data/skinData.json', 'utf8')
+);
 
 io.on('connection', socket => {
 	console.log(`New connection: ${socket.id}`);

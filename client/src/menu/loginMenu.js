@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { user } from '../main.js';
 
 export default class LoginMenu {
 	static setLogin(menu, socket) {
@@ -66,7 +67,7 @@ export default class LoginMenu {
 		});
 	}
 
-	static setLogout(button, socket, user) {
+	static setLogout(button, socket) {
 		// si l'utilisateur clique sur le bouton de déconnexion alors on envoie un message au serveur pour lui dire de déconnecter l'utilisateur
 		button.on('click', event => {
 			event.preventDefault();
