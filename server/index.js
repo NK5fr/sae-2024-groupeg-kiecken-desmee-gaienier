@@ -23,9 +23,6 @@ export let angelData = JSON.parse(
 export let playersData = JSON.parse(
 	readFileSync('server/data/playerData.json', 'utf8')
 );
-export let missileData = JSON.parse(
-	readFileSync('server/data/missileData.json', 'utf8')
-);
 export let stageData = JSON.parse(
 	readFileSync('server/data/stageData.json', 'utf8')
 );

@@ -1,4 +1,4 @@
-import { DiagWanderer, Wanderer } from './angel.js';
+import { DiagWanderer, Shooter, Wanderer } from './angel.js';
 import { stageData, angelData } from '../index.js';
 
 export class Stage {
@@ -20,10 +20,9 @@ export class Stage {
 		this.numberOfAngelsKilled = 0;
 	}
 
-	update(width, height) {
+	update() {
 		this.angels = this.angels.filter(angel => angel.health > 0);
 		this.numberOfAngelsKilled = this.numberOfAngelsSpawned - this.angels.length;
-		this.angels.forEach(angel => angel.update(width, height));
 	}
 
 	spawnAngels(width, height, gameNotFocused) {
@@ -35,7 +34,7 @@ export class Stage {
 			const random = Math.random();
 			let angel = null;
 			if (random < 0.2) {
-				angel = new Wanderer(
+				angel = new Shooter(
 					x,
 					y,
 					this.angelsSpecies,
