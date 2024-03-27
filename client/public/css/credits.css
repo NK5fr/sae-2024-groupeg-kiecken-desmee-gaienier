@@ -1,14 +1,13 @@
 .credits{
-    margin-top: 20px;
     margin-bottom: 20px;
-    padding: 20px;
+    padding: 10px;
     background-color: #f5f5f5;
     border-radius: 10px;
     box-shadow: 0px 0px 10px 0px #000000;
     text-align: center;
     width: 80%;
     margin-left: 10%;
-    margin-top: 10%;
+    margin-top: 2%;
 }
 
 .credits button{
@@ -21,4 +20,41 @@
     cursor: pointer;
     opacity: 1.2;
     text-size-adjust: 50px;
+}
+
+.credits > div {
+    display: flex;
+    justify-content: space-around;
+}
+
+.credits section {
+    background-color: #10303b;
+    color: whitesmoke;
+    border: #000000;
+    border-style: solid;
+    padding: 2%;
+    border-radius: 5%;
+    margin: 2%;
+    width: 33%;
+    text-align: left;
+}
+
+.credits section h2 {
+    text-align: center;
+    font-size: large;
+}
+
+.credits section p , .credits section li{
+    font-size: small;
+}
+
+.credits section h4, .credits section h5 {
+    margin-top: 5%;
+    font-size: medium;
+}
+
+.credits section img {
+    margin-top: 5%;
+    margin-bottom: 4%;
+    width: 50%;
 }

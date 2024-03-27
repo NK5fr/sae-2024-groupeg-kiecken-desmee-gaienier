@@ -1,5 +1,5 @@
 .regles{
-    margin-top: 20px;
+    margin-top: 5%;
     margin-bottom: 20px;
     padding: 20px;
     background-color: #f5f5f5;
@@ -8,7 +8,6 @@
     text-align: center;
     width: 80%;
     margin-left: 10%;
-    margin-top: 10%;
 }
 
 .regles button{
@@ -21,4 +20,33 @@
     cursor: pointer;
     opacity: 1.2;
     text-size-adjust: 50px;
+}
+
+.regles .description {
+    border-color: black;
+    border-style: solid;
+    border-radius: 5%;
+    padding: 5%;
+    width: 75%;
+    margin: auto;
+    margin-bottom: 2%;
+    margin-top: 2%;
+    background: radial-gradient(#f2e7bf, #e6cf7d) no-repeat;
+    font-style: italic;
+}
+
+.regles p {
+    font-size: large;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    line-height: 150%;
+}
+
+.regles > div {
+    display: flex;
+    justify-content: space-around;
+    margin: 4%;
+}
+
+.regles img {
+    height: 50%;
 }

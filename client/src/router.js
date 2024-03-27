@@ -31,14 +31,11 @@ export default class Router {
 				socket.emit('gameStart', {
 					width: canvas.width,
 					height: canvas.height,
+					user: window.sessionStorage.getItem('user'),
 				});
 			}
-			if (path === '/join') {
-				socket.emit('gameJoin');
-				ss;
-			}
 			if (path === '/rejouer') {
-				socket.emit('gameEnd', { socketId: socket.id });
+				socket.emit('gameStop');
 			}
 			if (!skipPushState) {
 				window.history.pushState(null, null, path);

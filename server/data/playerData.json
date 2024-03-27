@@ -1,14 +1,1 @@
-{
-    "health": 5,
-    "speed": 10,
-    "damage": 10,
-    "sprite": {
-        "left": "assets/player/left.png",
-        "idle": "assets/player/idle.png",
-        "right": "assets/player/right.png"
-    },
-    "width": 48,
-    "height": 96,
-    "missileType": "card",
-    "fireRate": 25
-}
+[{"user":"admin","health":100,"damage":100,"speed":100,"fireSpeed":99,"currentSkin":"reverse","currentWeapon":"sphere","skinsPool":["base","reverse"],"weaponsPool":["sphere","card"],"success":["godKiller"],"hitboxWidth":48,"hitboxHeight":96},{"user":"default","health":1,"damage":1,"speed":1,"fireSpeed":1,"currentSkin":"base","currentWeapon":"sphere","skinsPool":["base"],"weaponsPool":["sphere"],"success":[],"hitboxWidth":48,"hitboxHeight":96},{"user":"raph","health":1,"damage":1,"speed":1,"fireSpeed":1,"currentSkin":"base","currentWeapon":"sphere","skinsPool":["base"],"weaponsPool":["sphere"],"success":[],"hitboxWidth":48,"hitboxHeight":96},{"user":"superadmin","health":1,"damage":1,"speed":1,"fireSpeed":1,"currentSkin":"base","currentWeapon":"sphere","skinsPool":["base"],"weaponsPool":["sphere"],"success":[],"hitboxWidth":48,"hitboxHeight":96}]

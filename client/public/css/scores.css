@@ -1,16 +1,19 @@
-.rejouer{
+.scores{
+    margin-top: 4%;
     margin-bottom: 20px;
-    padding: 20px;
     background-color: #f5f5f5;
     border-radius: 10px;
     box-shadow: 0px 0px 10px 0px #000000;
     text-align: center;
     width: 80%;
     margin-left: 10%;
-    margin-top: 10%;
+    padding-top: 5%;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 1%;
 }
 
-.rejouer button{
+.scores button{
     width: 30%;
     background-color: #c4b31f;
     color: white;
@@ -20,6 +23,4 @@
     cursor: pointer;
     opacity: 1.2;
     text-size-adjust: 50px;
-    margin-left: 10%;
-    margin-right: 10%;
 }

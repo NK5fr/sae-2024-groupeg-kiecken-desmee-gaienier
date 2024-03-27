@@ -9,8 +9,11 @@ import startGameRenderer, {
 } from './game/renderGame.js';
 import CarouselStat from './carousel/carouselStat.js';
 import CarouselSkin from './carousel/carouselSkin.js';
+import ScoreMenu from './menu/scoreMenu.js';
 
 export const socket = io();
+
+export const user = window.sessionStorage.getItem('user');
 
 const playerCommands = [
 	'ArrowUp',
@@ -29,7 +32,24 @@ LoginMenu.setLogin($('.login'), socket);
 LoginMenu.setSignin($('.signin'), socket);
 LoginMenu.setMdp_oublie($('.mdp_oublie'), socket);
 
-LoginMenu.resetPassword($('.resetPassword'), socket);
+socket.on('resetLogPass', login => {
+	LoginMenu.resetPassword($('.resetPassword'), socket, login);
+});
+LoginMenu.setLogout($('.logout'), socket, user);
+
+ScoreMenu.setTable($('.scores'), [
+	{ name: 'Nathan', value: 12 },
+	{ name: 'Nathan', value: 2 },
+	{ name: 'Nathan', value: 3 },
+	{ name: 'Nathan', value: 4 },
+	{ name: 'Nathan', value: 5 },
+	{ name: 'Nathan', value: 6 },
+	{ name: 'Nathan', value: 7 },
+	{ name: 'Nathan', value: 8 },
+	{ name: 'Nathan', value: 9 },
+	{ name: 'Nathan', value: 10 },
+	{ name: 'Nathan', value: 11 },
+]);
 
 const routes = [
 	{ path: '/', view: $('.accueil') },
@@ -42,62 +62,81 @@ const routes = [
 	{ path: '/personnalisation', view: $('.personnalisation') },
 	{ path: '/rejouer', view: $('.rejouer') },
 	{ path: '/resetPassword', view: $('.resetPassword') },
+	{ path: '/scores', view: $('.scores') },
 ];
 
+let carouselLife;
+let carouselDamage;
+let carouselFireRate;
+let carouselSpeed;
+let carouselSkin;
+let carouselProjSkin;
+
 socket.on('gameStart', game => {
-	document.addEventListener('keydown', e => {
-		if (!playerCommands.includes(e.key)) return;
-		socket.emit('playerKeyDown', {
-			socketId: socket.id,
-			key: e.key,
-		});
+	document.addEventListener('keydown', ({ key }) => {
+		if (!playerCommands.includes(key)) return;
+		socket.emit('playerKeyDown', key);
 	});
-	document.addEventListener('keyup', e => {
-		if (!playerCommands.includes(e.key)) return;
-		socket.emit('playerKeyUp', {
-			socketId: socket.id,
-			key: e.key,
-		});
+	document.addEventListener('keyup', ({ key }) => {
+		if (!playerCommands.includes(key)) return;
+		socket.emit('playerKeyUp', key);
 	});
-	document.addEventListener('mousedown', event => {
-		socket.emit('playerMouseDown', {
-			socketId: socket.id,
-			x: event.clientX,
-			y: event.clientY,
-		});
+	document.addEventListener('mousedown', ({ clientX, clientY }) => {
+		socket.emit('playerMouseDown', { clientX, clientY });
 	});
 	document.addEventListener('mouseup', () => {
-		socket.emit('playerMouseUp', {
-			socketId: socket.id,
-		});
+		socket.emit('playerMouseUp');
 	});
-	document.addEventListener('mousemove', event => {
-		socket.emit('playerMouseMove', {
-			socketId: socket.id,
-			x: event.clientX,
-			y: event.clientY,
-		});
+	document.addEventListener('mousemove', ({ clientX, clientY }) => {
+		socket.emit('playerMouseMove', { clientX, clientY });
 	});
-
 	setGame(game);
 	startGameRenderer();
 });
 
 socket.on('gameUpdate', game => {
-	if (socket.id !== game.socketId) return;
 	setGame(game);
 });
 
-socket.on('gameEnd', () => {
+socket.on('gameStop', () => {
 	stopGameRenderer();
 	Router.navigate('/rejouer');
-	socket.emit('gameEnd', { socketId: socket.id });
+	socket.emit('gameStop');
 });
 
-let connection = false;
-
-socket.on('user', user => {
-	connection = true;
+socket.on('connexion', ({ user, playerData, playerSkins, weaponSkins }) => {
+	window.sessionStorage.setItem('user', user);
+	console.log(user, playerData, playerSkins, weaponSkins);
+	carouselLife = new CarouselStat(
+		$('.personnalisation .life'),
+		playerData.health
+	);
+	carouselDamage = new CarouselStat(
+		$('.personnalisation .damage'),
+		playerData.damage
+	);
+	carouselSpeed = new CarouselStat(
+		$('.personnalisation .speed'),
+		playerData.speed
+	);
+	carouselFireRate = new CarouselStat(
+		$('.personnalisation .fire-rate'),
+		playerData.fireSpeed
+	);
+	carouselSkin = new CarouselSkin(
+		$('.personnalisation .skin'),
+		playerSkins,
+		playerData.skinsPool,
+		playerData.currentSkin,
+		false
+	);
+	carouselProjSkin = new CarouselSkin(
+		$('.personnalisation .proj-skin'),
+		weaponSkins,
+		playerData.weaponsPool,
+		playerData.currentWeapon,
+		true
+	);
 });
 
 socket.on('path', path => {
@@ -109,22 +148,10 @@ Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
-/*
-if (connection === true) {
-	Router.navigate(window.location.pathname, true);
-	console.log('connection', connection);
-} else {
-	Router.navigate('/login', true);
-}
-*/
+Router.navigate('/login', true);
 
-Router.navigate(window.location.pathname, true);
+socket.on('alert', message => {
+	alert(message);
+});
 
 window.onpopstate = () => Router.navigate(document.location.pathname, true);
-
-const carouselLife = new CarouselStat($('.personnalisation .life'), 1);
-const carouselDamage = new CarouselStat($('.personnalisation .damage'), 1);
-const carouselFireRate = new CarouselStat($('.personnalisation .fire-rate'), 1);
-const carouselSpeed = new CarouselStat($('.personnalisation .speed'), 1);
-const carouselSkin = new CarouselSkin($('.personnalisation .skin'), [""], [""], "", false);
-const carouselProjSkin = new CarouselSkin($('.personnalisation .proj-skin'), ["card"], ["card"], "card", true);

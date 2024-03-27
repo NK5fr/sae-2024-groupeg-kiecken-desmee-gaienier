@@ -1,10 +1,19 @@
 import Entity from './entity.js';
-import { missileData } from '../index.js';
+
+const missileProperties = {
+	health: 1,
+	damage: 1,
+	speed: 5,
+	fireSpeed: 0,
+	hitboxWidth: 24,
+	hitboxHeight: 24,
+};
 
 export default class Missile extends Entity {
-	constructor(x, y, properties, fireAngle) {
+	constructor(x, y, fireAngle, type, properties) {
 		super(x, y, properties);
 		this.fireAngle = fireAngle;
+		this.type = type;
 	}
 
 	update(width, height) {
@@ -17,14 +26,16 @@ export default class Missile extends Entity {
 
 	isOutOfCanvas(width, height) {
 		return (
-			this.posX + this.width < 0 ||
+			this.posX + this.hitboxWidth < 0 ||
 			this.posX > width ||
-			this.posY + this.height < 0 ||
+			this.posY + this.hitboxHeight < 0 ||
 			this.posY > height
 		);
 	}
 
-	static createMissile(posX, posY, missileType, fireAngle) {
-		return new Missile(posX, posY, missileData[missileType], fireAngle);
+	static createMissile(posX, posY, fireAngle, damage, type) {
+		missileProperties.damage = damage;
+		console.log(type);
+		return new Missile(posX, posY, fireAngle, type, missileProperties);
 	}
 }

@@ -15,6 +15,7 @@
 	<link rel="stylesheet" href="css/credits.css" />
 	<link rel="stylesheet" href="css/personnalisation.css" />
 	<link rel="stylesheet" href="css/rejouer.css" />
+	<link rel="stylesheet" href="css/scores.css" />
 	<script src="build/main.bundle.js" defer></script>
 </head>
 <body>
@@ -24,6 +25,7 @@
 		</div>
 		<div class="rejouer">
 			<p>Fin du jeu</p>
+			<button href="/jeu" class="innerLink">Rejouer</button>
 			<button href="/" class="innerLink">Accueil</button>
 		</div>
 		<div class="login">
@@ -46,9 +48,9 @@
 				<label for="password">Password</label>
 				<input type="password" id="password" name="password">
 				<label for="password">Confirmer Password</label>
-				<input type="password" id="password" name="password">
+				<input type="password" id="password" name="password2">
 				<label for="question">Question de sécurité</label>
-				<select name="question" id="question">
+				<select name="recovery_phrase" id="recovery_phrase">
 					<option value="1">Quel est le nom de votre premier animal de compagnie ?</option>
 					<option value="2">Quel est le nom de jeune fille de votre mère ?</option>
 					<option value="3">Quel est le nom de votre ville natale ?</option>
@@ -65,7 +67,7 @@
 				<label for="login">Login</label>
 				<input type="text" id="login" name="login">
 				<label for="question">Votre question de sécurité</label>
-				<select name="question" id="question">
+				<select id="recovery_phrase2" name="recovery_phrase2" >
 					<option value="1">Quel est le nom de votre premier animal de compagnie ?</option>
 					<option value="2">Quel est le nom de jeune fille de votre mère ?</option>
 					<option value="3">Quel est le nom de votre ville natale ?</option>
@@ -73,7 +75,7 @@
 					<option value="5">Quel est le nom de votre meilleur ami d'enfance ?</option>
 				</select>
 				<label for="reponse">Réponse</label>
-				<input type="text" id="reponse" name="reponse">
+				<input type="text" id="response" name="response">
 				<input type="submit" value="Réhintialiser le mot de passe">
 				<a href="/login" class="loginLien innerLink">Se connecter</a>
 				<a href="/signin" class="siginLien innerLink">S'inscrire</a>
@@ -85,7 +87,7 @@
 				<label for="password">Nouveau mot de passe</label>
 				<input type="password" id="password" name="password">
 				<label for="password">Confirmer Password</label>
-				<input type="password" id="password" name="password">
+				<input type="password" id="password2" name="password2">
 				<input type="submit" value="Réinitialiser le mot de passe">
 				<a href="/login" class="loginLien innerLink">Se connecter</a>
 			</form>
@@ -99,33 +101,102 @@
 					<div class="menu">
 						<button href="/jeu" class="innerLink">Nouvelle partie</button>
 						<button href="/jeu" class="innerLink">Rejoindre</button>
-						<button class="facile">Facile</button>
-						<button class="normal">Normal</button>
-						<button class="difficile">Difficile</button>
+						<div class="diff">
+							<button class="facile">Facile</button>
+							<button class="normal">Normal</button>
+							<button class="difficile">Difficile</button>
+						</div>
 					</div>
 				</div>
+				<button href="/scores" class="innerLink">Scores</button>
 				<button href="/regles" class="innerLink">Règles</button>
 				<button href="/credits" class="innerLink">Crédits</button>
 				<button href="/personnalisation" class="innerLink">Personnalisation</button>
-				<button class="deconnexion">Deconnexion</button>
+				
+				<button class="logout">Deconnexion</button>
 			</div>
 		</div>
+		<div class="scores">
+			<table class="table table-striped table-bordered border-secondary">
+				<tr class="table-dark">
+					<th>Pseudo</th>
+					<th>Temps</th>
+				</tr>
+			</table>
+			<button href="/" class="innerLink">Accueil</button>
+		</div>
 		<div class="regles">
-			<p class="description">
-				Dans "Heaven Must Fall", incarnez Nathan, un héros déterminé à remettre
-				Dieu à sa place après que son frère divin ait semé le chaos. Armé jusqu'aux dents, Nathan s'élance 
-				à travers les cieux déchus, affrontant des hordes d'anges déchus devenus les sbires de la rébellion.
-				Des séraphins impitoyables aux trônes colossaux, en passant par les archanges déchus, chaque niveau
-				offre un défi épique, ponctué de rencontres avec de redoutables boss, les Archanges déchus, chacun 
-				doté de pouvoirs divins corrompus. Utilisez un arsenal varié et améliorable pour pulvériser vos 
-				ennemis célestes et restaurer l'ordre divin. "Heaven Must Fall" offre une action frénétique et 
-				une histoire captivante où la lutte pour la justice traverse les cieux eux-mêmes.
-				Êtes-vous prêt à prendre les armes et à faire tomber le paradis déchu ? 
-			</p>
+			<div>
+				<img src="images/feu.gif">
+				<p class="description">
+					Un mal d'origine inconnue a envahit le paradis. La corruption à pris possession de tout les anges qui menacent de 
+					détruire le monde des hommes. Pour lutter face à ce mal un élu est né parmis les hommes afin de 
+					faire tomber le ciel et le refabriquer de zéro. Incarnez cet élu et faites tomber un à un les sept étages
+					remplis d'anges malveillants sous les ordre des sept archanges. Une fois les étages purifiés, il vous faudra
+					combattre l'être suprême, le vaincre et prendre sa place pour remettre la paix sur le monde.
+					La corruption est tenace, il vous faudra combattre de nombreuses fois, tâchez d'être de plus en plus 
+					rapide pour accomplir votre mission. N'oubliez pas ... Heaven Must Fall !
+				</p>
+				<img src="images/feu.gif">
+			</div>
 			<button href="/" class="innerLink">Accueil</button>
 		</div>
 		<div class="credits">
-			<p>Nathan DESMEE Raphael KIECKEN Antoine GAIENIER</p>
+			<div>
+				<section class="nathan">
+					<h2>Nathan DESMEE</h2>
+					<hr>
+					<p>Groupe G</p>
+					<h4>Surnoms :</h4>
+					<ul>
+						<li>NK5_fr</li>
+						<li>The GOAT</li>
+						<li>The Honored One</li>
+					</ul>
+					<h4>Jeu vidéo préféré :</h4>
+					<img src="/images/rdr2.jpeg">
+					<h5>Pourcentage de la note :</h5>
+					<ul>
+						<li>99.9%</li>
+					</ul>
+				</section>
+				<section class="raphael">
+					<h2>Raphael KIECKEN</h2>
+					<hr>
+					<p>Groupe G</p>
+					<h4>Surnoms :</h4>
+					<ul>
+						<li>Sora</li>
+						<li>Ours Tente</li>
+						<li>The One Who Left It All Behind</li>
+					</ul>
+					<h4>Jeu vidéo préféré :</h4>
+					<img src="/images/ow.jpeg">
+					<h5>Pourcentage de la note :</h5>
+					<ul>
+						<li>0.05%</li>
+					</ul>
+				</section>
+				<section class="antoine">
+					<h2>Antoine GAIENIER</h2>
+					<hr>
+					<p>Groupe G</p>
+					<h4>Surnoms :</h4>
+					<ul>
+						<li>Apache</li>
+						<li>Apaache</li>
+						<li>Apachee</li>
+						<li>Tier Temps</li>
+						<li>King of Curses</li>
+					</ul>
+					<h4>Jeu vidéo préféré :</h4>
+					<img src="/images/csgo.jpeg">
+					<h5>Pourcentage de la note :</h5>
+					<ul>
+						<li>0.05%</li>
+					</ul>
+				</section>
+			</div>
 			<button href="/" class="innerLink">Accueil</button>
 		</div>
 		<div class="personnalisation">
