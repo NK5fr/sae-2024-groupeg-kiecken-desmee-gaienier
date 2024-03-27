@@ -31,6 +31,22 @@
     margin: auto;
     margin-bottom: 2%;
     margin-top: 2%;
-    background: radial-gradient(#f2e7bf, #e6cf7d 100%) no-repeat;
+    background: radial-gradient(#f2e7bf, #e6cf7d) no-repeat;
     font-style: italic;
+}
+
+.regles p {
+    font-size: large;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    line-height: 150%;
+}
+
+.regles > div {
+    display: flex;
+    justify-content: space-around;
+    margin: 4%;
+}
+
+.regles img {
+    height: 50%;
 }

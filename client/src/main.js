@@ -32,11 +32,13 @@ LoginMenu.setLogin($('.login'), socket);
 LoginMenu.setSignin($('.signin'), socket);
 LoginMenu.setMdp_oublie($('.mdp_oublie'), socket);
 
-LoginMenu.resetPassword($('.resetPassword'), socket);
-LoginMenu.setLogout($('.logout'), socket);
+socket.on('resetLogPass', login => {
+	LoginMenu.resetPassword($('.resetPassword'), socket, login);
+});
+LoginMenu.setLogout($('.logout'), socket, user);
 
 ScoreMenu.setTable($('.scores'), [
-	{ name: 'Nathan', value: 1 },
+	{ name: 'Nathan', value: 12 },
 	{ name: 'Nathan', value: 2 },
 	{ name: 'Nathan', value: 3 },
 	{ name: 'Nathan', value: 4 },
@@ -146,9 +148,7 @@ Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
-Router.navigate(window.location.pathname, true);
-if (user) Router.navigate('/', true);
-else Router.navigate('/login', true);
+Router.navigate('/login', true);
 
 socket.on('alert', message => {
 	alert(message);
