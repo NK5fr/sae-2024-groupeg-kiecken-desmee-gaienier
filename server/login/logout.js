@@ -1,19 +1,17 @@
 import fs from 'fs';
 import { io } from '../index.js';
 
-export default function deconnexion(data, socket) {
+export default function logout(data, socket) {
 	// récupère les données de l'utilisateur dans la base de données avec le login reçu
 	let dataBase = fs.readFileSync('server/data/userData.json', 'utf-8');
 	let dataBaseParsed = JSON.parse(dataBase);
 
-	console.log('Database', dataBase.length);
-	console.log('database', dataBaseParsed);
+	console.log(data);
 
-	let user = dataBaseParsed.find(user => user.login == data.login);
+	let user = dataBaseParsed.find(user => user.login == data);
 	console.log('User', user);
 	if (user != undefined && user.connexion == true) {
-		io.to(socket).emit('user', user.login);
-		io.to(socket).emit('path', '/');
+		io.to(socket).emit('path', '/login');
 		user.connexion = false;
 		fs.writeFileSync(
 			'server/data/userData.json',

@@ -33,11 +33,7 @@ LoginMenu.setSignin($('.signin'), socket);
 LoginMenu.setMdp_oublie($('.mdp_oublie'), socket);
 
 LoginMenu.resetPassword($('.resetPassword'), socket);
-LoginMenu.setLogout(
-	$('.logout'),
-	socket,
-	window.sessionStorage.getItem('user')
-);
+LoginMenu.setLogout($('.logout'), socket, user);
 
 ScoreMenu.setTable($('.scores'), [
 	{ name: 'Nathan', value: 1 },
@@ -101,6 +97,7 @@ socket.on('gameStop', () => {
 });
 
 socket.on('user', user => {
+	console.log(user);
 	window.sessionStorage.setItem('user', user);
 });
 socket.on('path', path => {
@@ -112,9 +109,9 @@ Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
-Router.navigate(window.location.pathname, true);
-Router.navigate(window.location.pathname, true);
-//Router.navigate('/login', true);
+//Router.navigate(window.location.pathname, true);
+
+Router.navigate('/login', true);
 
 socket.on('alert', message => {
 	alert(message);
@@ -132,25 +129,4 @@ const carouselSkin = new CarouselSkin(
 	['base'],
 	'base',
 	false
-);
-const carouselProjSkin = new CarouselSkin(
-	$('.personnalisation .proj-skin'),
-	['card', 'sphere'],
-	['card'],
-	'card',
-	true
-);
-const carouselSkin = new CarouselSkin(
-	$('.personnalisation .skin'),
-	['base', 'reverse'],
-	['base'],
-	'base',
-	false
-);
-const carouselProjSkin = new CarouselSkin(
-	$('.personnalisation .proj-skin'),
-	['card', 'energy-ball'],
-	['card'],
-	'card',
-	true
 );

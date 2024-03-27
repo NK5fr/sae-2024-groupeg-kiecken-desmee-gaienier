@@ -2,12 +2,13 @@ import http from 'http';
 import express from 'express';
 import addWebpackMiddleware from './middlewares/addWebpackMiddleware.js';
 import { Server as IOServer } from 'socket.io';
-import connexion from './login/connexion.js';
+import login from './login/login.js';
 import signin from './login/signin.js';
 import mdp_oublie from './login/mdp_oublie.js';
 import Game from './game/game.js';
 import { readFileSync } from 'fs';
 import resetPassword from './login/resetPassword.js';
+import logout from './login/logout.js';
 
 let currentGame = [];
 
@@ -32,7 +33,7 @@ export let stageData = JSON.parse(
 io.on('connection', socket => {
 	console.log(`New connection: ${socket.id}`);
 	socket.on('login', data => {
-		connexion(data, socket.id);
+		login(data, socket.id);
 	});
 	socket.on('signin', data => {
 		signin(data, socket.id);
@@ -44,7 +45,7 @@ io.on('connection', socket => {
 		resetPassword(data, socket.id);
 	});
 	socket.on('logout', data => {
-		deconnexion(data, socket.id);
+		logout(data, socket.id);
 	});
 
 	socket.on('gameStart', ({ user, width, height }) => {
