@@ -30,7 +30,7 @@ export default function login(data, socket) {
 			weaponSkins: skinData.weaponSkins,
 		});
 		io.to(socket).emit('path', '/');
-		user.connexion = true;
+		user.connexion = false;
 		// enregistre la connexion de l'utilisateur dans la base de données
 		fs.writeFileSync(
 			'server/data/userData.json',

@@ -1,6 +1,6 @@
 import { socket } from '../main.js';
 import { renderAngels } from './renderAngel.js';
-import { renderMissilesHitbox } from './renderMissiles.js';
+import { renderMissiles, renderMissilesHitbox } from './renderMissiles.js';
 import renderPlayer, { renderHealthBar } from './renderPlayer.js';
 import renderStage, { renderStageProgressionBar } from './renderStage.js';
 
@@ -39,6 +39,9 @@ function renderGame() {
 		});
 
 		renderAngels(game.stage.angels, context);
+		game.stage.angels.forEach(angel => {
+			if (angel.missiles) renderMissiles(angel.missiles, context);
+		});
 
 		renderStageProgressionBar(game.stage, context, canvas);
 		renderHealthBar(game.mainPlayer, 0, context, canvas);

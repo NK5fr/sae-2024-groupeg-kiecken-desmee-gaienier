@@ -73,16 +73,13 @@ function updateGame(gameInstance) {
 	}
 	if (gameInstance.gameNotFocused) return;
 	mainPlayer.update(gameInstance.width, gameInstance.height);
-	mainPlayer.missiles.forEach(missile =>
-		missile.update(gameInstance.width, gameInstance.height)
-	);
 	otherPlayers.forEach(player => {
 		player.update(gameInstance.width, gameInstance.height);
-		player.missiles.forEach(missile =>
-			missile.update(gameInstance.width, gameInstance.height)
-		);
 	});
 	stage.update(gameInstance.width, gameInstance.height);
+	stage.angels.forEach(angel => {
+		angel.update(mainPlayer, gameInstance.width, gameInstance.height);
+	});
 
 	stage.angels.forEach(angel => {
 		if (mainPlayer.checkCollision(angel)) {
@@ -95,7 +92,6 @@ function updateGame(gameInstance) {
 				missile.health = 0;
 			}
 		});
-
 		otherPlayers.forEach(player => {
 			if (player.checkCollision(angel)) {
 				player.health -= angel.damage;
