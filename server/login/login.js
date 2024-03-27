@@ -5,6 +5,7 @@
 
 import fs from 'fs';
 import { io } from '../index.js';
+import { playersData, skinData } from '../index.js';
 
 export default function login(data, socket) {
 	//console.log('Données de connexion reçues', data);
@@ -19,8 +20,15 @@ export default function login(data, socket) {
 		user => user.login == data.login && user.password == data.password
 	);
 	//console.log('User', user);
-	if (user != undefined && user.connexion == false) {
-		io.to(socket).emit('user', user.login);
+	if (user && user.connexion == false) {
+		const playerData = playersData.find(player => player.user === user.login);
+		console.log(user, playerData, skinData);
+		io.to(socket).emit('connexion', {
+			user: user.login,
+			playerData,
+			playerSkins: skinData.playerSkins,
+			weaponSkins: skinData.weaponSkins,
+		});
 		io.to(socket).emit('path', '/');
 		user.connexion = true;
 		// enregistre la connexion de l'utilisateur dans la base de données
@@ -28,7 +36,7 @@ export default function login(data, socket) {
 			'server/data/userData.json',
 			JSON.stringify(dataBaseParsed)
 		);
-	} else if (user != undefined && user.connexion == true) {
+	} else if (user && user.connexion == true) {
 		io.to(socket).emit('alert', 'Utilisateur déjà connecté');
 	} else {
 		io.to(socket).emit('alert', 'Mot de passe ou login incorrect');

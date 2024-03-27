@@ -4,21 +4,20 @@ export default class Entity {
 		this.posY = y;
 
 		this.health = this.maxHealth = properties.health;
-		this.speed = properties.speed;
 		this.damage = properties.damage;
+		this.speed = properties.speed;
+		this.fireSpeed = properties.fireSpeed;
 
-		this.sprite = properties.sprite;
-
-		this.width = properties.width;
-		this.height = properties.height;
+		this.hitboxWidth = properties.hitboxWidth;
+		this.hitboxHeight = properties.hitboxHeight;
 	}
 
 	checkCollision(entity) {
 		return (
-			this.posX < entity.posX + entity.width &&
-			this.posX + this.width > entity.posX &&
-			this.posY < entity.posY + entity.height &&
-			this.posY + this.height > entity.posY
+			this.posX < entity.posX + entity.hitboxWidth &&
+			this.posX + this.hitboxWidth > entity.posX &&
+			this.posY < entity.posY + entity.hitboxHeight &&
+			this.posY + this.hitboxHeight > entity.posY
 		);
 	}
 }

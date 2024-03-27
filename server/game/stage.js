@@ -1,8 +1,8 @@
-import { Wanderer } from './angel.js';
+import { DiagWanderer, Wanderer } from './angel.js';
 import { stageData, angelData } from '../index.js';
 
 export class Stage {
-	constructor(name, width, height) {
+	constructor(name) {
 		this.name = name;
 
 		this.angelsSpecies = stageData[name].angelsSpecies;
@@ -14,9 +14,6 @@ export class Stage {
 
 		this.nameImage = stageData[name].nameImage;
 		this.nameOpacity = 1;
-
-		this.width = width;
-		this.height = height;
 
 		this.numberOfAngels = stageData[name].numberOfAngels;
 		this.numberOfAngelsSpawned = 0;
@@ -35,9 +32,34 @@ export class Stage {
 
 		if (gameNotFocused) return;
 		if (this.numberOfAngelsSpawned < this.numberOfAngels) {
-			this.angels.push(
-				new Wanderer(x, y, angelData[this.angelsSpecies]['one'])
-			);
+			const random = Math.random();
+			let angel = null;
+			if (random < 0.2) {
+				angel = new Wanderer(
+					x,
+					y,
+					this.angelsSpecies,
+					'three',
+					angelData[this.angelsSpecies]['three']
+				);
+			} else if (random < 0.5) {
+				angel = new DiagWanderer(
+					x,
+					y,
+					this.angelsSpecies,
+					'two',
+					angelData[this.angelsSpecies]['two']
+				);
+			} else {
+				angel = new Wanderer(
+					x,
+					y,
+					this.angelsSpecies,
+					'one',
+					angelData[this.angelsSpecies]['one']
+				);
+			}
+			this.angels.push(angel);
 			this.numberOfAngelsSpawned++;
 		}
 	}
