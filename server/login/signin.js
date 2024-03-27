@@ -18,7 +18,7 @@ export default function signin(data, socket) {
 	}
 	// si l'utilisateur n'est pas trouvé donc on l'ajoute à la base de données et on le connecte
 	else {
-		data.connexion = 1;
+		data.connexion = true;
 		console.log(data);
 		dataBaseParsed.push(data);
 		fs.writeFileSync(

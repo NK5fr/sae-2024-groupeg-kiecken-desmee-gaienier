@@ -1,5 +1,5 @@
 .regles{
-    margin-top: 10%;
+    margin-top: 5%;
     margin-bottom: 20px;
     padding: 20px;
     background-color: #f5f5f5;
@@ -20,4 +20,17 @@
     cursor: pointer;
     opacity: 1.2;
     text-size-adjust: 50px;
+}
+
+.regles .description {
+    border-color: black;
+    border-style: solid;
+    border-radius: 5%;
+    padding: 5%;
+    width: 75%;
+    margin: auto;
+    margin-bottom: 2%;
+    margin-top: 2%;
+    background: radial-gradient(#f2e7bf, #e6cf7d 100%) no-repeat;
+    font-style: italic;
 }

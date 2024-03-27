@@ -6,34 +6,31 @@
 import fs from 'fs';
 import { io } from '../index.js';
 
-export default function connexion(data, socket) {
-	console.log('Données de connexion reçues', data);
+export default function login(data, socket) {
+	//console.log('Données de connexion reçues', data);
 
 	// récupère les données de l'utilisateur dans la base de données avec le login reçu
 	let dataBase = fs.readFileSync('server/data/userData.json', 'utf-8');
 	let dataBaseParsed = JSON.parse(dataBase);
 
-	console.log('Database', dataBase.length);
-	// parcourir database pour trouver l'utilisateur
-	console.log('database', dataBaseParsed);
+	//console.log('database', dataBaseParsed);
 
 	let user = dataBaseParsed.find(
 		user => user.login == data.login && user.password == data.password
 	);
-	console.log('User', user);
-	if (user != undefined && user.connexion == 0) {
+	//console.log('User', user);
+	if (user != undefined && user.connexion == false) {
 		io.to(socket).emit('user', user.login);
 		io.to(socket).emit('path', '/');
-		user.connexion = 1;
+		user.connexion = true;
 		// enregistre la connexion de l'utilisateur dans la base de données
 		fs.writeFileSync(
 			'server/data/userData.json',
 			JSON.stringify(dataBaseParsed)
 		);
-	} else if (user != undefined && user.connexion == 1) {
+	} else if (user != undefined && user.connexion == true) {
 		io.to(socket).emit('alert', 'Utilisateur déjà connecté');
 	} else {
 		io.to(socket).emit('alert', 'Mot de passe ou login incorrect');
 	}
 }
-

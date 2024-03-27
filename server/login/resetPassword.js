@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { io } from '../index.js';
 
 export default function resetPassword(data, socket) {
 	console.log('Données de réinitialisation de mot de passe reçues', data);
@@ -12,17 +13,15 @@ export default function resetPassword(data, socket) {
 
 	let user = dataBaseParsed.find(user => user.login == data.login);
 	console.log('User', user);
+
 	if (user != undefined) {
 		user.password = data.password;
-		// Supprime l'utilisateur de la base de données
-		dataBaseParsed = dataBaseParsed.filter(user => user.login != data.login);
-		// Ajoute l'utilisateur modifié à la base de données
-		dataBaseParsed.push(user);
-		fs.writeFileSync('data/DataBase.json', JSON.stringify(dataBaseParsed));
-		console.log('Mot de passe réinitialisé');
-		//socket.emit('loginSuccess', user);
+		fs.writeFileSync(
+			'server/data/userData.json',
+			JSON.stringify(dataBaseParsed)
+		);
+		io.to(socket).emit('path', '/login');
 	} else {
-		console.log('Utilisateur non trouvé');
-		//socket.emit('loginFail');
+		io.to(socket).emit('alert', 'Utilisateur non trouvé');
 	}
 }
