@@ -20,6 +20,8 @@ export default class Game {
 		this.owner = playerData.user;
 		this.socketId = socketId;
 
+		this.startTime = Date.now();
+
 		this.mainPlayer = new Player(100, 100, playerData, socketId);
 
 		this.stages = stage;
@@ -60,6 +62,10 @@ function updateGame(gameInstance) {
 			gameInstance.stages.indexOf(stage.name) ===
 			gameInstance.stages.length - 1
 		) {
+			const time = new Date(Date.now() - gameInstance.startTime);
+			console.log(
+				`${time.getUTCHours() >= 10 ? time.getUTCHours() : '0' + time.getUTCHours()}:${time.getUTCMinutes() >= 10 ? time.getUTCMinutes() : '0' + time.getUTCMinutes()}:${time.getUTCSeconds() >= 10 ? time.getUTCSeconds() : '0' + time.getUTCSeconds()}`
+			);
 			io.to(gameInstance.socketId).emit('gameStop');
 			return;
 		}
