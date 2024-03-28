@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { io } from '../index.js';
+import login from './login.js';
 
 export default function signin(data, socket) {
 	console.log('Données de connexion reçues', data);
@@ -18,7 +19,7 @@ export default function signin(data, socket) {
 	}
 	// si l'utilisateur n'est pas trouvé donc on l'ajoute à la base de données et on le connecte
 	else {
-		data.connexion = true;
+		data.connexion = false;
 		console.log('signin', data);
 		dataBaseParsed.push(data);
 		fs.writeFileSync(
@@ -35,8 +36,7 @@ export default function signin(data, socket) {
 		fs.writeFileSync('server/data/playerData.json', JSON.stringify(players));
 		console.log('Utilisateur ajouté');
 
-		io.to(socket).emit('path', '/');
-		io.to(socket).emit('user', data.login);
+		login({login: data.login, password: data.password}, socket);
 		
 	}
 }

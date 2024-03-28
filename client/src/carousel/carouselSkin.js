@@ -37,9 +37,15 @@ export default class CarouselSkin {
 		let html = ``;
 		let n = 0;
 		this.skins.forEach(skin => {
-			if (this.actualSkin === skin)
+			if (this.actualSkin === skin){
 				html += `<div class="carousel-item active">`;
-			else html += `<div class="carousel-item">`;
+				this.actualIndex = n;
+			} else {
+				html += `<div class="carousel-item">`;
+			}
+				
+
+			
 
 			if (this.isProj)
 				html += `<img src="assets/missile/${skin}.png" name="${skin}">`;
