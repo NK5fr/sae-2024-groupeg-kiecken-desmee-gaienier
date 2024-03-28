@@ -8,6 +8,7 @@
     text-align: center;
     width: 80%;
     margin-left: 10%;
+    padding-top: 3%;
 }
 
 .regles button{
@@ -44,7 +45,7 @@
 .regles > div {
     display: flex;
     justify-content: space-around;
-    margin: 4%;
+    margin: 3%;
 }
 
 .regles img {

@@ -6,8 +6,10 @@ export default class ScoreMenu {
 		const tenMost = scores.slice(0, 10);
 		const table = $('table', element);
 		let html = table.html();
+		let n = 1;
 		tenMost.forEach(score => {
-			html += `<tr><td>${score.name}</td><td>${score.value} secondes</td></tr>`;
+			html += `<tr><td>${n}</td><td>${score.name}</td><td>${score.value} secondes</td></tr>`;
+			n++;
 		});
 		table.html(html);
 	}

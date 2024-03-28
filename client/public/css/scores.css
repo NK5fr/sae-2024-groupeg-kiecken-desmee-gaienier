@@ -7,10 +7,10 @@
     text-align: center;
     width: 80%;
     margin-left: 10%;
-    padding-top: 5%;
     padding-left: 5%;
     padding-right: 5%;
     padding-bottom: 1%;
+    padding-top: 2%;
 }
 
 .scores button{
@@ -23,4 +23,35 @@
     cursor: pointer;
     opacity: 1.2;
     text-size-adjust: 50px;
+}
+
+.scores > h1 {
+    margin-bottom: 3%;
+}
+
+.scores > table {
+    width: 80%;
+    margin: auto;
+    margin-bottom: 3%;
+    border-style: solid;
+    border-color: black;
+    background: linear-gradient(#e2e2e2 50%, #bbbbbb) no-repeat;
+    font-size: large;
+}
+
+.scores td , .scores th{
+    padding: 1%;
+    border-style: solid;
+    border-color: #000000;
+    border-width: 1px;
+    width: 45%;
+}
+
+.scores th {
+    background-color: #303030;
+    color: whitesmoke;
+}
+
+.scores td:nth-child(1), .scores th:nth-child(1){
+    width: 10%;
 }

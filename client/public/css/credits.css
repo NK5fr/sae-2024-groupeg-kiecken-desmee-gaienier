@@ -8,6 +8,7 @@
     width: 80%;
     margin-left: 10%;
     margin-top: 2%;
+    padding-top: 2%;
 }
 
 .credits button{
@@ -28,8 +29,7 @@
 }
 
 .credits section {
-    background-color: #10303b;
-    color: whitesmoke;
+    background: radial-gradient(#f2e7bf, #e6cf7d) no-repeat;
     border: #000000;
     border-style: solid;
     padding: 2%;

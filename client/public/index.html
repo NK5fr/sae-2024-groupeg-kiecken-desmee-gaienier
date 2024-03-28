@@ -28,27 +28,27 @@
 			<button href="/jeu" class="innerLink">Rejouer</button>
 			<button href="/" class="innerLink">Accueil</button>
 		</div>
-		<div class="login">
+		<div class="login connexionForm">
 			<form action="login" method="post">
 				<p>Connexion</p>
 				<label for="login">Login</label>
-				<input type="text" id="login" name="login">
+				<input type="text" id="login" name="login" class="form-control">
 				<label for="password">Password</label>
-				<input type="password" id="password" name="password">
+				<input type="password" id="password" name="password" class="form-control">
 				<input type="submit" value="Connexion">
 				<a href="/mdp_oublie" class="mdp_oublieLien innerLink">Mot de passe oublié</a>
 				<a href="/signin" class="siginLien innerLink">S'inscrire</a>
 			</form>
 		</div>
-		<div class="signin">
+		<div class="signin connexionForm">
 			<form action="signin" method="post">
 				<p>Inscription</p>
 				<label for="login">Login</label>
-				<input type="text" id="login" name="login">
+				<input type="text" id="login" name="login" class="form-control">
 				<label for="password">Password</label>
-				<input type="password" id="password" name="password">
+				<input type="password" id="password" name="password" class="form-control">
 				<label for="password">Confirmer Password</label>
-				<input type="password" id="password" name="password2">
+				<input type="password" id="password" name="password2" class="form-control">
 				<label for="question">Question de sécurité</label>
 				<select name="recovery_phrase" id="recovery_phrase">
 					<option value="1">Quel est le nom de votre premier animal de compagnie ?</option>
@@ -57,15 +57,17 @@
 					<option value="4">Quel est le nom de votre premier professeur ?</option>
 					<option value="5">Quel est le nom de votre meilleur ami d'enfance ?</option>
 				</select>
-				<input type="text" id="reponse" name="reponse">
+				<label for="reponse">Réponse</label>
+				<input type="text" id="reponse" name="reponse" class="form-control">
 				<input type="submit" value="S'inscrire">
 				<a href="/login" class="loginLien innerLink">Se connecter</a>
 			</form>
 		</div>
-		<div class="mdp_oublie">
+		<div class="mdp_oublie connexionForm">
 			<form action="mdp_oublie" method="post">
+				<p>Mot de passe oublié</p>
 				<label for="login">Login</label>
-				<input type="text" id="login" name="login">
+				<input type="text" id="login" name="login" class="form-control">
 				<label for="question">Votre question de sécurité</label>
 				<select id="recovery_phrase2" name="recovery_phrase2" >
 					<option value="1">Quel est le nom de votre premier animal de compagnie ?</option>
@@ -75,19 +77,20 @@
 					<option value="5">Quel est le nom de votre meilleur ami d'enfance ?</option>
 				</select>
 				<label for="reponse">Réponse</label>
-				<input type="text" id="response" name="response">
+				<input type="text" id="response" name="response" class="form-control">
 				<input type="submit" value="Réhintialiser le mot de passe">
 				<a href="/login" class="loginLien innerLink">Se connecter</a>
 				<a href="/signin" class="siginLien innerLink">S'inscrire</a>
 			</form>
 		</div>
 		
-		<div class="resetPassword">
+		<div class="resetPassword connexionForm">
 			<form action="resetPassword" method="post">
+				<p>Changement de mot de passe</p>
 				<label for="password">Nouveau mot de passe</label>
-				<input type="password" id="password" name="password">
+				<input type="password" id="password" name="password" class="form-control">
 				<label for="password">Confirmer Password</label>
-				<input type="password" id="password2" name="password2">
+				<input type="password" id="password2" name="password2" class="form-control">
 				<input type="submit" value="Réinitialiser le mot de passe">
 				<a href="/login" class="loginLien innerLink">Se connecter</a>
 			</form>
@@ -117,8 +120,10 @@
 			</div>
 		</div>
 		<div class="scores">
-			<table class="table table-striped table-bordered border-secondary">
-				<tr class="table-dark">
+			<h1>Scores</h1>
+			<table>
+				<tr>
+					<th>Rang</th>
 					<th>Pseudo</th>
 					<th>Temps</th>
 				</tr>
@@ -126,6 +131,7 @@
 			<button href="/" class="innerLink">Accueil</button>
 		</div>
 		<div class="regles">
+			<h1>Règles</h1>
 			<div>
 				<img src="images/feu.gif">
 				<p class="description">
@@ -142,6 +148,7 @@
 			<button href="/" class="innerLink">Accueil</button>
 		</div>
 		<div class="credits">
+			<h1>Crédits</h1>
 			<div>
 				<section class="nathan">
 					<h2>Nathan DESMEE</h2>
@@ -200,6 +207,7 @@
 			<button href="/" class="innerLink">Accueil</button>
 		</div>
 		<div class="personnalisation">
+			<h1>Personnalisation</h1>
 			<div class="carousels">
 				<div class="carousel slide life">
 					<h2>Vie</h2>
@@ -224,7 +232,18 @@
 					<button class="carousel-control-next" type="button">
 						<span class="carousel-control-next-icon"></span>
 					</button>				
-				</div>
+				</div>l).
+
+				TypeError: NetworkError when attempting to fetch resource. ClientUserControleur.js:81:24
+				Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at http://localhost:8000/user/connect. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 404.
+				
+				Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at http://localhost:8000/user/connect. (Reason: CORS request did not succeed). Status code: (null).
+				
+				TypeError: NetworkError when attempting to fetch resource. ClientUserControleur.js:81:24
+				
+				1
+				
+				​
 				<div class="carousel slide fire-rate">
 					<h2>Vitesse de tir</h2>
 					<div class="carousel-inner">

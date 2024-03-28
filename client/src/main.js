@@ -148,7 +148,7 @@ Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
-Router.navigate('/login', true);
+Router.navigate(window.location.pathname, true);
 
 socket.on('alert', message => {
 	alert(message);
