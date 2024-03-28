@@ -1,15 +1,7 @@
 const angelSkinPath = 'assets/angel';
-const angelImage = [];
+const angelImage = new Image();
 
 export default function renderAngel(angel, context) {
-	let angelImage = angelImage.find(
-		image => image.src === `${angelSkinPath}/${angel.species}/${angel.type}.png`
-	);
-	if (!angelImage) {
-		angelImage = new Image();
-		angelImage.src = `${angelSkinPath}/${angel.species}/${angel.type}.png`;
-		angelImage.push(angelImage);
-	}
 	angelImage.src = `${angelSkinPath}/${angel.species}/${angel.type}.png`;
 	context.drawImage(angelImage, angel.posX, angel.posY);
 }

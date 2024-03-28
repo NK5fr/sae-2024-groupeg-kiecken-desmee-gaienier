@@ -134,13 +134,11 @@ io.on('connection', socket => {
 		const game = currentGame.find(game => game.socketId === socket.id);
 		if (!game) return;
 		currentGame = currentGame.filter(game => game.socketId !== socket.id);
-		console.log(`Game stopped: ${socket.id}`);
 	});
 
 	socket.on('disconnect', () => {
 		const game = currentGame.find(game => game.socketId === socket.id);
 		if (game) game.stopGame();
-		console.log(`Disconnected: ${socket.id}`);
 	});
 });
 

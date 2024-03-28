@@ -2,7 +2,7 @@ import { io } from '../index.js';
 import Player from './player.js';
 import { Stage } from './stage.js';
 
-const stage = ['jupiter', 'saturn', 'uranus', 'sun'];
+const stage = ['venus', 'earth', 'jupiter', 'mars', 'saturn', 'uranus', 'sun'];
 
 export default class Game {
 	#gameUpdater;
@@ -22,7 +22,7 @@ export default class Game {
 
 		this.mainPlayer = new Player(100, 100, playerData, socketId);
 
-		this.stages = ['venus', 'earth', 'mars'];
+		this.stages = stage;
 		this.stage = new Stage(this.stages[0], width, height);
 	}
 
@@ -38,6 +38,12 @@ export default class Game {
 	}
 
 	stopGame() {
+		this.mainPlayer.missiles = [];
+		this.otherPlayers.forEach(player => {
+			player.missiles = [];
+		});
+		this.stage.angels = [];
+		this.stage.strandedMissiles = [];
 		clearInterval(this.#gameUpdater);
 		clearInterval(this.#angelsSpawner);
 	}
@@ -57,13 +63,11 @@ function updateGame(gameInstance) {
 			io.to(gameInstance.socketId).emit('gameStop');
 			return;
 		}
-
 		gameInstance.stage = new Stage(
 			gameInstance.stages[gameInstance.stages.indexOf(stage.name) + 1],
 			gameInstance.width,
 			gameInstance.height
 		);
-
 		gameInstance.startGame();
 	}
 	if (mainPlayer.health <= 0) {
@@ -74,7 +78,7 @@ function updateGame(gameInstance) {
 	otherPlayers.forEach(player => {
 		player.update(gameInstance.width, gameInstance.height);
 	});
-	stage.update(gameInstance.width, gameInstance.height);
+	stage.update(mainPlayer);
 	stage.angels.forEach(angel => {
 		angel.update(mainPlayer, gameInstance.width, gameInstance.height);
 	});

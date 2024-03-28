@@ -2,24 +2,23 @@
     "venus": {
         "background": "/assets/stage/background/1.png",
         "numberOfAngels": 10,
-        "angelsSpecies": "cherubin",
+        "angelsSpecies": "cupidon",
         "archangel": "anael"
     },
     "earth": {
         "background": "/assets/stage/background/2.png",
         "numberOfAngels": 10,
-        "angelsSpecies": "seraphin",
-        "archangel": "zadkiel"
+        "angelsSpecies": "vertue",
+        "archangel": "sachiel"
     },
     "jupiter": {
         "background": "/assets/stage/background/3.png",
         "numberOfAngels": 10,
-        "angelsSpecies": "vertu",
-        "archangel": "michael"
+        "angelsSpecies": "domination",
+        "archangel": "gabriel"
     },
     "mars": {
         "background": "/assets/stage/background/4.png",
-        "name": "/assets/stage/background/4.png",
         "numberOfAngels": 10,
         "angelsSpecies": "puissance",
         "archangel": "camael"
@@ -27,19 +26,19 @@
     "uranus": {
         "background": "/assets/stage/background/5.png",
         "numberOfAngels": 10,
-        "angelsSpecies": "principaute",
-        "archangel": "jophiel"
+        "angelsSpecies": "cherubin",
+        "archangel": "raphael"
     },
     "saturn": {
         "background": "/assets/stage/background/6.png",
         "numberOfAngels": 10,
-        "angelsSpecies": "domination",
-        "archangel": "uriel"
+        "angelsSpecies": "seraphin",
+        "archangel": "michael"
     },
     "sun" : {
         "background": "/assets/stage/background/7.png",
         "numberOfAngels": 10,
-        "angelsSpecies": "archange",
-        "archangel": "gabriel"
+        "angelsSpecies": "trone",
+        "archangel": "cassiel"
     }
 }

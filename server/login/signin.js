@@ -35,7 +35,6 @@ export default function signin(
 			'server/data/playerData.json',
 			JSON.stringify(playersData)
 		);
-
 		io.to(socketId).emit('userLogin', {
 			playerData: player,
 			playerSkins: skinData.playerSkins,

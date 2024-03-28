@@ -1,25 +1,11 @@
 {
-    "puissance": {
-        "one": {
-            "speed": 5,
-            "health": 2,
-            "damage": 1,
-            "hitboxWidth": 48,
-            "hitboxHeight": 48
-        },
-        "two": {
-            "speed": 7,
-            "health": 1,
-            "damage": 3,
-            "hitboxWidth": 48,
-            "hitboxHeight": 48
-        },
-        "three": {
-            "speed": 3,
-            "health": 3,
-            "damage": 2,
-            "hitboxWidth": 48,
-            "hitboxHeight": 48
+    "archange": {
+        "camael": {
+            "speed": 10,
+            "health": 10,
+            "damage": 5,
+            "hitboxWidth": 144,
+            "hitboxHeight": 144
         }
     },
     "cherubin": {
@@ -45,6 +31,75 @@
             "hitboxHeight": 96
         }
     },
+    "cupidon": {
+        "one" : {
+            "speed": 5,
+            "health": 2,
+            "damage": 1,
+            "hitboxWidth": 48,
+            "hitboxHeight": 48
+        },
+        "two" : {
+            "speed": 7,
+            "health": 1,
+            "damage": 3,
+            "hitboxWidth": 48,
+            "hitboxHeight": 48
+        },
+        "three" : {
+            "speed": 3,
+            "health": 3,
+            "damage": 2,
+            "hitboxWidth": 48,
+            "hitboxHeight": 48
+        }
+    },
+    "domination": {
+        "one" : {
+            "speed": 5,
+            "health": 2,
+            "damage": 1,
+            "hitboxWidth": 48,
+            "hitboxHeight": 48
+        },
+        "two" : {
+            "speed": 7,
+            "health": 1,
+            "damage": 3,
+            "hitboxWidth": 48,
+            "hitboxHeight": 48
+        },
+        "three" : {
+            "speed": 3,
+            "health": 3,
+            "damage": 2,
+            "hitboxWidth": 48,
+            "hitboxHeight": 48
+        }
+    },
+    "puissance": {
+        "one": {
+            "speed": 5,
+            "health": 2,
+            "damage": 1,
+            "hitboxWidth": 48,
+            "hitboxHeight": 48
+        },
+        "two": {
+            "speed": 7,
+            "health": 1,
+            "damage": 3,
+            "hitboxWidth": 48,
+            "hitboxHeight": 48
+        },
+        "three": {
+            "speed": 3,
+            "health": 3,
+            "damage": 2,
+            "hitboxWidth": 48,
+            "hitboxHeight": 48
+        }
+    },
     "seraphin": {
         "one" : {
             "speed": 5,
@@ -68,14 +123,63 @@
             "hitboxHeight": 96
         }
     },
-    "archange": {
-        "camael": {
-            "speed": 10,
-            "health": 10,
-            "damage": 5,
-            "hitboxWidth": 144,
-            "hitboxHeight": 144
+    "trone": {
+        "one" : {
+            "speed": 5,
+            "health": 2,
+            "damage": 1,
+            "hitboxWidth": 96,
+            "hitboxHeight": 96
+        },
+        "two" : {
+            "speed": 7,
+            "health": 1,
+            "damage": 3,
+            "hitboxWidth": 96,
+            "hitboxHeight": 96
+        },
+        "three" : {
+            "speed": 3,
+            "health": 3,
+            "damage": 2,
+            "hitboxWidth": 96,
+            "hitboxHeight": 96
+        }
+    },
+    "vertue": {
+        "one" : {
+            "speed": 5,
+            "health": 2,
+            "damage": 1,
+            "hitboxWidth": 48,
+            "hitboxHeight": 48
+        },
+        "two" : {
+            "speed": 7,
+            "health": 1,
+            "damage": 3,
+            "hitboxWidth": 48,
+            "hitboxHeight": 48
+        },
+        "three" : {
+            "speed": 3,
+            "health": 3,
+            "damage": 2,
+            "hitboxWidth": 48,
+            "hitboxHeight": 48
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+    
     
 }

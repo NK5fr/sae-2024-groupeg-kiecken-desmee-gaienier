@@ -22,10 +22,13 @@ export class Stage {
 		this.numberOfAngelsKilled = 0;
 	}
 
-	update() {
+	update(player) {
 		this.angels.forEach(angel => {
-			if (angel.health <= 0 && angel.missiles) {
-				this.strandedMissiles = this.strandedMissiles.concat(angel.missiles);
+			if (angel.health <= 0) {
+				player.souls += angel.souls;
+				if (angel.missiles) {
+					this.strandedMissiles = this.strandedMissiles.concat(angel.missiles);
+				}
 			}
 		});
 		this.angels = this.angels.filter(angel => angel.health > 0);
