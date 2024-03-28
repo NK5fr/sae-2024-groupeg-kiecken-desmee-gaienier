@@ -77,7 +77,7 @@ Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
-if (user) Router.navigate('/');
+if (user) Router.navigate(window.location.pathname, true);
 else Router.navigate('/login');
 
 window.onpopstate = () => Router.navigate(document.location.pathname, true);
