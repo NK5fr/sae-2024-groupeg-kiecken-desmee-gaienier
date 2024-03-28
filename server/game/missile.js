@@ -35,7 +35,6 @@ export default class Missile extends Entity {
 
 	static createMissile(posX, posY, fireAngle, damage, type) {
 		missileProperties.damage = damage;
-		console.log(type);
 		return new Missile(posX, posY, fireAngle, type, missileProperties);
 	}
 }

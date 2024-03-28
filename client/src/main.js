@@ -13,7 +13,7 @@ import ScoreMenu from './menu/scoreMenu.js';
 
 export const socket = io();
 
-export const user = window.sessionStorage.getItem('user');
+export let user = window.sessionStorage.getItem('user');
 
 const playerCommands = [
 	'ArrowUp',
@@ -28,14 +28,14 @@ const playerCommands = [
 
 PlayMenu.setMenu($('.menuJouer'));
 
-LoginMenu.setLogin($('.login'), socket);
-LoginMenu.setSignin($('.signin'), socket);
-LoginMenu.setMdp_oublie($('.mdp_oublie'), socket);
-
-socket.on('resetLogPass', login => {
-	LoginMenu.resetPassword($('.resetPassword'), socket, login);
+LoginMenu.setLogin($('.login'));
+LoginMenu.setSignin($('.signin'));
+LoginMenu.setForgetPassword($('.mdp_oublie'));
+socket.on('userResetPassword', login => {
+	LoginMenu.setResetPassword($('.resetPassword'), login);
+	Router.navigate('/resetPassword', true);
 });
-LoginMenu.setLogout($('.logout'), socket, user);
+LoginMenu.setLogout($('.logout'));
 
 ScoreMenu.setTable($('.scores'), [
 	{ name: 'Nathan', value: 12 },
@@ -72,6 +72,16 @@ let carouselSpeed;
 let carouselSkin;
 let carouselProjSkin;
 
+Router.routes = routes;
+Router.notFound = $('.notFound');
+
+Router.setInnerLinks(document.body);
+
+if (user) Router.navigate('/');
+else Router.navigate('/login');
+
+window.onpopstate = () => Router.navigate(document.location.pathname, true);
+
 socket.on('gameStart', game => {
 	document.addEventListener('keydown', ({ key }) => {
 		if (!playerCommands.includes(key)) return;
@@ -104,9 +114,9 @@ socket.on('gameStop', () => {
 	socket.emit('gameStop');
 });
 
-socket.on('connexion', ({ user, playerData, playerSkins, weaponSkins }) => {
-	window.sessionStorage.setItem('user', user);
-	console.log(user, playerData, playerSkins, weaponSkins);
+socket.on('userLogin', ({ playerData, playerSkins, weaponSkins }) => {
+	window.sessionStorage.setItem('user', playerData.user);
+	user = playerData.user;
 	carouselLife = new CarouselStat(
 		$('.personnalisation .life'),
 		playerData.health
@@ -137,21 +147,13 @@ socket.on('connexion', ({ user, playerData, playerSkins, weaponSkins }) => {
 		playerData.currentWeapon,
 		true
 	);
+	Router.navigate('/');
 });
 
-socket.on('path', path => {
-	Router.navigate(path, true);
+socket.on('changePath', path => {
+	Router.navigate(path);
 });
 
-Router.routes = routes;
-Router.notFound = $('.notFound');
-
-Router.setInnerLinks(document.body);
-
-Router.navigate(window.location.pathname, true);
-
-socket.on('alert', message => {
+socket.on('serverAlert', message => {
 	alert(message);
 });
-
-window.onpopstate = () => Router.navigate(document.location.pathname, true);

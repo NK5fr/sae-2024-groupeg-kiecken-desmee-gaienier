@@ -1,18 +1,19 @@
 import { renderMissiles } from './renderMissiles.js';
 
-const playerSkinPath = 'assets/player/';
+const playerSkinPath = 'assets/player';
 const playerImage = new Image();
 
 export default function renderPlayer(player, context) {
 	if (player.health <= 0) return;
 
 	if (player.speedX > 0)
-		playerImage.src = `${playerSkinPath}${player.currentSkin}/right.png`;
+		playerImage.src = `${playerSkinPath}/${player.currentSkin}/right.png`;
 	else if (player.speedX < 0)
-		playerImage.src = `${playerSkinPath}${player.currentSkin}/left.png`;
-	else playerImage.src = `${playerSkinPath}${player.currentSkin}/idle.png`;
+		playerImage.src = `${playerSkinPath}/${player.currentSkin}/left.png`;
+	else playerImage.src = `${playerSkinPath}/${player.currentSkin}/idle.png`;
 
 	context.drawImage(playerImage, player.posX, player.posY);
+
 	renderMissiles(player.missiles, context);
 }
 

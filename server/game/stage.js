@@ -9,6 +9,8 @@ export class Stage {
 		this.archangel = stageData[name].archangel;
 		this.angels = [];
 
+		this.strandedMissiles = [];
+
 		this.background = stageData[name].background;
 		this.backgroundX = 0;
 
@@ -20,16 +22,23 @@ export class Stage {
 		this.numberOfAngelsKilled = 0;
 	}
 
-	update() {
+	update(player) {
+		this.angels.forEach(angel => {
+			if (angel.health <= 0) {
+				player.souls += angel.souls;
+				if (angel.missiles) {
+					this.strandedMissiles = this.strandedMissiles.concat(angel.missiles);
+				}
+			}
+		});
 		this.angels = this.angels.filter(angel => angel.health > 0);
 		this.numberOfAngelsKilled = this.numberOfAngelsSpawned - this.angels.length;
 	}
 
-	spawnAngels(width, height, gameNotFocused) {
+	spawnAngels(width, height) {
 		let x = width;
 		let y = Math.floor(Math.random() * height);
 
-		if (gameNotFocused) return;
 		if (this.numberOfAngelsSpawned < this.numberOfAngels) {
 			const random = Math.random();
 			let angel = null;

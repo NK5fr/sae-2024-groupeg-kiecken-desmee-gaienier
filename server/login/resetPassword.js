@@ -1,27 +1,16 @@
 import fs from 'fs';
 import { io } from '../index.js';
 
-export default function resetPassword(data, socket) {
-	console.log('Données de réinitialisation de mot de passe reçues', data);
-
-	// récupère les données de l'utilisateur dans la base de données avec le login reçu
-	let dataBase = fs.readFileSync('server/data/userData.json', 'utf-8');
-	let dataBaseParsed = JSON.parse(dataBase);
-
-	// parcourir database pour trouver l'utilisateur
-	console.log('database', dataBaseParsed);
-
-	let user = dataBaseParsed.find(user => user.login == data.login);
-	console.log('User', user);
-
-	if (user != undefined) {
-		user.password = data.password;
-		fs.writeFileSync(
-			'server/data/userData.json',
-			JSON.stringify(dataBaseParsed)
-		);
-		io.to(socket).emit('path', '/login');
+export default function resetPassword(login, password, socketId) {
+	const usersData = JSON.parse(
+		fs.readFileSync('server/data/userData.json', 'utf8')
+	);
+	const user = usersData.find(user => user.login === login);
+	if (user) {
+		user.password = password;
+		fs.writeFileSync('server/data/userData.json', JSON.stringify(usersData));
+		io.to(socketId).emit('changePath', '/login');
 	} else {
-		io.to(socket).emit('alert', 'Utilisateur non trouvé');
+		io.to(socketId).emit('serverAlert', 'Utilisateur non trouvé');
 	}
 }

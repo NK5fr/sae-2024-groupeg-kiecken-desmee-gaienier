@@ -1,76 +1,71 @@
 import $ from 'jquery';
-import { user } from '../main.js';
+import { socket } from '../main.js';
 
 export default class LoginMenu {
-	static setLogin(menu, socket) {
+	static setLogin(menu) {
 		$('form', menu).on('submit', event => {
 			event.preventDefault();
 			const login = $('input[name=login]', menu).val();
 			const password = $('input[name=password]', menu).val();
-			socket.emit('login', { login, password });
+			socket.emit('userLogin', { userLogin: login, password });
 		});
 	}
-	static setSignin(menu, socket) {
+
+	static setSignin(menu) {
 		$('form', menu).on('submit', event => {
 			event.preventDefault();
 			const login = $('input[name=login]', menu).val();
 			const password = $('input[name=password]', menu).val();
 			const password2 = $('input[name=password2]', menu).val();
-			const recovery_phrase = $('select[name=recovery_phrase]', menu).val();
-			const reponse = $('input[name=reponse]', menu).val();
+			const recoverySentence = $('select[name=recovery_phrase]', menu).val();
+			const response = $('input[name=reponse]', menu).val();
 
-			console.log(recovery_phrase);
 			if (password != password2) {
 				alert('Les mots de passe ne correspondent pas');
 				return;
 			} else {
-				socket.emit('signin', {
+				socket.emit('userSignin', {
 					login,
 					password,
-					recovery_phrase,
-					reponse,
+					recoverySentence,
+					response,
 				});
 			}
 		});
 	}
 
-	static setMdp_oublie(menu, socket) {
+	static setForgetPassword(menu) {
 		$('form', menu).on('submit', event => {
 			event.preventDefault();
 			const login = $('input[name=login]', menu).val();
-			const recovery_phrase = $('select[name=recovery_phrase2]', menu).val();
+			const recoverySentence = $('select[name=recovery_phrase2]', menu).val();
 			const response = $('input[name=response]', menu).val();
-			socket.emit('mdp_oublie', { login, recovery_phrase, response });
+			socket.emit('userForgetPassword', { login, recoverySentence, response });
 		});
 	}
-	static resetPassword(menu, socket, login) {
+
+	static setResetPassword(menu, login) {
 		$('form', menu).on('submit', event => {
 			event.preventDefault();
-			login = login;
-			console.log('login', login);
-
 			const password = $('input[name=password]', menu).val();
 			const password2 = $('input[name=password2]', menu).val();
 			if (password !== password2) {
 				alert('Les mots de passe ne correspondent pas');
-				return;
 			} else if (login === null) {
-				console.log(login);
 				alert('Erreur lors de la réinitialisation du mot de passe');
-				return;
 			} else {
-				console.log('resetPassword', login, password);
-				socket.emit('resetPassword', { login, password });
+				socket.emit('userResetPassword', { login, password });
 			}
 		});
 	}
 
-	static setLogout(button, socket) {
-		// si l'utilisateur clique sur le bouton de déconnexion alors on envoie un message au serveur pour lui dire de déconnecter l'utilisateur
+	static setLogout(button) {
 		button.on('click', event => {
 			event.preventDefault();
-			console.log("Déconnexion de l'utilisateur", user);
-			socket.emit('logout', user);
+			const login = window.sessionStorage.getItem('user');
+			window.sessionStorage.removeItem('user');
+			console.log(login);
+			socket.emit('userLogout', login);
 		});
 	}
 }

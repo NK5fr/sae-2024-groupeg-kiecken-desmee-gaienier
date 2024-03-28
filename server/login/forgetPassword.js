@@ -1,0 +1,27 @@
+import fs from 'fs';
+import { io } from '../index.js';
+
+export default function forgetPassword(
+	login,
+	recoverySentence,
+	response,
+	socketId
+) {
+	const usersData = JSON.parse(
+		fs.readFileSync('server/data/userData.json', 'utf8')
+	);
+	const user = usersData.find(
+		user =>
+			user.login === login &&
+			user.recoverySentence === recoverySentence &&
+			user.response === response
+	);
+	if (user) {
+		io.to(socketId).emit('userResetPassword', login);
+	} else {
+		io.to(socketId).emit(
+			'serverAlert',
+			'Login, phrase de récupération ou réponse incorrecte'
+		);
+	}
+}

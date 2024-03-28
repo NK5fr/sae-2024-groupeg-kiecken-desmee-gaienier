@@ -2,13 +2,12 @@ import { io } from '../index.js';
 import Player from './player.js';
 import { Stage } from './stage.js';
 
-const stage = ['jupiter', 'saturn', 'uranus', 'sun'];
+const stage = ['venus', 'earth', 'jupiter', 'mars', 'saturn', 'uranus', 'sun'];
 
 export default class Game {
 	#gameUpdater;
 	#angelsSpawner;
 
-	gameNotFocused = false;
 	debug = false;
 
 	mainPlayer;
@@ -21,9 +20,11 @@ export default class Game {
 		this.owner = playerData.user;
 		this.socketId = socketId;
 
+		this.startTime = Date.now();
+
 		this.mainPlayer = new Player(100, 100, playerData, socketId);
 
-		this.stages = ['venus', 'earth', 'mars'];
+		this.stages = stage;
 		this.stage = new Stage(this.stages[0], width, height);
 	}
 
@@ -39,6 +40,12 @@ export default class Game {
 	}
 
 	stopGame() {
+		this.mainPlayer.missiles = [];
+		this.otherPlayers.forEach(player => {
+			player.missiles = [];
+		});
+		this.stage.angels = [];
+		this.stage.strandedMissiles = [];
 		clearInterval(this.#gameUpdater);
 		clearInterval(this.#angelsSpawner);
 	}
@@ -55,30 +62,34 @@ function updateGame(gameInstance) {
 			gameInstance.stages.indexOf(stage.name) ===
 			gameInstance.stages.length - 1
 		) {
+			const time = new Date(Date.now() - gameInstance.startTime);
+			console.log(
+				`${time.getUTCHours() >= 10 ? time.getUTCHours() : '0' + time.getUTCHours()}:${time.getUTCMinutes() >= 10 ? time.getUTCMinutes() : '0' + time.getUTCMinutes()}:${time.getUTCSeconds() >= 10 ? time.getUTCSeconds() : '0' + time.getUTCSeconds()}`
+			);
 			io.to(gameInstance.socketId).emit('gameStop');
 			return;
 		}
-
 		gameInstance.stage = new Stage(
 			gameInstance.stages[gameInstance.stages.indexOf(stage.name) + 1],
 			gameInstance.width,
 			gameInstance.height
 		);
-
 		gameInstance.startGame();
 	}
 	if (mainPlayer.health <= 0) {
 		gameInstance.stopGame();
 		io.to(gameInstance.socketId).emit('gameStop');
 	}
-	if (gameInstance.gameNotFocused) return;
 	mainPlayer.update(gameInstance.width, gameInstance.height);
 	otherPlayers.forEach(player => {
 		player.update(gameInstance.width, gameInstance.height);
 	});
-	stage.update(gameInstance.width, gameInstance.height);
+	stage.update(mainPlayer);
 	stage.angels.forEach(angel => {
 		angel.update(mainPlayer, gameInstance.width, gameInstance.height);
+	});
+	stage.strandedMissiles.forEach(missile => {
+		missile.update(gameInstance.width, gameInstance.height);
 	});
 
 	stage.angels.forEach(angel => {
@@ -123,9 +134,5 @@ function updateGame(gameInstance) {
 }
 
 function spawnAngels(gameInstance) {
-	gameInstance.stage.spawnAngels(
-		gameInstance.width,
-		gameInstance.height,
-		gameInstance.gameNotFocused
-	);
+	gameInstance.stage.spawnAngels(gameInstance.width, gameInstance.height);
 }

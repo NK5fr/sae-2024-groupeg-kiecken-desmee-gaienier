@@ -1,42 +1,44 @@
 import fs from 'fs';
 import { io } from '../index.js';
-import login from './login.js';
+import { playersData, skinData } from '../index.js';
 
-export default function signin(data, socket) {
-	console.log('Données de connexion reçues', data);
-
-	// récupère les données de l'utilisateur dans la base de données avec le login reçu
-	let dataBase = fs.readFileSync('server/data/userData.json', 'utf-8');
-	let dataBaseParsed = JSON.parse(dataBase);
-
-	// parcourir database pour trouver l'utilisateur
-	console.log('database', dataBaseParsed);
-
-	let user = dataBaseParsed.find(user => user.login == data.login);
-	console.log('User', user);
-	if (user != undefined) {
-		io.to(socket).emit('alert', 'Utilisateur déjà existant');
-	}
-	// si l'utilisateur n'est pas trouvé donc on l'ajoute à la base de données et on le connecte
-	else {
-		data.connexion = false;
-		console.log('signin', data);
-		dataBaseParsed.push(data);
-		fs.writeFileSync(
-			'server/data/userData.json',
-			JSON.stringify(dataBaseParsed)
-		);
-		const players = JSON.parse(fs.readFileSync('server/data/playerData.json'));
-		const newPlayer = Object.assign(
+export default function signin(
+	login,
+	password,
+	recoverySentence,
+	response,
+	socketId
+) {
+	const usersData = JSON.parse(
+		fs.readFileSync('server/data/userData.json', 'utf8')
+	);
+	let user = usersData.find(user => user.login == login);
+	if (user) {
+		io.to(socketId).emit('serverAlert', "Nom d'utilisateur déjà utilisé");
+	} else {
+		user = {
+			login,
+			password,
+			recoverySentence,
+			response,
+			connexion: false,
+		};
+		usersData.push(user);
+		fs.writeFileSync('server/data/userData.json', JSON.stringify(usersData));
+		const player = Object.assign(
 			{},
-			players.find(player => player.user == 'default')
+			playersData.find(player => player.user == 'default')
 		);
-		newPlayer.user = data.login;
-		players.push(newPlayer);
-		fs.writeFileSync('server/data/playerData.json', JSON.stringify(players));
-		console.log('Utilisateur ajouté');
-
-		login({login: data.login, password: data.password}, socket);
-		
+		player.user = login;
+		playersData.push(player);
+		fs.writeFileSync(
+			'server/data/playerData.json',
+			JSON.stringify(playersData)
+		);
+		io.to(socketId).emit('userLogin', {
+			playerData: player,
+			playerSkins: skinData.playerSkins,
+			weaponSkins: skinData.weaponSkins,
+		});
 	}
 }

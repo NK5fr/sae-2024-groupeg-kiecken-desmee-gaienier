@@ -1,1 +1,1 @@
-[{"login":"admin","password":"admin","recovery_phrase":"3","response":"lille","connexion":false},{"login":"raph","password":"raph","recovery_phrase":"1","reponse":"noa","connexion":false}]
+[{"login":"admin","password":"admin","recoverySentence":"3","response":"lille","connexion":false},{"login":"raph","password":"raph2","recoverySentence":"1","response":"noa","connexion":false}]

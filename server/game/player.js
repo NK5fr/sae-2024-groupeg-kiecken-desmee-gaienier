@@ -4,8 +4,8 @@ import Missile from './missile.js';
 const stat = {
 	healthIncrement: 5,
 	damageIncrement: 2,
-	fireSpeedIncrement: 7,
-	speedIncrement: 1.5,
+	fireSpeedIncrement: 8,
+	speedIncrement: 2,
 };
 export default class Player extends Entity {
 	constructor(x, y, properties, socketId) {
@@ -20,11 +20,12 @@ export default class Player extends Entity {
 		this.skinsPool = properties.skinsPool;
 		this.weaponsPool = properties.weaponsPool;
 
-		this.health = this.maxHealth =
-			10 + stat.healthIncrement * properties.health;
+		this.health = this.maxHealth = 5 + stat.healthIncrement * properties.health;
 		this.damage = 1 + stat.damageIncrement * properties.damage;
 		this.fireSpeed = stat.fireSpeedIncrement * properties.fireSpeed;
-		this.speed = 2 + stat.speedIncrement * properties.speed;
+		this.speed = 3 + stat.speedIncrement * properties.speed;
+
+		this.souls = properties.souls;
 
 		this.speedX = 0;
 		this.speedY = 0;
