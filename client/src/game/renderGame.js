@@ -43,6 +43,8 @@ function renderGame() {
 			if (angel.missiles) renderMissiles(angel.missiles, context);
 		});
 
+		renderMissiles(game.stage.strandedMissiles, context);
+
 		renderStageProgressionBar(game.stage, context, canvas);
 		renderHealthBar(game.mainPlayer, 0, context, canvas);
 		game.otherPlayers.forEach((player, index) => {

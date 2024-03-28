@@ -1,7 +1,7 @@
 {
     "venus": {
         "background": "/assets/stage/background/1.png",
-        "numberOfAngels": 1100,
+        "numberOfAngels": 10,
         "angelsSpecies": "cherubin",
         "archangel": "anael"
     },

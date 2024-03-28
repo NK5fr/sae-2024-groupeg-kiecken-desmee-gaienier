@@ -19,7 +19,6 @@ export default class Router {
 
 	static navigate(path, skipPushState = false) {
 		const route = this.routes.find(route => route.path === path);
-		console.log('route', this.#setInnerLinks);
 		if (route) {
 			this.notFound.hide();
 			if (this.currentRoute) {
@@ -33,8 +32,7 @@ export default class Router {
 					height: canvas.height,
 					user: window.sessionStorage.getItem('user'),
 				});
-			}
-			if (path === '/rejouer') {
+			} else {
 				socket.emit('gameStop');
 			}
 			if (!skipPushState) {

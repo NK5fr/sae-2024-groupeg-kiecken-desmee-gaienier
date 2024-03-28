@@ -4,9 +4,9 @@ import addWebpackMiddleware from './middlewares/addWebpackMiddleware.js';
 import { Server as IOServer } from 'socket.io';
 import login from './login/login.js';
 import signin from './login/signin.js';
-import mdp_oublie from './login/mdp_oublie.js';
+import forgetPassword from './login/forgetPassword.js';
 import Game from './game/game.js';
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import resetPassword from './login/resetPassword.js';
 import logout from './login/logout.js';
 
@@ -30,22 +30,30 @@ export let skinData = JSON.parse(
 	readFileSync('server/data/skinData.json', 'utf8')
 );
 
+const usersData = JSON.parse(
+	readFileSync('server/data/userData.json', 'utf-8')
+);
+usersData.forEach(user => {
+	user.connexion = false;
+});
+writeFileSync('server/data/userData.json', JSON.stringify(usersData));
+
 io.on('connection', socket => {
 	console.log(`New connection: ${socket.id}`);
-	socket.on('login', data => {
-		login(data, socket.id);
+	socket.on('userLogin', ({ userLogin, password }) => {
+		login(userLogin, password, socket.id);
 	});
-	socket.on('signin', data => {
-		signin(data, socket.id);
+	socket.on('userLogout', login => {
+		logout(login, socket.id);
 	});
-	socket.on('mdp_oublie', data => {
-		mdp_oublie(data, socket.id);
+	socket.on('userSignin', ({ login, password, recoverySentence, response }) => {
+		signin(login, password, recoverySentence, response, socket.id);
 	});
-	socket.on('resetPassword', data => {
-		resetPassword(data, socket.id);
+	socket.on('userForgetPassword', ({ login, recoverySentence, response }) => {
+		forgetPassword(login, recoverySentence, response, socket.id);
 	});
-	socket.on('logout', data => {
-		logout(data, socket.id);
+	socket.on('userResetPassword', ({ login, password }) => {
+		resetPassword(login, password, socket.id);
 	});
 
 	socket.on('gameStart', ({ user, width, height }) => {
@@ -123,11 +131,15 @@ io.on('connection', socket => {
 	});
 
 	socket.on('gameStop', () => {
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (!game) return;
 		currentGame = currentGame.filter(game => game.socketId !== socket.id);
+		console.log(`Game stopped: ${socket.id}`);
 	});
 
 	socket.on('disconnect', () => {
-		currentGame = currentGame.filter(game => game.socketId !== socket.id);
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (game) game.stopGame();
 		console.log(`Disconnected: ${socket.id}`);
 	});
 });

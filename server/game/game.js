@@ -8,7 +8,6 @@ export default class Game {
 	#gameUpdater;
 	#angelsSpawner;
 
-	gameNotFocused = false;
 	debug = false;
 
 	mainPlayer;
@@ -71,7 +70,6 @@ function updateGame(gameInstance) {
 		gameInstance.stopGame();
 		io.to(gameInstance.socketId).emit('gameStop');
 	}
-	if (gameInstance.gameNotFocused) return;
 	mainPlayer.update(gameInstance.width, gameInstance.height);
 	otherPlayers.forEach(player => {
 		player.update(gameInstance.width, gameInstance.height);
@@ -79,6 +77,9 @@ function updateGame(gameInstance) {
 	stage.update(gameInstance.width, gameInstance.height);
 	stage.angels.forEach(angel => {
 		angel.update(mainPlayer, gameInstance.width, gameInstance.height);
+	});
+	stage.strandedMissiles.forEach(missile => {
+		missile.update(gameInstance.width, gameInstance.height);
 	});
 
 	stage.angels.forEach(angel => {
@@ -123,9 +124,5 @@ function updateGame(gameInstance) {
 }
 
 function spawnAngels(gameInstance) {
-	gameInstance.stage.spawnAngels(
-		gameInstance.width,
-		gameInstance.height,
-		gameInstance.gameNotFocused
-	);
+	gameInstance.stage.spawnAngels(gameInstance.width, gameInstance.height);
 }
