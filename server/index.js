@@ -9,7 +9,6 @@ import Game from './game/game.js';
 import { readFileSync, writeFileSync } from 'fs';
 import resetPassword from './login/resetPassword.js';
 import logout from './login/logout.js';
-import { data } from 'jquery';
 import { setCurrentSkin, setSkinsPool, setStat } from './player/playerDataManager.js';
 
 let currentGame = [];
