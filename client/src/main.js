@@ -117,8 +117,8 @@ socket.on('gameStop', data => {
 	socket.emit('gameStop');
 });
 
-socket.on('stageTransition', newStage => {
-	startTransition(newStage);
+socket.on('stageTransition', previousStage => {
+	startTransition(previousStage);
 });
 
 socket.on('stageTransition', newStage => {
