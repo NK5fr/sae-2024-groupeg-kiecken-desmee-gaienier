@@ -117,7 +117,6 @@ socket.on('gameStop', data => {
 });
 
 socket.on('userLogin', user => {
-	console.log(user);
 	window.sessionStorage.setItem('user', user);
 	user = user;
 	setAllCarouselData();
@@ -135,24 +134,25 @@ socket.on('serverAlert', message => {
 function setAllCarouselData() {
 	socket.emit('setCarousel', user);
 	socket.on('setCarousel', ({ playerData, playerSkins, weaponSkins }) => {
-		console.log(playerData);
-		console.log(playerSkins);
-		console.log(weaponSkins);
 		carouselLife = new CarouselStat(
-			$('.personnalisation .life'),
-			playerData.health
+			$('.personnalisation .health'),
+			playerData.health,
+			'life'
 		);
 		carouselDamage = new CarouselStat(
 			$('.personnalisation .damage'),
-			playerData.damage
+			playerData.damage,
+			'damage'
 		);
 		carouselSpeed = new CarouselStat(
 			$('.personnalisation .speed'),
-			playerData.speed
+			playerData.speed,
+			'speed'
 		);
 		carouselFireRate = new CarouselStat(
-			$('.personnalisation .fire-rate'),
-			playerData.fireSpeed
+			$('.personnalisation .fireSpeed'),
+			playerData.fireSpeed,
+			'fire-rate'
 		);
 		carouselSkin = new CarouselSkin(
 			$('.personnalisation .skin'),
