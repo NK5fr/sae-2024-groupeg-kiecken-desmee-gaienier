@@ -56,34 +56,6 @@ function updateGame(gameInstance) {
 	const mainPlayer = gameInstance.mainPlayer;
 	const otherPlayers = gameInstance.otherPlayers;
 
-	if (stage.stageIsClear()) {
-		gameInstance.stopGame();
-		if (
-			gameInstance.stages.indexOf(stage.name) ===
-			gameInstance.stages.length - 1
-		) {
-			const time = new Date(Date.now() - gameInstance.startTime);
-			const formatedTime = `${time.getUTCHours() >= 10 ? time.getUTCHours() : '0' + time.getUTCHours()}:${time.getUTCMinutes() >= 10 ? time.getUTCMinutes() : '0' + time.getUTCMinutes()}:${time.getUTCSeconds() >= 10 ? time.getUTCSeconds() : '0' + time.getUTCSeconds()}`;
-			io.to(gameInstance.socketId).emit('gameStop', {
-				user: mainPlayer.user,
-				souls: mainPlayer.souls,
-			});
-			return;
-		}
-		gameInstance.stage = new Stage(
-			gameInstance.stages[gameInstance.stages.indexOf(stage.name) + 1],
-			gameInstance.width,
-			gameInstance.height
-		);
-		gameInstance.startGame();
-	}
-	if (mainPlayer.health <= 0) {
-		gameInstance.stopGame();
-		io.to(gameInstance.socketId).emit('gameStop', {
-			user: mainPlayer.user,
-			souls: mainPlayer.souls,
-		});
-	}
 	mainPlayer.update(gameInstance.width, gameInstance.height);
 	otherPlayers.forEach(player => {
 		player.update(gameInstance.width, gameInstance.height);
@@ -135,6 +107,37 @@ function updateGame(gameInstance) {
 		}
 	});
 	io.to(gameInstance.socketId).emit('gameUpdate', gameInstance);
+	if (stage.stageIsClear()) {
+		gameInstance.stopGame();
+		if (
+			gameInstance.stages.indexOf(stage.name) ===
+			gameInstance.stages.length - 1
+		) {
+			const time = new Date(Date.now() - gameInstance.startTime);
+			const formatedTime = `${time.getUTCHours() >= 10 ? time.getUTCHours() : '0' + time.getUTCHours()}:${time.getUTCMinutes() >= 10 ? time.getUTCMinutes() : '0' + time.getUTCMinutes()}:${time.getUTCSeconds() >= 10 ? time.getUTCSeconds() : '0' + time.getUTCSeconds()}`;
+			io.to(gameInstance.socketId).emit('gameStop', {
+				user: mainPlayer.user,
+				souls: mainPlayer.souls,
+			});
+			return;
+		}
+		gameInstance.stage = new Stage(
+			gameInstance.stages[gameInstance.stages.indexOf(stage.name) + 1],
+			gameInstance.width,
+			gameInstance.height
+		);
+
+		io.to(gameInstance.socketId).emit('stageTransition', gameInstance.stage);
+
+		//gameInstance.startGame();
+	}
+	if (mainPlayer.health <= 0) {
+		gameInstance.stopGame();
+		io.to(gameInstance.socketId).emit('gameStop', {
+			user: mainPlayer.user,
+			souls: mainPlayer.souls,
+		});
+	}
 }
 
 function spawnAngels(gameInstance) {

@@ -1,6 +1,12 @@
 const background = new Image();
+const newBackground = new Image();
+const transitionBackground = new Image();
 const nameImage = new Image();
 let backgroundX = 0;
+
+let backgroundY = 0;
+let transitionBackgroundY = 0;
+let newBackgroundY = 0;
 
 export default function renderStage(stage, context) {
 	background.src = stage.background;
@@ -18,6 +24,22 @@ export default function renderStage(stage, context) {
 		context.restore();
 		stage.nameOpacity -= 0.01;
 	}
+}
+
+export function renderStageChangement(stage, newStage, context, canvas) {
+	background.src = stage.background;
+	newBackground.src = newStage.background;
+	transitionBackground.src = 'assets/background/0.png';
+	backgroundY += 1;
+	transitionBackgroundY = backgroundY - transitionBackground.height;
+	newBackgroundY = transitionBackgroundY - newBackground.height;
+	context.drawImage(background, 0, backgroundY);
+	context.drawImage(transitionBackground, 0, transitionBackgroundY);
+	context.drawImage(newBackground, 0, newBackgroundY);
+	if (newBackgroundY >= 0) {
+		return true;
+	}
+	return false;
 }
 
 export function renderStageProgressionBar(stage, context, canvas) {

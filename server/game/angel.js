@@ -9,7 +9,12 @@ export class Wanderer extends Entity {
 	}
 
 	update(player, width, height) {
-		this.posX -= this.speed;
+		const angle = Math.atan2(
+			player.posY - this.posY - this.hitboxHeight / 2,
+			player.posX - this.posX - this.hitboxWidth / 2
+		);
+		this.posX += Math.cos(angle) * this.speed;
+		this.posY += Math.sin(angle) * this.speed;
 		if (this.posX <= 0) {
 			this.posX = width - this.hitboxWidth;
 			this.posY = Math.random() * (height - this.hitboxHeight);
