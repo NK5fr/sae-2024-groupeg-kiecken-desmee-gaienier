@@ -1,4 +1,4 @@
-import $, { event } from 'jquery';
+import $ from 'jquery';
 import { socket, user } from '../main.js';
 
 export default class CarouselSkin {
@@ -68,10 +68,18 @@ export default class CarouselSkin {
 			event.preventDefault();
 			const skin = $(event.currentTarget).attr('name');
 			if (this.ownedSkins.includes(skin) && this.actualSkin !== skin) {
-				socket.emit('currentSkin', {'skin': skin, 'isProj': this.isProj, 'username': user});
+				socket.emit('currentSkin', {
+					skin: skin,
+					isProj: this.isProj,
+					username: user,
+				});
 				this.actualSkin = skin;
-			} else if(this.actualSkin !== skin) {
-				socket.emit('skinsPool', {'skin': skin, 'isProj': this.isProj, 'username': user})
+			} else if (this.actualSkin !== skin) {
+				socket.emit('skinsPool', {
+					skin: skin,
+					isProj: this.isProj,
+					username: user,
+				});
 				this.ownedSkins.push(skin);
 				this.actualSkin = skin;
 			}
