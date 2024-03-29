@@ -81,9 +81,12 @@ Router.setInnerLinks(document.body);
 if (user) {
 	Router.navigate(window.location.pathname, true);
 	setAllCarouselData();
+	socket.emit('open', user);
 } else Router.navigate('/login');
 
-window.onpopstate = () => Router.navigate(document.location.pathname, true);
+window.onpopstate = () => {
+	Router.navigate(document.location.pathname, true);
+};
 
 socket.on('gameStart', game => {
 	document.addEventListener('keydown', ({ key }) => {
@@ -180,6 +183,6 @@ function setAllCarouselData() {
 	});
 }
 
-document.addEventListener('visibilitychange', event => {
-	socket.emit('close', user);
+window.addEventListener('unload', event => {
+	if(user) socket.emit('close', user);
 })

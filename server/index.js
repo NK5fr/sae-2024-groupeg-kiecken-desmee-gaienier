@@ -39,11 +39,11 @@ const usersData = JSON.parse(
 	readFileSync('server/data/userData.json', 'utf-8')
 );
 usersData.forEach(user => {
-	setConnexionFalse(user);
+	setConnexion(user, false);
 });
 
-function setConnexionFalse(user) {
-	user.connexion = false;
+function setConnexion(user, value) {
+	user.connexion = value;
 	writeFileSync('server/data/userData.json', JSON.stringify(usersData));
 }
 
@@ -178,7 +178,11 @@ io.on('connection', socket => {
 	});
 
 	socket.on('close', (username) => {
-		setConnexionFalse(usersData.find(u => u.login === username));
+		setConnexion(usersData.find(u => u.login === username), false);
+	});
+
+	socket.on('open', (username) => {
+		setConnexion(usersData.find(u => u.login === username), true);
 	});
 });
 
