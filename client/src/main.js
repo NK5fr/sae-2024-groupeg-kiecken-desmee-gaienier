@@ -6,6 +6,7 @@ import LoginMenu from './menu/loginMenu.js';
 import startGameRenderer, {
 	setGame,
 	stopGameRenderer,
+	startTransition,
 } from './game/renderGame.js';
 import CarouselStat from './carousel/carouselStat.js';
 import CarouselSkin from './carousel/carouselSkin.js';
@@ -114,6 +115,10 @@ socket.on('gameStop', data => {
 	stopGameRenderer();
 	Router.navigate('/rejouer');
 	socket.emit('gameStop');
+});
+
+socket.on('stageTransition', newStage => {
+	startTransition(newStage);
 });
 
 socket.on('userLogin', user => {

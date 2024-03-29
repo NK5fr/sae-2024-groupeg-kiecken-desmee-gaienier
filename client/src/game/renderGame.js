@@ -2,7 +2,10 @@ import { socket } from '../main.js';
 import { renderAngels } from './renderAngel.js';
 import { renderMissiles, renderMissilesHitbox } from './renderMissiles.js';
 import renderPlayer, { renderHealthBar } from './renderPlayer.js';
-import renderStage, { renderStageProgressionBar } from './renderStage.js';
+import renderStage, {
+	renderStageProgressionBar,
+	renderStageChangement,
+} from './renderStage.js';
 
 export const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d'),
@@ -12,6 +15,7 @@ export const canvas = document.querySelector('.gameCanvas'),
 
 let gameRenderer = null;
 let game = null;
+let transitionStage = null;
 
 canvasResizeObserver.observe(canvas);
 
@@ -28,38 +32,51 @@ export default function startGameRenderer() {
 	gameRenderer = requestAnimationFrame(renderGame);
 }
 
+export function startTransition(newStage) {
+	transitionStage = newStage;
+	gameRenderer = requestAnimationFrame(renderTransition);
+}
+
 function renderGame() {
-	if (!game.gameNotFocused) {
-		context.clearRect(0, 0, game.width, game.height);
-		renderStage(game.stage, context, canvas);
+	context.clearRect(0, 0, game.width, game.height);
 
-		renderPlayer(game.mainPlayer, context);
+	renderStage(game.stage, context, canvas);
+
+	renderPlayer(game.mainPlayer, context);
+	game.otherPlayers.forEach(player => {
+		renderPlayer(player, context);
+	});
+
+	renderAngels(game.stage.angels, context);
+	game.stage.angels.forEach(angel => {
+		if (angel.missiles) renderMissiles(angel.missiles, context);
+	});
+
+	renderMissiles(game.stage.strandedMissiles, context);
+
+	renderStageProgressionBar(game.stage, context, canvas);
+	renderHealthBar(game.mainPlayer, 0, context, canvas);
+	game.otherPlayers.forEach((player, index) => {
+		renderHealthBar(player, index + 1, context, canvas);
+	});
+
+	if (game.debug) {
+		renderMissilesHitbox(game.mainPlayer.missiles, context);
 		game.otherPlayers.forEach(player => {
-			renderPlayer(player, context);
+			renderMissilesHitbox(player.missiles, context);
 		});
-
-		renderAngels(game.stage.angels, context);
-		game.stage.angels.forEach(angel => {
-			if (angel.missiles) renderMissiles(angel.missiles, context);
-		});
-
-		renderMissiles(game.stage.strandedMissiles, context);
-
-		renderStageProgressionBar(game.stage, context, canvas);
-		renderHealthBar(game.mainPlayer, 0, context, canvas);
-		game.otherPlayers.forEach((player, index) => {
-			renderHealthBar(player, index + 1, context, canvas);
-		});
-
-		if (game.debug) {
-			renderMissilesHitbox(game.mainPlayer.missiles, context);
-			game.otherPlayers.forEach(player => {
-				renderMissilesHitbox(player.missiles, context);
-			});
-		}
-		socket.emit('gameRendered', game);
 	}
 	gameRenderer = requestAnimationFrame(renderGame);
+}
+
+function renderTransition() {
+	context.clearRect(0, 0, game.width, game.height);
+	if (renderStageChangement(game.stage, transitionStage, context, canvas)) {
+		game.stage = transitionStage;
+		transitionStage = null;
+		stopGameRenderer();
+	}
+	gameRenderer = requestAnimationFrame(renderTransition);
 }
 
 export function setGame(gameInstance) {
