@@ -4,6 +4,7 @@
             "speed": 10,
             "health": 10,
             "damage": 5,
+            "souls": 150,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         }
@@ -13,6 +14,7 @@
             "speed": 5,
             "health": 2,
             "damage": 1,
+            "souls": 20,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
@@ -20,6 +22,7 @@
             "speed": 7,
             "health": 1,
             "damage": 3,
+            "souls": 30,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
@@ -27,6 +30,7 @@
             "speed": 3,
             "health": 3,
             "damage": 2,
+            "souls": 40,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         }
