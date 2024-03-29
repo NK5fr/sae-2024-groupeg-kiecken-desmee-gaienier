@@ -106,7 +106,6 @@ function updateGame(gameInstance) {
 			});
 		}
 	});
-	io.to(gameInstance.socketId).emit('gameUpdate', gameInstance);
 	if (stage.stageIsClear()) {
 		gameInstance.stopGame();
 		if (
@@ -121,15 +120,12 @@ function updateGame(gameInstance) {
 			});
 			return;
 		}
+		io.to(gameInstance.socketId).emit('stageTransition', gameInstance.stage);
 		gameInstance.stage = new Stage(
 			gameInstance.stages[gameInstance.stages.indexOf(stage.name) + 1],
 			gameInstance.width,
 			gameInstance.height
 		);
-
-		io.to(gameInstance.socketId).emit('stageTransition', gameInstance.stage);
-
-		//gameInstance.startGame();
 	}
 	if (mainPlayer.health <= 0) {
 		gameInstance.stopGame();
@@ -138,6 +134,7 @@ function updateGame(gameInstance) {
 			souls: mainPlayer.souls,
 		});
 	}
+	io.to(gameInstance.socketId).emit('gameUpdate', gameInstance);
 }
 
 function spawnAngels(gameInstance) {

@@ -13,9 +13,11 @@ export const canvas = document.querySelector('.gameCanvas'),
 		resampleCanvas();
 	});
 
+export let stageTransitionEnd = false;
+
 let gameRenderer = null;
 let game = null;
-let transitionStage = null;
+let stage = null;
 
 canvasResizeObserver.observe(canvas);
 
@@ -32,8 +34,8 @@ export default function startGameRenderer() {
 	gameRenderer = requestAnimationFrame(renderGame);
 }
 
-export function startTransition(newStage) {
-	transitionStage = newStage;
+export function startTransition(previousStage) {
+	stage = previousStage;
 	gameRenderer = requestAnimationFrame(renderTransition);
 }
 
@@ -71,16 +73,27 @@ function renderGame() {
 
 function renderTransition() {
 	context.clearRect(0, 0, game.width, game.height);
-	if (renderStageChangement(game.stage, transitionStage, context, canvas)) {
-		game.stage = transitionStage;
-		transitionStage = null;
+	renderStageChangement(game.stage, stage, context, canvas);
+	renderPlayer(game.mainPlayer, context);
+	game.otherPlayers.forEach(player => {
+		renderPlayer(player, context);
+	});
+	if (stageTransitionEnd) {
 		stopGameRenderer();
+		socket.emit('stageChangeEnd');
+		stageTransitionEnd = false;
+		startGameRenderer();
+	} else {
+		gameRenderer = requestAnimationFrame(renderTransition);
 	}
-	gameRenderer = requestAnimationFrame(renderTransition);
 }
 
 export function setGame(gameInstance) {
 	game = gameInstance;
+}
+
+export function stageChangeEnd() {
+	stageTransitionEnd = true;
 }
 
 export function stopGameRenderer() {

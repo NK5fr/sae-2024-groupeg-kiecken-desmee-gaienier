@@ -1,12 +1,14 @@
+import { stageChangeEnd } from './renderGame.js';
+
+const previousBackground = new Image();
 const background = new Image();
-const newBackground = new Image();
 const transitionBackground = new Image();
 const nameImage = new Image();
 let backgroundX = 0;
 
+let previousBackgroundY = 0;
 let backgroundY = 0;
 let transitionBackgroundY = 0;
-let newBackgroundY = 0;
 
 export default function renderStage(stage, context) {
 	background.src = stage.background;
@@ -28,18 +30,30 @@ export default function renderStage(stage, context) {
 
 export function renderStageChangement(stage, newStage, context, canvas) {
 	background.src = stage.background;
-	newBackground.src = newStage.background;
-	transitionBackground.src = 'assets/background/0.png';
-	backgroundY += 1;
-	transitionBackgroundY = backgroundY - transitionBackground.height;
-	newBackgroundY = transitionBackgroundY - newBackground.height;
-	context.drawImage(background, 0, backgroundY);
-	context.drawImage(transitionBackground, 0, transitionBackgroundY);
-	context.drawImage(newBackground, 0, newBackgroundY);
-	if (newBackgroundY >= 0) {
-		return true;
+	previousBackground.src = newStage.background;
+	transitionBackground.src = 'assets/stage/background/0.png';
+	previousBackgroundY += 5;
+	transitionBackgroundY = previousBackgroundY - transitionBackground.height;
+	backgroundY = transitionBackgroundY - previousBackground.height;
+	console.log(backgroundY);
+	context.drawImage(previousBackground, backgroundX, previousBackgroundY);
+	context.drawImage(
+		previousBackground,
+		backgroundX + previousBackground.width,
+		previousBackgroundY
+	);
+	context.drawImage(transitionBackground, backgroundX, transitionBackgroundY);
+	context.drawImage(
+		transitionBackground,
+		backgroundX + transitionBackground.width,
+		transitionBackgroundY
+	);
+	context.drawImage(background, backgroundX, backgroundY);
+	context.drawImage(background, backgroundX + background.width, backgroundY);
+	if (backgroundY >= 0) {
+		previousBackgroundY = 0;
+		stageChangeEnd();
 	}
-	return false;
 }
 
 export function renderStageProgressionBar(stage, context, canvas) {

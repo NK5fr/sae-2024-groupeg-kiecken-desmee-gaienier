@@ -9,7 +9,11 @@ import Game from './game/game.js';
 import { readFileSync, writeFileSync } from 'fs';
 import resetPassword from './login/resetPassword.js';
 import logout from './login/logout.js';
-import { setCurrentSkin, setSkinsPool, setStat } from './player/playerDataManager.js';
+import {
+	setCurrentSkin,
+	setSkinsPool,
+	setStat,
+} from './player/playerDataManager.js';
 
 let currentGame = [];
 
@@ -81,6 +85,12 @@ io.on('connection', socket => {
 		game.startGame();
 		currentGame.push(game);
 		socket.emit('gameStart', game);
+	});
+
+	socket.on('stageChangeEnd', () => {
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (!game) return;
+		game.startGame();
 	});
 
 	socket.on('playerKeyDown', key => {
