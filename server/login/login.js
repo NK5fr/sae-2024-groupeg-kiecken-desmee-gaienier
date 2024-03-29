@@ -13,8 +13,8 @@ export default function login(login, password, socketId) {
 		///user => user.login == login && user.password == passwordMD5
 		user => user.login === login && user.password === password
 	);
-	if (user /*&& !user.connexion*/) {
-		//user.connexion = true;
+	if (user && !user.connexion) {
+		user.connexion = true;
 		writeFileSync('server/data/userData.json', JSON.stringify(usersData));
 		io.to(socketId).emit('userLogin', user.login);
 	} else if (user && user.connexion) {

@@ -166,6 +166,10 @@ io.on('connection', socket => {
 	socket.on('stat', data => {
 		setStat(data.username, data.value, data.statName);
 	});
+
+	socket.on('close', (username) => {
+		setConnexionFalse(usersData.find(u => u.login === username));
+	});
 });
 
 addWebpackMiddleware(app);

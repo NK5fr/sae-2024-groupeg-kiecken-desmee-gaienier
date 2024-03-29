@@ -1,6 +1,6 @@
 import Router from './router.js';
 import PlayMenu from './menu/playMenu.js';
-import $ from 'jquery';
+import $, { event } from 'jquery';
 import { io } from 'socket.io-client';
 import LoginMenu from './menu/loginMenu.js';
 import startGameRenderer, {
@@ -116,9 +116,9 @@ socket.on('gameStop', data => {
 	socket.emit('gameStop');
 });
 
-socket.on('userLogin', user => {
-	window.sessionStorage.setItem('user', user);
-	user = user;
+socket.on('userLogin', login => {
+	window.sessionStorage.setItem('user', login);
+	user = login;
 	setAllCarouselData();
 	Router.navigate('/');
 });
@@ -170,3 +170,7 @@ function setAllCarouselData() {
 		);
 	});
 }
+
+document.addEventListener('visibilitychange', event => {
+	socket.emit('close', user);
+})
