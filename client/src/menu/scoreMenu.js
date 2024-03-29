@@ -8,7 +8,7 @@ export default class ScoreMenu {
 		let html = table.html();
 		let n = 1;
 		tenMost.forEach(score => {
-			html += `<tr><td>${n}</td><td>${score.name}</td><td>${score.value} secondes</td></tr>`;
+			html += `<tr><td>${n}</td><td>${score.name}</td><td>${score.value}</td></tr>`;
 			n++;
 		});
 		table.html(html);

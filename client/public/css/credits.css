@@ -34,7 +34,7 @@
     border-style: solid;
     padding: 2%;
     border-radius: 5%;
-    margin: 2%;
+    margin: 1%;
     width: 33%;
     text-align: left;
 }
@@ -56,5 +56,5 @@
 .credits section img {
     margin-top: 5%;
     margin-bottom: 4%;
-    width: 50%;
+    width: 30%;
 }
