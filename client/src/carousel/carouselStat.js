@@ -12,7 +12,7 @@ export default class CarouselStat {
             event.preventDefault();
             this.actualLevel++;
             if(this.actualLevel > 10) this.actualLevel = 10;
-            socket.emit('stat', {'statName': statName, 'value': actualLevel, 'username': user});
+            socket.emit('stat', {'statName': this.statName, 'value': this.actualLevel, 'username': user});
             this.setCarousel();
         });
         this.setCarousel();

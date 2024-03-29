@@ -137,7 +137,7 @@ function setAllCarouselData() {
 		carouselLife = new CarouselStat(
 			$('.personnalisation .health'),
 			playerData.health,
-			'life'
+			'health'
 		);
 		carouselDamage = new CarouselStat(
 			$('.personnalisation .damage'),
@@ -152,7 +152,7 @@ function setAllCarouselData() {
 		carouselFireRate = new CarouselStat(
 			$('.personnalisation .fireSpeed'),
 			playerData.fireSpeed,
-			'fire-rate'
+			'fireSpeed'
 		);
 		carouselSkin = new CarouselSkin(
 			$('.personnalisation .skin'),

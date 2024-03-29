@@ -153,7 +153,6 @@ io.on('connection', socket => {
 	socket.on('disconnect', () => {
 		const game = currentGame.find(game => game.socketId === socket.id);
 		if (game) game.stopGame();
-		setConnexionFalse(usersData.find(user => user.login === userName));
 	});
 
 	socket.on('currentSkin', data => {
