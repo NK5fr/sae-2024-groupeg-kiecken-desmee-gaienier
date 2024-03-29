@@ -9,6 +9,8 @@ import Game from './game/game.js';
 import { readFileSync, writeFileSync } from 'fs';
 import resetPassword from './login/resetPassword.js';
 import logout from './login/logout.js';
+import { data } from 'jquery';
+import { setCurrentSkin, setSkinsPool, setStat } from './player/playerDataManager.js';
 
 let currentGame = [];
 
@@ -139,6 +141,18 @@ io.on('connection', socket => {
 	socket.on('disconnect', () => {
 		const game = currentGame.find(game => game.socketId === socket.id);
 		if (game) game.stopGame();
+	});
+
+	socket.on('currentSkin', data => {
+		setCurrentSkin(data.username, data.skin, data.isProj);
+	});
+
+	socket.on('skinsPool', data => {
+		setSkinsPool(data.username, data.skin, data.isProj);
+	});
+
+	socket.on('stat', data => {
+		setStat(data.username, data.value, data.statName);
 	});
 });
 

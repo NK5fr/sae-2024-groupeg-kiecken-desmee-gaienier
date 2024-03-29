@@ -118,20 +118,24 @@ socket.on('userLogin', ({ playerData, playerSkins, weaponSkins }) => {
 	window.sessionStorage.setItem('user', playerData.user);
 	user = playerData.user;
 	carouselLife = new CarouselStat(
-		$('.personnalisation .life'),
-		playerData.health
+		$('.personnalisation .health'),
+		playerData.health,
+		'life'
 	);
 	carouselDamage = new CarouselStat(
 		$('.personnalisation .damage'),
-		playerData.damage
+		playerData.damage,
+		'damage'
 	);
 	carouselSpeed = new CarouselStat(
 		$('.personnalisation .speed'),
-		playerData.speed
+		playerData.speed,
+		'speed'
 	);
 	carouselFireRate = new CarouselStat(
-		$('.personnalisation .fire-rate'),
-		playerData.fireSpeed
+		$('.personnalisation .fireSpeed'),
+		playerData.fireSpeed,
+		'fire-rate'
 	);
 	carouselSkin = new CarouselSkin(
 		$('.personnalisation .skin'),
