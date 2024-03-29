@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { io } from '../index.js';
 import { playersData, skinData } from '../index.js';
+//import encryptionTool from './encryptionTool.js';
 
 export default function signin(
 	login,
@@ -16,8 +17,10 @@ export default function signin(
 	if (user) {
 		io.to(socketId).emit('serverAlert', "Nom d'utilisateur déjà utilisé");
 	} else {
+		//const passwordMD5 = encryptionTool(password);
 		user = {
 			login,
+			//passwordMD5,
 			password,
 			recoverySentence,
 			response,

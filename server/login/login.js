@@ -1,13 +1,17 @@
 import fs from 'fs';
 import { io } from '../index.js';
 import { playersData, skinData } from '../index.js';
+//import encryptionTool from './encryptionTool.js';
 
 export default function login(login, password, socketId) {
 	const usersData = JSON.parse(
 		fs.readFileSync('server/data/userData.json', 'utf-8')
 	);
+
+	//const passwordMD5 = encryptionTool(password);
 	const user = usersData.find(
-		user => user.login == login && user.password == password
+		///user => user.login == login && user.password == passwordMD5
+		user => user.login === login && user.password === password
 	);
 	if (user && !user.connexion) {
 		const playerData = playersData.find(player => player.user === user.login);
