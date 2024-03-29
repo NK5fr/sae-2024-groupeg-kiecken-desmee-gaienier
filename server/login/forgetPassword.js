@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { readFileSync } from 'fs';
 import { io } from '../index.js';
 
 export default function forgetPassword(
@@ -8,7 +8,7 @@ export default function forgetPassword(
 	socketId
 ) {
 	const usersData = JSON.parse(
-		fs.readFileSync('server/data/userData.json', 'utf8')
+		readFileSync('server/data/userData.json', 'utf8')
 	);
 	const user = usersData.find(
 		user =>

@@ -1,4 +1,5 @@
 import $, { event } from 'jquery';
+import { socket, user } from '../main.js';
 
 export default class CarouselSkin {
 	constructor(element, skins, ownedSkins, actualSkin, isProj) {
@@ -37,22 +38,18 @@ export default class CarouselSkin {
 		let html = ``;
 		let n = 0;
 		this.skins.forEach(skin => {
-			if (this.actualSkin === skin){
+			if (this.actualSkin === skin) {
 				html += `<div class="carousel-item active">`;
 				this.actualIndex = n;
 			} else {
 				html += `<div class="carousel-item">`;
 			}
-				
-
-			
 
 			if (this.isProj)
 				html += `<img src="assets/missile/${skin}.png" name="${skin}">`;
 			else html += `<img src="assets/player/${skin}/idle.png" name="${skin}">`;
 
-			if (this.actualSkin === skin) 
-                html += `<p>Equipé</p>`;
+			if (this.actualSkin === skin) html += `<p>Equipé</p>`;
 			else if (this.ownedSkins.includes(skin))
 				html += `<p>Cliquez pour équiper</p>`;
 			else html += `<p>Cliquez pour débloquer à 100 pièces</p>`;
@@ -70,13 +67,11 @@ export default class CarouselSkin {
 		$('.carousel-inner img', this.element).on('click', event => {
 			event.preventDefault();
 			const skin = $(event.currentTarget).attr('name');
-			if (this.actualSkin === skin) {
-				console.log(`Déjà équipé`);
-			} else if (this.ownedSkins.includes(skin)) {
-				console.log(`Equipé`);
+			if (this.ownedSkins.includes(skin) && this.actualSkin !== skin) {
+				socket.emit('currentSkin', {'skin': skin, 'isProj': this.isProj, 'username': user});
 				this.actualSkin = skin;
-			} else {
-				console.log(`Acheté`);
+			} else if(this.actualSkin !== skin) {
+				socket.emit('skinsPool', {'skin': skin, 'isProj': this.isProj, 'username': user})
 				this.ownedSkins.push(skin);
 				this.actualSkin = skin;
 			}

@@ -1,15 +1,18 @@
 import $ from 'jquery';
+import { socket, user } from '../main.js';
 
 export default class CarouselStat {
 
-    constructor(element, actualLevel){
+    constructor(element, actualLevel, statName){
         this.element = element;
         this.actualLevel = actualLevel
+        this.statName = statName
 
         $('.carousel-control-next', this.element).on('click', event => {
             event.preventDefault();
             this.actualLevel++;
             if(this.actualLevel > 10) this.actualLevel = 10;
+            socket.emit('stat', {'statName': this.statName, 'value': this.actualLevel, 'username': user});
             this.setCarousel();
         });
         this.setCarousel();

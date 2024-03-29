@@ -9,6 +9,7 @@ import Game from './game/game.js';
 import { readFileSync, writeFileSync } from 'fs';
 import resetPassword from './login/resetPassword.js';
 import logout from './login/logout.js';
+import { setCurrentSkin, setSkinsPool, setStat } from './player/playerDataManager.js';
 
 let currentGame = [];
 
@@ -34,9 +35,13 @@ const usersData = JSON.parse(
 	readFileSync('server/data/userData.json', 'utf-8')
 );
 usersData.forEach(user => {
-	user.connexion = false;
+	setConnexionFalse(user);
 });
-writeFileSync('server/data/userData.json', JSON.stringify(usersData));
+
+function setConnexionFalse(user) {
+	user.connexion = false;
+	writeFileSync('server/data/userData.json', JSON.stringify(usersData));
+}
 
 io.on('connection', socket => {
 	console.log(`New connection: ${socket.id}`);
@@ -54,6 +59,15 @@ io.on('connection', socket => {
 	});
 	socket.on('userResetPassword', ({ login, password }) => {
 		resetPassword(login, password, socket.id);
+	});
+
+	socket.on('setCarousel', user => {
+		const playerData = playersData.find(player => player.user === user);
+		socket.emit('setCarousel', {
+			playerData,
+			playerSkins: skinData.playerSkins,
+			weaponSkins: skinData.weaponSkins,
+		});
 	});
 
 	socket.on('gameStart', ({ user, width, height }) => {
@@ -139,6 +153,18 @@ io.on('connection', socket => {
 	socket.on('disconnect', () => {
 		const game = currentGame.find(game => game.socketId === socket.id);
 		if (game) game.stopGame();
+	});
+
+	socket.on('currentSkin', data => {
+		setCurrentSkin(data.username, data.skin, data.isProj);
+	});
+
+	socket.on('skinsPool', data => {
+		setSkinsPool(data.username, data.skin, data.isProj);
+	});
+
+	socket.on('stat', data => {
+		setStat(data.username, data.value, data.statName);
 	});
 });
 

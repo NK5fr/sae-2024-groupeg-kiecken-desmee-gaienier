@@ -63,10 +63,11 @@ function updateGame(gameInstance) {
 			gameInstance.stages.length - 1
 		) {
 			const time = new Date(Date.now() - gameInstance.startTime);
-			console.log(
-				`${time.getUTCHours() >= 10 ? time.getUTCHours() : '0' + time.getUTCHours()}:${time.getUTCMinutes() >= 10 ? time.getUTCMinutes() : '0' + time.getUTCMinutes()}:${time.getUTCSeconds() >= 10 ? time.getUTCSeconds() : '0' + time.getUTCSeconds()}`
-			);
-			io.to(gameInstance.socketId).emit('gameStop');
+			const formatedTime = `${time.getUTCHours() >= 10 ? time.getUTCHours() : '0' + time.getUTCHours()}:${time.getUTCMinutes() >= 10 ? time.getUTCMinutes() : '0' + time.getUTCMinutes()}:${time.getUTCSeconds() >= 10 ? time.getUTCSeconds() : '0' + time.getUTCSeconds()}`;
+			io.to(gameInstance.socketId).emit('gameStop', {
+				user: mainPlayer.user,
+				souls: mainPlayer.souls,
+			});
 			return;
 		}
 		gameInstance.stage = new Stage(
@@ -78,7 +79,10 @@ function updateGame(gameInstance) {
 	}
 	if (mainPlayer.health <= 0) {
 		gameInstance.stopGame();
-		io.to(gameInstance.socketId).emit('gameStop');
+		io.to(gameInstance.socketId).emit('gameStop', {
+			user: mainPlayer.user,
+			souls: mainPlayer.souls,
+		});
 	}
 	mainPlayer.update(gameInstance.width, gameInstance.height);
 	otherPlayers.forEach(player => {

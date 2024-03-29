@@ -3,7 +3,7 @@ import Entity from './entity.js';
 const missileProperties = {
 	health: 1,
 	damage: 1,
-	speed: 5,
+	speed: 20,
 	fireSpeed: 0,
 	hitboxWidth: 24,
 	hitboxHeight: 24,

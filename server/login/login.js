@@ -1,11 +1,11 @@
-import fs from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { io } from '../index.js';
-import { playersData, skinData } from '../index.js';
+
 //import encryptionTool from './encryptionTool.js';
 
 export default function login(login, password, socketId) {
 	const usersData = JSON.parse(
-		fs.readFileSync('server/data/userData.json', 'utf-8')
+		readFileSync('server/data/userData.json', 'utf-8')
 	);
 
 	//const passwordMD5 = encryptionTool(password);
@@ -13,15 +13,10 @@ export default function login(login, password, socketId) {
 		///user => user.login == login && user.password == passwordMD5
 		user => user.login === login && user.password === password
 	);
-	if (user && !user.connexion) {
-		const playerData = playersData.find(player => player.user === user.login);
-		user.connexion = true;
-		fs.writeFileSync('server/data/userData.json', JSON.stringify(usersData));
-		io.to(socketId).emit('userLogin', {
-			playerData,
-			playerSkins: skinData.playerSkins,
-			weaponSkins: skinData.weaponSkins,
-		});
+	if (user /*&& !user.connexion*/) {
+		//user.connexion = true;
+		writeFileSync('server/data/userData.json', JSON.stringify(usersData));
+		io.to(socketId).emit('userLogin', user.login);
 	} else if (user && user.connexion) {
 		io.to(socketId).emit('serverAlert', 'Utilisateur déjà connecté');
 	} else {
