@@ -77,8 +77,10 @@ Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
-if (user) Router.navigate(window.location.pathname, true);
-else Router.navigate('/login');
+if (user) {
+	Router.navigate(window.location.pathname, true);
+	setAllCarouselData();
+} else Router.navigate('/login');
 
 window.onpopstate = () => Router.navigate(document.location.pathname, true);
 
@@ -108,49 +110,16 @@ socket.on('gameUpdate', game => {
 	setGame(game);
 });
 
-socket.on('gameStop', () => {
+socket.on('gameStop', data => {
 	stopGameRenderer();
 	Router.navigate('/rejouer');
 	socket.emit('gameStop');
 });
 
-socket.on('userLogin', ({ playerData, playerSkins, weaponSkins }) => {
-	window.sessionStorage.setItem('user', playerData.user);
-	user = playerData.user;
-	carouselLife = new CarouselStat(
-		$('.personnalisation .health'),
-		playerData.health,
-		'life'
-	);
-	carouselDamage = new CarouselStat(
-		$('.personnalisation .damage'),
-		playerData.damage,
-		'damage'
-	);
-	carouselSpeed = new CarouselStat(
-		$('.personnalisation .speed'),
-		playerData.speed,
-		'speed'
-	);
-	carouselFireRate = new CarouselStat(
-		$('.personnalisation .fireSpeed'),
-		playerData.fireSpeed,
-		'fire-rate'
-	);
-	carouselSkin = new CarouselSkin(
-		$('.personnalisation .skin'),
-		playerSkins,
-		playerData.skinsPool,
-		playerData.currentSkin,
-		false
-	);
-	carouselProjSkin = new CarouselSkin(
-		$('.personnalisation .proj-skin'),
-		weaponSkins,
-		playerData.weaponsPool,
-		playerData.currentWeapon,
-		true
-	);
+socket.on('userLogin', user => {
+	window.sessionStorage.setItem('user', user);
+	user = user;
+	setAllCarouselData();
 	Router.navigate('/');
 });
 
@@ -161,3 +130,43 @@ socket.on('changePath', path => {
 socket.on('serverAlert', message => {
 	alert(message);
 });
+
+function setAllCarouselData() {
+	socket.emit('setCarousel', user);
+	socket.on('setCarousel', ({ playerData, playerSkins, weaponSkins }) => {
+		carouselLife = new CarouselStat(
+			$('.personnalisation .health'),
+			playerData.health,
+			'life'
+		);
+		carouselDamage = new CarouselStat(
+			$('.personnalisation .damage'),
+			playerData.damage,
+			'damage'
+		);
+		carouselSpeed = new CarouselStat(
+			$('.personnalisation .speed'),
+			playerData.speed,
+			'speed'
+		);
+		carouselFireRate = new CarouselStat(
+			$('.personnalisation .fireSpeed'),
+			playerData.fireSpeed,
+			'fire-rate'
+		);
+		carouselSkin = new CarouselSkin(
+			$('.personnalisation .skin'),
+			playerSkins,
+			playerData.skinsPool,
+			playerData.currentSkin,
+			false
+		);
+		carouselProjSkin = new CarouselSkin(
+			$('.personnalisation .proj-skin'),
+			weaponSkins,
+			playerData.weaponsPool,
+			playerData.currentWeapon,
+			true
+		);
+	});
+}

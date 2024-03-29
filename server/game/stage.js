@@ -25,7 +25,12 @@ export class Stage {
 	update(player) {
 		this.angels.forEach(angel => {
 			if (angel.health <= 0) {
-				player.souls += angel.souls;
+				if (angel.species === this.archangel) {
+					player.souls += 150;
+				} else {
+					player.souls +=
+						angel.type == 'three' ? 40 : angel.type == 'two' ? 25 : 10;
+				}
 				if (angel.missiles) {
 					this.strandedMissiles = this.strandedMissiles.concat(angel.missiles);
 				}

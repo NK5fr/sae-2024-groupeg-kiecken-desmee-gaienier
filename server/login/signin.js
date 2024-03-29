@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { io } from '../index.js';
 import { playersData, skinData } from '../index.js';
 
@@ -10,7 +10,7 @@ export default function signin(
 	socketId
 ) {
 	const usersData = JSON.parse(
-		fs.readFileSync('server/data/userData.json', 'utf8')
+		readFileSync('server/data/userData.json', 'utf8')
 	);
 	let user = usersData.find(user => user.login == login);
 	if (user) {
@@ -24,21 +24,14 @@ export default function signin(
 			connexion: false,
 		};
 		usersData.push(user);
-		fs.writeFileSync('server/data/userData.json', JSON.stringify(usersData));
+		writeFileSync('server/data/userData.json', JSON.stringify(usersData));
 		const player = Object.assign(
 			{},
 			playersData.find(player => player.user == 'default')
 		);
 		player.user = login;
 		playersData.push(player);
-		fs.writeFileSync(
-			'server/data/playerData.json',
-			JSON.stringify(playersData)
-		);
-		io.to(socketId).emit('userLogin', {
-			playerData: player,
-			playerSkins: skinData.playerSkins,
-			weaponSkins: skinData.weaponSkins,
-		});
+		writeFileSync('server/data/playerData.json', JSON.stringify(playersData));
+		io.to(socketId).emit('userLogin', login);
 	}
 }

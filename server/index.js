@@ -35,9 +35,13 @@ const usersData = JSON.parse(
 	readFileSync('server/data/userData.json', 'utf-8')
 );
 usersData.forEach(user => {
-	user.connexion = false;
+	setConnexionFalse(user);
 });
-writeFileSync('server/data/userData.json', JSON.stringify(usersData));
+
+function setConnexionFalse(user) {
+	user.connexion = false;
+	writeFileSync('server/data/userData.json', JSON.stringify(usersData));
+}
 
 io.on('connection', socket => {
 	console.log(`New connection: ${socket.id}`);
@@ -55,6 +59,15 @@ io.on('connection', socket => {
 	});
 	socket.on('userResetPassword', ({ login, password }) => {
 		resetPassword(login, password, socket.id);
+	});
+
+	socket.on('setCarousel', user => {
+		const playerData = playersData.find(player => player.user === user);
+		socket.emit('setCarousel', {
+			playerData,
+			playerSkins: skinData.playerSkins,
+			weaponSkins: skinData.weaponSkins,
+		});
 	});
 
 	socket.on('gameStart', ({ user, width, height }) => {
@@ -140,6 +153,7 @@ io.on('connection', socket => {
 	socket.on('disconnect', () => {
 		const game = currentGame.find(game => game.socketId === socket.id);
 		if (game) game.stopGame();
+		setConnexionFalse(usersData.find(user => user.login === userName));
 	});
 
 	socket.on('currentSkin', data => {

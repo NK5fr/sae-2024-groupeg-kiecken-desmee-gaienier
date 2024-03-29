@@ -38,22 +38,18 @@ export default class CarouselSkin {
 		let html = ``;
 		let n = 0;
 		this.skins.forEach(skin => {
-			if (this.actualSkin === skin){
+			if (this.actualSkin === skin) {
 				html += `<div class="carousel-item active">`;
 				this.actualIndex = n;
 			} else {
 				html += `<div class="carousel-item">`;
 			}
-				
-
-			
 
 			if (this.isProj)
 				html += `<img src="assets/missile/${skin}.png" name="${skin}">`;
 			else html += `<img src="assets/player/${skin}/idle.png" name="${skin}">`;
 
-			if (this.actualSkin === skin) 
-                html += `<p>Equipé</p>`;
+			if (this.actualSkin === skin) html += `<p>Equipé</p>`;
 			else if (this.ownedSkins.includes(skin))
 				html += `<p>Cliquez pour équiper</p>`;
 			else html += `<p>Cliquez pour débloquer à 100 pièces</p>`;
