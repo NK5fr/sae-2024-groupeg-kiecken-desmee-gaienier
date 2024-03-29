@@ -29,11 +29,20 @@
 
 .connexionForm input[type="text"], .connexionForm input[type="password"] {
     width: 75%;
+    border-color: black;
 }
 
 .connexionForm label{
     margin-top: 5%;
     margin-bottom: 5%;
+}
+
+/* inptu[type="select"]  blanc */
+.connexionForm select {
+   background-color: white;
+   border-color: black;
+   width: 90%;
+
 }
 
 
