@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { socket } from '../main.js';
+import { setUserNull, socket} from '../main.js';
 
 export default class LoginMenu {
 	static setLogin(menu) {
@@ -51,7 +51,7 @@ export default class LoginMenu {
 			const password2 = $('input[name=password2]', menu).val();
 			if (password !== password2) {
 				alert('Les mots de passe ne correspondent pas');
-			} else if (login === null) {
+			} else if (!login) {
 				alert('Erreur lors de la réinitialisation du mot de passe');
 			} else {
 				socket.emit('userResetPassword', { login, password });
@@ -63,7 +63,7 @@ export default class LoginMenu {
 		button.on('click', event => {
 			event.preventDefault();
 			const login = window.sessionStorage.getItem('user');
-			window.sessionStorage.removeItem('user');
+			setUserNull();
 			console.log(login);
 			socket.emit('userLogout', login);
 		});

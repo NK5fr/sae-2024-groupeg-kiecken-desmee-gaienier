@@ -1,11 +1,12 @@
 import $ from 'jquery';
-import { socket } from './main.js';
+import { socket, user } from './main.js';
 import { canvas } from './game/renderGame.js';
 
 export default class Router {
 	static routes = [];
 	static notFound;
 	static currentRoute;
+	static connexionRoutes = [];
 
 	static #setInnerLinks;
 
@@ -18,7 +19,11 @@ export default class Router {
 	}
 
 	static navigate(path, skipPushState = false) {
-		const route = this.routes.find(route => route.path === path);
+		console.log(path);
+		let route = this.routes.find(route => route.path === path);
+		if(user && this.connexionRoutes.includes(route?.path)) {
+			route = this.routes.find(route => route.path === '/');
+		}
 		if (route) {
 			this.notFound.hide();
 			if (this.currentRoute) {
@@ -26,7 +31,7 @@ export default class Router {
 			}
 			this.currentRoute = route;
 			route.view.show();
-			if (path === '/jeu') {
+			if (route.path === '/jeu') {
 				socket.emit('gameStart', {
 					width: canvas.width,
 					height: canvas.height,
@@ -36,7 +41,7 @@ export default class Router {
 				socket.emit('gameStop');
 			}
 			if (!skipPushState) {
-				window.history.pushState(null, null, path);
+				window.history.pushState(null, null, route.path);
 			}
 		} else {
 			this.notFound.show();

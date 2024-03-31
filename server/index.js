@@ -190,7 +190,7 @@ addWebpackMiddleware(app);
 
 app.use(express.static('client/public'));
 
-app.get('/:path', (req, res) => {
+app.get('/*', (req, res) => {
 	res.sendFile('client/public/index.html', fileOptions);
 });
 

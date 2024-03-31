@@ -74,14 +74,15 @@ let carouselSkin;
 let carouselProjSkin;
 
 Router.routes = routes;
+Router.connexionRoutes = ['/login', '/signin', '/mdp_oublie', '/resetPassword'];
 Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
 if (user) {
-	Router.navigate(window.location.pathname, true);
+	Router.navigate(window.location.pathname);
 	setAllCarouselData();
-	socket.emit('open', user);
+	setTimeout(() => socket.emit('open', user), 1000);
 } else Router.navigate('/login');
 
 window.onpopstate = () => {
@@ -186,3 +187,8 @@ function setAllCarouselData() {
 window.addEventListener('unload', event => {
 	if(user) socket.emit('close', user);
 })
+
+export function setUserNull() {
+	user = null;
+	window.sessionStorage.removeItem('user');
+}
