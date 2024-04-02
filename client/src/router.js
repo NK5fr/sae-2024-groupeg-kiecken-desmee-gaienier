@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { socket, user } from './main.js';
-import { canvas } from './game/renderGame.js';
+import { canvas, stopGameRenderer } from './game/renderGame.js';
 
 export default class Router {
 	static routes = [];
@@ -20,7 +20,7 @@ export default class Router {
 
 	static navigate(path, skipPushState = false) {
 		let route = this.routes.find(route => route.path === path);
-		if(user && this.connexionRoutes.includes(route?.path)) {
+		if (user && this.connexionRoutes.includes(route?.path)) {
 			route = this.routes.find(route => route.path === '/');
 		}
 		if (route) {
@@ -37,6 +37,7 @@ export default class Router {
 					user: window.sessionStorage.getItem('user'),
 				});
 			} else {
+				stopGameRenderer();
 				socket.emit('gameStop');
 			}
 			if (!skipPushState) {

@@ -1,23 +1,30 @@
-import fs from 'fs';
-import { scoreData } from '../index.js';
+import { readFileSync, writeFileSync } from 'fs';
 
 export function addScore(username, score) {
-	scoreData.push({"user":username, "score":score});
-	fs.writeFileSync('server/data/scoreData.json', JSON.stringify(scoreData));
+	const scoreData = readScoreData();
+	scoreData.push({ user: username, score: score });
+	writeScoreData(scoreData);
 }
 
-export function scoreManager(socket, scoreData){
+function readScoreData() {
+	return JSON.parse(readFileSync('server/data/scoreData.json', 'utf8'));
+}
 
-    socket.on('score', data => {
-        addScore(data.user, data.time);
-        socket.emit('setScore', {
-			"scores": scoreData
+function writeScoreData(data) {
+	writeFileSync('server/data/scoreData.json', JSON.stringify(data));
+}
+
+export function scoreManager(socket, scoreData) {
+	socket.on('score', data => {
+		addScore(data.user, data.time);
+		socket.emit('setScore', {
+			scores: scoreData,
 		});
 	});
 
-    socket.on('setScore', () => {
+	socket.on('setScore', () => {
 		socket.emit('setScore', {
-			"scores": scoreData
+			scores: scoreData,
 		});
 	});
 }

@@ -26,6 +26,12 @@ const playerCommands = [
 	's',
 	'q',
 	'd',
+	'Z',
+	'S',
+	'Q',
+	'D',
+	'g',
+	'G',
 ];
 
 PlayMenu.setMenu($('.menuJouer'));
@@ -71,6 +77,7 @@ game.setGames([
 const routes = [
 	{ path: '/', view: $('.accueil') },
 	{ path: '/jeu', view: $('.jeu') },
+	{ path: '/rejoindre', view: $('.jeu') },
 	{ path: '/login', view: $('.login') },
 	{ path: '/signin', view: $('.signin') },
 	{ path: '/mdp_oublie', view: $('.mdp_oublie') },
@@ -132,6 +139,11 @@ socket.on('gameUpdate', game => {
 	setGame(game);
 });
 
+socket.on('gameJoin', game => {
+	setGame(game);
+	startGameRenderer();
+});
+
 socket.on('gameStop', data => {
 	stopGameRenderer();
 	Router.navigate('/rejouer');
@@ -140,11 +152,8 @@ socket.on('gameStop', data => {
 });
 
 socket.on('stageTransition', previousStage => {
+	stopGameRenderer();
 	startTransition(previousStage);
-});
-
-socket.on('stageTransition', newStage => {
-	startTransition(newStage);
 });
 
 socket.on('userLogin', login => {
@@ -210,14 +219,13 @@ function setScores() {
 	});
 }
 window.addEventListener('unload', event => {
-	if(user) socket.emit('close', user);
-})
-
-window.addEventListener('load', event => {
-	if(user) socket.emit('open', user);
-	//if(user) setTimeout(() => socket.emit('open', user), 1000);
+	if (user) socket.emit('close', user);
 });
 
+window.addEventListener('load', event => {
+	if (user) socket.emit('open', user);
+	//if(user) setTimeout(() => socket.emit('open', user), 1000);
+});
 
 export function setUserNull() {
 	user = null;

@@ -1,6 +1,9 @@
-import { readFileSync, writeFileSync } from 'fs';
 import { io } from '../index.js';
-import { playersData, skinData } from '../index.js';
+import { readUsersData, writeUsersData } from '../managers/connexionManager.js';
+import {
+	readPlayersData,
+	writePlayersData,
+} from '../managers/playerManager.js';
 //import encryptionTool from './encryptionTool.js';
 
 export default function signin(
@@ -10,9 +13,7 @@ export default function signin(
 	response,
 	socketId
 ) {
-	const usersData = JSON.parse(
-		readFileSync('server/data/userData.json', 'utf8')
-	);
+	const usersData = readUsersData();
 	let user = usersData.find(user => user.login == login);
 	if (user) {
 		io.to(socketId).emit('serverAlert', "Nom d'utilisateur déjà utilisé");
@@ -27,14 +28,15 @@ export default function signin(
 			connexion: false,
 		};
 		usersData.push(user);
-		writeFileSync('server/data/userData.json', JSON.stringify(usersData));
+		writeUsersData(usersData);
+		const playersData = readPlayersData();
 		const player = Object.assign(
 			{},
 			playersData.find(player => player.user == 'default')
 		);
 		player.user = login;
 		playersData.push(player);
-		writeFileSync('server/data/playerData.json', JSON.stringify(playersData));
+		writePlayersData(playersData);
 		io.to(socketId).emit('userLogin', login);
 	}
 }

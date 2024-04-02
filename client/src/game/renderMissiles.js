@@ -24,13 +24,11 @@ export function renderMissiles(missiles, context) {
 }
 
 function renderMissileHitbox(missile, context) {
-	context.save();
 	context.beginPath();
 	context.rect(missile.posX, missile.posY, missile.width, missile.height);
 	context.strokeStyle = 'red';
 	context.stroke();
 	context.closePath();
-	context.restore();
 }
 
 export function renderMissilesHitbox(missiles, context) {

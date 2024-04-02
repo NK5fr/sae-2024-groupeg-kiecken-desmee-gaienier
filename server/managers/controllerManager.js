@@ -1,53 +1,46 @@
-export default function controllerManager(socket, currentGame) {
+import { currentGame } from '../index.js';
+
+export default function controllerManager(socket) {
 	socket.on('playerKeyDown', key => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id) game.mainPlayer.onKeyDown(key);
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === socket.id)
-				.forEach(player => player.onKeyDown(key));
+		const player = findPlayerBySocketId(socket.id);
+		if (!player) return;
+		player.onKeyDown(key);
 	});
 
 	socket.on('playerKeyUp', key => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id) game.mainPlayer.onKeyUp(key);
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === socket.id)
-				.forEach(player => player.onKeyUp(key));
+		const player = findPlayerBySocketId(socket.id);
+		if (!player) return;
+		player.onKeyUp(key);
 	});
 
 	socket.on('playerMouseDown', ({ clientX, clientY }) => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id)
-			game.mainPlayer.onMouseDown(clientX, clientY);
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === data.socketId)
-				.forEach(player => player.onMouseDown(data.x, data.y));
+		const player = findPlayerBySocketId(socket.id);
+		if (!player) return;
+		player.onMouseDown(clientX, clientY);
 	});
 
 	socket.on('playerMouseUp', () => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id) game.mainPlayer.onMouseUp();
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === socket.id)
-				.forEach(player => player.onMouseUp());
+		const player = findPlayerBySocketId(socket.id);
+		if (!player) return;
+		player.onMouseUp();
 	});
 
 	socket.on('playerMouseMove', ({ clientX, clientY }) => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id)
-			game.mainPlayer.onMouseMove(clientX, clientY);
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === socket.id)
-				.forEach(player => player.onMouseMove(clientX, clientY));
+		const player = findPlayerBySocketId(socket.id);
+		if (!player) return;
+		player.onMouseMove(clientX, clientY);
 	});
+}
+
+function findPlayerBySocketId(socketId) {
+	let player;
+	currentGame.forEach(game => {
+		if (game.mainPlayer.socketId === socketId) player = game.mainPlayer;
+		else {
+			game.otherPlayers.forEach(p => {
+				if (p.socketId === socketId) player = p;
+			});
+		}
+	});
+	return player;
 }

@@ -1,17 +1,18 @@
-import fs from 'fs';
-import { playersData } from '../index.js';
+import { readFileSync, writeFileSync } from 'fs';
 
 function setCurrentSkin(username, skin, isProj) {
+	const playersData = readPlayersData();
 	const player = playersData.find(p => p.user === username);
 	if (isProj) {
 		player.currentWeapon = skin;
 	} else {
 		player.currentSkin = skin;
 	}
-	fs.writeFileSync('server/data/playerData.json', JSON.stringify(playersData));
+	writePlayersData(playersData);
 }
 
 function setSkinsPool(username, skin, isProj) {
+	const playersData = readPlayersData();
 	const player = playersData.find(p => p.user === username);
 	if (isProj) {
 		player.weaponsPool.push(skin);
@@ -20,13 +21,14 @@ function setSkinsPool(username, skin, isProj) {
 		player.skinsPool.push(skin);
 		player.currentSkin = skin;
 	}
-	fs.writeFileSync('server/data/playerData.json', JSON.stringify(playersData));
+	writePlayersData(playersData);
 }
 
 function setStat(username, value, statName) {
+	const playersData = readPlayersData();
 	const player = playersData.find(p => p.user === username);
 	player[statName] = value;
-	fs.writeFileSync('server/data/playerData.json', JSON.stringify(playersData));
+	writePlayersData(playersData);
 }
 
 export default function playerManager(socket, skinData) {
@@ -43,11 +45,24 @@ export default function playerManager(socket, skinData) {
 	});
 
 	socket.on('setCarousel', user => {
-		const playerData = playersData.find(player => player.user === user);
+		const playersData = readPlayersData();
+		const skinData = readSkinData();
 		socket.emit('setCarousel', {
-			playerData,
+			playerData: playersData.find(p => p.user === user),
 			playerSkins: skinData.playerSkins,
 			weaponSkins: skinData.weaponSkins,
 		});
 	});
+}
+
+export function readPlayersData() {
+	return JSON.parse(readFileSync('server/data/playerData.json', 'utf8'));
+}
+
+function readSkinData() {
+	return JSON.parse(readFileSync('server/data/skinData.json', 'utf8'));
+}
+
+export function writePlayersData(playersData) {
+	writeFileSync('server/data/playerData.json', JSON.stringify(playersData));
 }

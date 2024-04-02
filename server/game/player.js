@@ -25,6 +25,12 @@ export default class Player extends Entity {
 		this.fireSpeed = stat.fireSpeedIncrement * properties.fireSpeed;
 		this.speed = 3 + stat.speedIncrement * properties.speed;
 
+		this.previousDamage = this.damage;
+		this.previousFireSpeed = this.fireSpeed;
+		this.previousSpeed = this.speed;
+
+		this.currentBonus = [];
+
 		this.souls = properties.souls;
 
 		this.speedX = 0;
@@ -94,6 +100,43 @@ export default class Player extends Entity {
 				this.currentWeapon
 			)
 		);
+	}
+
+	applyBonus(bonus) {
+		switch (bonus.type) {
+			case 'health':
+				if (this.health < this.maxHealth) {
+					this.health += this.maxHealth * bonus.percent;
+					this.health = Math.min(this.health, this.maxHealth);
+				}
+				return;
+			case 'damage':
+				this.damage += this.damage * bonus.percent;
+				break;
+			case 'fireSpeed':
+				this.fireSpeed += this.fireSpeed * bonus.percent;
+				break;
+			case 'speed':
+				this.speed += this.speed * bonus.percent;
+				break;
+		}
+		setTimeout(() => {
+			this.removeBonus(bonus);
+		}, 8000);
+	}
+
+	removeBonus(bonus) {
+		switch (bonus.type) {
+			case 'damage':
+				this.damage = this.previousDamage;
+				break;
+			case 'fireSpeed':
+				this.fireSpeed = this.previousFireSpeed;
+				break;
+			case 'speed':
+				this.speed = this.previousSpeed;
+				break;
+		}
 	}
 
 	canMoveOnX(width) {

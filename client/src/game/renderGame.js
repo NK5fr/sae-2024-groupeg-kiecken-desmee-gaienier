@@ -1,7 +1,13 @@
 import { socket } from '../main.js';
 import { renderAngels } from './renderAngel.js';
+import { renderAllBonus } from './renderBonus.js';
 import { renderMissiles, renderMissilesHitbox } from './renderMissiles.js';
-import renderPlayer, { renderHealthBar } from './renderPlayer.js';
+import renderPlayer, {
+	renderHealthBar,
+	renderPlayerHitbox,
+	renderPlayerStats,
+	renderPlayers,
+} from './renderPlayer.js';
 import renderStage, {
 	renderStageProgressionBar,
 	renderStageChangement,
@@ -16,6 +22,7 @@ export const canvas = document.querySelector('.gameCanvas'),
 export let stageTransitionEnd = false;
 
 let gameRenderer = null;
+let transitionRenderer = null;
 let game = null;
 let stage = null;
 
@@ -36,18 +43,17 @@ export default function startGameRenderer() {
 
 export function startTransition(previousStage) {
 	stage = previousStage;
-	gameRenderer = requestAnimationFrame(renderTransition);
+	transitionRenderer = requestAnimationFrame(renderTransition);
 }
 
 function renderGame() {
 	context.clearRect(0, 0, game.width, game.height);
+	console.log(`Game ${game.socketId} is rendering`);
 
 	renderStage(game.stage, context, canvas);
 
 	renderPlayer(game.mainPlayer, context);
-	game.otherPlayers.forEach(player => {
-		renderPlayer(player, context);
-	});
+	renderPlayers(game.otherPlayers, context);
 
 	renderAngels(game.stage.angels, context);
 	game.stage.angels.forEach(angel => {
@@ -56,6 +62,8 @@ function renderGame() {
 
 	renderMissiles(game.stage.strandedMissiles, context);
 
+	renderAllBonus(game.stage.bonus, context);
+
 	renderStageProgressionBar(game.stage, context, canvas);
 	renderHealthBar(game.mainPlayer, 0, context, canvas);
 	game.otherPlayers.forEach((player, index) => {
@@ -63,6 +71,12 @@ function renderGame() {
 	});
 
 	if (game.debug) {
+		console.log('Debug mode is on');
+		renderPlayerHitbox(game.mainPlayer, context);
+		renderPlayerStats(game.mainPlayer, context, canvas);
+		game.otherPlayers.forEach(player => {
+			renderPlayerHitbox(player, context);
+		});
 		renderMissilesHitbox(game.mainPlayer.missiles, context);
 		game.otherPlayers.forEach(player => {
 			renderMissilesHitbox(player.missiles, context);
@@ -73,6 +87,7 @@ function renderGame() {
 
 function renderTransition() {
 	context.clearRect(0, 0, game.width, game.height);
+	console.log('Transition is rendering');
 	renderStageChangement(game.stage, stage, context, canvas);
 	renderPlayer(game.mainPlayer, context);
 	game.otherPlayers.forEach(player => {
@@ -84,7 +99,7 @@ function renderTransition() {
 		stageTransitionEnd = false;
 		startGameRenderer();
 	} else {
-		gameRenderer = requestAnimationFrame(renderTransition);
+		transitionRenderer = requestAnimationFrame(renderTransition);
 	}
 }
 
@@ -98,4 +113,8 @@ export function stageChangeEnd() {
 
 export function stopGameRenderer() {
 	cancelAnimationFrame(gameRenderer);
+}
+
+export function stopTransitionRenderer() {
+	cancelAnimationFrame(transitionRenderer);
 }

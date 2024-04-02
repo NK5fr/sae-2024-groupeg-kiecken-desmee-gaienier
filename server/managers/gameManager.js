@@ -1,18 +1,25 @@
 import { readFileSync } from 'fs';
 import Game from '../game/game.js';
+import { addGame, currentGame, removeGame } from '../index.js';
 
-
-export default function gameManager(socket, currentGame, playersData) {
+export default function gameManager(socket) {
 	socket.on('gameStart', ({ user, width, height }) => {
-		playersData = JSON.parse(
-			readFileSync('server/data/playerData.json', 'utf8')
-		);
+		const playersData = readPlayersData();
 		let game = currentGame.find(game => game.user === user);
 		if (game) return;
-		let playerData = playersData.find(player => player.user === user);
-		game = new Game(width, height, playerData, socket.id);
+		let player = playersData.find(player => player.user === user);
+		game = new Game(width, height, player, socket.id);
 		game.startGame();
-		currentGame.push(game);
+		addGame(game);
+		socket.emit('gameStart', game);
+	});
+
+	socket.on('gameJoin', ({ host, user }) => {
+		const playersData = readPlayersData();
+		let game = currentGame.find(game => game.owner === host);
+		if (!game) return;
+		let player = playersData.find(player => player.user === user);
+		game.addNewPlayer(player, socket.id);
 		socket.emit('gameStart', game);
 	});
 
@@ -23,7 +30,6 @@ export default function gameManager(socket, currentGame, playersData) {
 	});
 
 	socket.on('canvasResampled', data => {
-		if (currentGame.length === 0) return;
 		const game = currentGame.find(game => game.socketId === socket.id);
 		if (game) {
 			game.width = data.width;
@@ -32,13 +38,14 @@ export default function gameManager(socket, currentGame, playersData) {
 	});
 
 	socket.on('gameStop', () => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		currentGame = currentGame.filter(game => game.socketId !== socket.id);
+		removeGame(socket.id);
 	});
 
 	socket.on('disconnect', () => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (game) game.stopGame();
+		removeGame(socket.id);
 	});
+}
+
+function readPlayersData() {
+	return JSON.parse(readFileSync('server/data/playerData.json', 'utf8'));
 }

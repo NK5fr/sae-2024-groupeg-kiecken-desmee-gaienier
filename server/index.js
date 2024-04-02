@@ -10,7 +10,7 @@ import gameManager from './managers/gameManager.js';
 import playerManager from './managers/playerManager.js';
 import { scoreManager } from './managers/scoreManager.js';
 
-let currentGame = [];
+export let currentGame = [];
 
 const fileOptions = { root: process.cwd() };
 const app = express();
@@ -32,32 +32,36 @@ export let skinData = JSON.parse(
 export let scoreData = JSON.parse(
 	readFileSync('server/data/scoreData.json', 'utf8')
 );
+export let bonusData = JSON.parse(
+	readFileSync('server/data/bonusData.json', 'utf8')
+);
 
 const usersData = JSON.parse(
 	readFileSync('server/data/userData.json', 'utf-8')
 );
 usersData.forEach(user => {
-	setConnexion(user, false);
+	user.connexion = false;
 });
-
-export function setConnexion(user, value) {
-	user.connexion = value;
-	writeFileSync('server/data/userData.json', JSON.stringify(usersData));
-}
+writeFileSync('server/data/userData.json', JSON.stringify(usersData));
 
 io.on('connection', socket => {
 	console.log(`New connection: ${socket.id}`);
-
-	connexionManager(socket, usersData);
-
-	controllerManager(socket, currentGame);
-
-	gameManager(socket, currentGame, playersData);
-
-	playerManager(socket, skinData);
-
-	scoreManager(socket, scoreData)
+	connexionManager(socket);
+	controllerManager(socket);
+	gameManager(socket);
+	playerManager(socket);
+	scoreManager(socket, scoreData);
 });
+
+export function addGame(game) {
+	currentGame.push(game);
+	console.log(currentGame);
+}
+
+export function removeGame(socketId) {
+	currentGame = currentGame.filter(game => game.socketId !== socketId);
+	console.log(currentGame);
+}
 
 addWebpackMiddleware(app);
 
