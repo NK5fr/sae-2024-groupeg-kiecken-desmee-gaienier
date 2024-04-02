@@ -4,10 +4,10 @@ import addWebpackMiddleware from './middlewares/addWebpackMiddleware.js';
 import { Server as IOServer } from 'socket.io';
 import { readFileSync, writeFileSync } from 'fs';
 
-import connexionManager from './player/connexionManager.js';
-import controllerManager from './player/controllerManager.js';
-import gameManager from './player/gameManager.js';
-import playerManager from './player/playerDataManager.js';
+import connexionManager from './managers/connexionManager.js';
+import controllerManager from './managers/controllerManager.js';
+import gameManager from './managers/gameManager.js';
+import playerManager from './managers/playerManager.js';
 
 let currentGame = [];
 
