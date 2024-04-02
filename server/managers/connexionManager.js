@@ -3,8 +3,9 @@ import signin from '../login/signin.js';
 import forgetPassword from '../login/forgetPassword.js';
 import resetPassword from '../login/resetPassword.js';
 import logout from '../login/logout.js';
+import { setConnexion } from '../index.js';
 
-export default function connexionManager(socket) {
+export default function connexionManager(socket, usersData) {
 	socket.on('userLogin', ({ userLogin, password }) => {
 		login(userLogin, password, socket.id);
 	});

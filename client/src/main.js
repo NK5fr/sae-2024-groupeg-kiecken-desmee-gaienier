@@ -143,6 +143,12 @@ socket.on('serverAlert', message => {
 	alert(message);
 });
 
+socket.on('gameWin', data => {
+	stopGameRenderer();
+	Router.navigate('/rejouer');
+	socket.emit('gameWin', data);
+});
+
 function setAllCarouselData() {
 	socket.emit('setCarousel', user);
 	socket.on('setCarousel', ({ playerData, playerSkins, weaponSkins }) => {

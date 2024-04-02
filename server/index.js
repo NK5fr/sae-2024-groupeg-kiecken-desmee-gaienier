@@ -28,6 +28,9 @@ export let stageData = JSON.parse(
 export let skinData = JSON.parse(
 	readFileSync('server/data/skinData.json', 'utf8')
 );
+export let scoreData = JSON.parse(
+	readFileSync('server/data/scoreData.json', 'utf8')
+);
 
 const usersData = JSON.parse(
 	readFileSync('server/data/userData.json', 'utf-8')
@@ -36,7 +39,7 @@ usersData.forEach(user => {
 	setConnexion(user, false);
 });
 
-function setConnexion(user, value) {
+export function setConnexion(user, value) {
 	user.connexion = value;
 	writeFileSync('server/data/userData.json', JSON.stringify(usersData));
 }
@@ -44,13 +47,20 @@ function setConnexion(user, value) {
 io.on('connection', socket => {
 	console.log(`New connection: ${socket.id}`);
 
-	connexionManager(socket);
+	connexionManager(socket, usersData);
 
 	controllerManager(socket, currentGame);
 
 	gameManager(socket, currentGame, playersData);
 
 	playerManager(socket, skinData);
+
+	socket.on('gameWin', data => {
+		console.log(data);
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (!game) return;
+		currentGame = currentGame.filter(game => game.socketId !== socket.id);
+	});
 });
 
 addWebpackMiddleware(app);
