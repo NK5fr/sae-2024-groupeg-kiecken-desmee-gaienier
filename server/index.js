@@ -34,6 +34,9 @@ export let stageData = JSON.parse(
 export let skinData = JSON.parse(
 	readFileSync('server/data/skinData.json', 'utf8')
 );
+export let scoreData = JSON.parse(
+	readFileSync('server/data/scoreData.json', 'utf8')
+);
 
 const usersData = JSON.parse(
 	readFileSync('server/data/userData.json', 'utf-8')
@@ -154,7 +157,7 @@ io.on('connection', socket => {
 		}
 	});
 
-	socket.on('gameStop', () => {
+	socket.on('gameStop', data => {
 		const game = currentGame.find(game => game.socketId === socket.id);
 		if (!game) return;
 		currentGame = currentGame.filter(game => game.socketId !== socket.id);
@@ -185,6 +188,13 @@ io.on('connection', socket => {
 	socket.on('open', (username) => {
 		console.log('open');
 		setConnexion(usersData.find(u => u.login === username), true);
+	});
+
+	socket.on('gameWin', data => {
+		console.log(data);
+		const game = currentGame.find(game => game.socketId === socket.id);
+		if (!game) return;
+		currentGame = currentGame.filter(game => game.socketId !== socket.id);
 	});
 });
 
