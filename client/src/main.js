@@ -44,19 +44,7 @@ socket.on('userResetPassword', login => {
 });
 LoginMenu.setLogout($('.logout'));
 
-ScoreMenu.setTable($('.scores'), [
-	{ name: 'Nathan', value: 12 },
-	{ name: 'Nathan', value: 2 },
-	{ name: 'Nathan', value: 3 },
-	{ name: 'Nathan', value: 4 },
-	{ name: 'Nathan', value: 5 },
-	{ name: 'Nathan', value: 6 },
-	{ name: 'Nathan', value: 7 },
-	{ name: 'Nathan', value: 8 },
-	{ name: 'Nathan', value: 9 },
-	{ name: 'Nathan', value: 10 },
-	{ name: 'Nathan', value: 11 },
-]);
+const table = new ScoreMenu($('.scores'));
 
 const routes = [
 	{ path: '/', view: $('.accueil') },
@@ -89,6 +77,7 @@ Router.setInnerLinks(document.body);
 if (user) {
 	Router.navigate(window.location.pathname);
 	setAllCarouselData();
+	setScores();
 } else Router.navigate('/login');
 
 window.onpopstate = () => {
@@ -130,6 +119,7 @@ socket.on('gameStop', data => {
 	stopGameRenderer();
 	Router.navigate('/rejouer');
 	socket.emit('gameStop');
+	if(data.win) socket.emit('score', data);
 });
 
 socket.on('stageTransition', previousStage => {
@@ -141,6 +131,7 @@ socket.on('userLogin', login => {
 	window.sessionStorage.setItem('user', login);
 	user = login;
 	setAllCarouselData();
+	setScores();
 	Router.navigate('/');
 });
 
@@ -150,12 +141,6 @@ socket.on('changePath', path => {
 
 socket.on('serverAlert', message => {
 	alert(message);
-});
-
-socket.on('gameWin', data => {
-	stopGameRenderer();
-	Router.navigate('/rejouer');
-	socket.emit('gameWin', data);
 });
 
 function setAllCarouselData() {
@@ -198,6 +183,12 @@ function setAllCarouselData() {
 	});
 }
 
+function setScores() {
+	socket.emit('setScore');
+	socket.on('setScore', data => {
+		table.setTable(data.scores);
+	});
+}
 window.addEventListener('unload', event => {
 	if (user) socket.emit('close', user);
 });

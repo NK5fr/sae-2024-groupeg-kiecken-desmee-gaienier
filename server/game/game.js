@@ -130,6 +130,7 @@ function updateGame(gameInstance) {
 				user: mainPlayer.user,
 				souls: mainPlayer.souls,
 				time: formatedTime,
+				win: true,
 			});
 			otherPlayers.forEach(player => {
 				io.to(player.socketId).emit('gameStop', {

@@ -13,3 +13,18 @@ function readScoreData() {
 function writeScoreData(data) {
 	writeFileSync('server/data/scoreData.json', JSON.stringify(data));
 }
+
+export function scoreManager(socket, scoreData) {
+	socket.on('score', data => {
+		addScore(data.user, data.time);
+		socket.emit('setScore', {
+			scores: scoreData,
+		});
+	});
+
+	socket.on('setScore', () => {
+		socket.emit('setScore', {
+			scores: scoreData,
+		});
+	});
+}

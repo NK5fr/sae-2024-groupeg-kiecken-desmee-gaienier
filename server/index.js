@@ -8,6 +8,7 @@ import connexionManager from './managers/connexionManager.js';
 import controllerManager from './managers/controllerManager.js';
 import gameManager from './managers/gameManager.js';
 import playerManager from './managers/playerManager.js';
+import { scoreManager } from './managers/scoreManager.js';
 
 export let currentGame = [];
 
@@ -49,6 +50,7 @@ io.on('connection', socket => {
 	controllerManager(socket);
 	gameManager(socket);
 	playerManager(socket);
+	scoreManager(socket, scoreData);
 });
 
 export function addGame(game) {
