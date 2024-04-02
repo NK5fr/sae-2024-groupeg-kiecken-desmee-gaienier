@@ -13,7 +13,7 @@ import {
 	setCurrentSkin,
 	setSkinsPool,
 	setStat,
-} from './player/playerDataManager.js';
+} from './managers/playerManager.js';
 
 let currentGame = [];
 
@@ -178,10 +178,12 @@ io.on('connection', socket => {
 	});
 
 	socket.on('close', (username) => {
+		console.log('close');
 		setConnexion(usersData.find(u => u.login === username), false);
 	});
 
 	socket.on('open', (username) => {
+		console.log('open');
 		setConnexion(usersData.find(u => u.login === username), true);
 	});
 });
