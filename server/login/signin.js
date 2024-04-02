@@ -17,10 +17,10 @@ export default function signin(
 	if (user) {
 		io.to(socketId).emit('serverAlert', "Nom d'utilisateur déjà utilisé");
 	} else {
-		//const passwordMD5 = encryptionTool(password);
+		//const cryptPassword = encryptionTool(password);
 		user = {
 			login,
-			//passwordMD5,
+			//cryptPassword,
 			password,
 			recoverySentence,
 			response,
