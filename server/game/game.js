@@ -114,10 +114,11 @@ function updateGame(gameInstance) {
 		) {
 			const time = new Date(Date.now() - gameInstance.startTime);
 			const formatedTime = `${time.getUTCHours() >= 10 ? time.getUTCHours() : '0' + time.getUTCHours()}:${time.getUTCMinutes() >= 10 ? time.getUTCMinutes() : '0' + time.getUTCMinutes()}:${time.getUTCSeconds() >= 10 ? time.getUTCSeconds() : '0' + time.getUTCSeconds()}`;
-			io.to(gameInstance.socketId).emit('gameWin', {
+			io.to(gameInstance.socketId).emit('gameStop', {
 				user: mainPlayer.user,
 				souls: mainPlayer.souls,
-				time: formatedTime
+				time: formatedTime,
+				win: true
 			});
 			return;
 		}

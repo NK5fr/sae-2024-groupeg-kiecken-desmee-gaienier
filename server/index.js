@@ -8,6 +8,7 @@ import connexionManager from './managers/connexionManager.js';
 import controllerManager from './managers/controllerManager.js';
 import gameManager from './managers/gameManager.js';
 import playerManager from './managers/playerManager.js';
+import { scoreManager } from './managers/scoreManager.js';
 
 let currentGame = [];
 
@@ -55,12 +56,7 @@ io.on('connection', socket => {
 
 	playerManager(socket, skinData);
 
-	socket.on('gameWin', data => {
-		console.log(data);
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		currentGame = currentGame.filter(game => game.socketId !== socket.id);
-	});
+	scoreManager(socket, scoreData)
 });
 
 addWebpackMiddleware(app);
