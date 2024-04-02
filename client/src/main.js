@@ -11,6 +11,7 @@ import startGameRenderer, {
 import CarouselStat from './carousel/carouselStat.js';
 import CarouselSkin from './carousel/carouselSkin.js';
 import ScoreMenu from './menu/scoreMenu.js';
+import JoinMenu from './menu/joinMenu.js';
 
 export const socket = io();
 
@@ -38,7 +39,34 @@ socket.on('userResetPassword', login => {
 });
 LoginMenu.setLogout($('.logout'));
 
-const table = new ScoreMenu($('.scores'));
+const score = new ScoreMenu($('.scores'));
+const game = new JoinMenu($('.join'));
+
+game.setGames([
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+	{host:"nathan",participants:1},
+]);
 
 const routes = [
 	{ path: '/', view: $('.accueil') },
@@ -52,6 +80,7 @@ const routes = [
 	{ path: '/rejouer', view: $('.rejouer') },
 	{ path: '/resetPassword', view: $('.resetPassword') },
 	{ path: '/scores', view: $('.scores') },
+	{ path: '/join', view: $('.join') }
 ];
 
 let carouselLife;
@@ -177,7 +206,7 @@ function setAllCarouselData() {
 function setScores() {
 	socket.emit('setScore');
 	socket.on('setScore', data => {
-		table.setTable(data.scores);
+		score.setTable(data.scores);
 	});
 }
 window.addEventListener('unload', event => {

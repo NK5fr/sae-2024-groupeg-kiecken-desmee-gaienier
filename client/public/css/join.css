@@ -1,0 +1,70 @@
+.join{
+    margin-top: 1%;
+    margin-bottom: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 0px #000000;
+    text-align: center;
+    width: 80%;
+    margin-left: 10%;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 1%;
+    padding-top: 2%;
+}
+
+.join button{
+    width: 30%;
+    background-color: #c4b31f;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    opacity: 1.2;
+    text-size-adjust: 50px;
+}
+
+.join > h1 {
+    margin-bottom: 3%;
+}
+
+.join  table {
+    width: 100%;
+    font-size: large;
+    
+}
+
+.join > div {
+    height: 30em;
+    width: 70%;
+    margin: auto;
+    overflow-y: scroll;
+    border-style: solid;
+    border-color: black;
+    margin-bottom: 1%;
+}
+
+.join table th {
+    background-color: #303030;
+    color: white;
+    position: sticky;
+    top: 0;
+}
+
+.join table tr {
+    border-bottom-style: solid;
+    border-bottom-color: #000000;
+    border-bottom-width: 1px;
+    border-right-style: solid;
+    border-right-color: #000000;
+    border-right-width: 1px;
+}
+
+.join table td, .join table th {
+    padding: 1%;
+}
+
+.join table tr:nth-child(2n + 1){
+    background-color: #c0c0c0;
+}

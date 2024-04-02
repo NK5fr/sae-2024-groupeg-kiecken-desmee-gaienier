@@ -19,7 +19,6 @@ export default class Router {
 	}
 
 	static navigate(path, skipPushState = false) {
-		console.log(path);
 		let route = this.routes.find(route => route.path === path);
 		if(user && this.connexionRoutes.includes(route?.path)) {
 			route = this.routes.find(route => route.path === '/');
