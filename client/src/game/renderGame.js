@@ -48,7 +48,7 @@ export function startTransition(previousStage) {
 
 function renderGame() {
 	context.clearRect(0, 0, game.width, game.height);
-	console.log('Game is rendering');
+	console.log(`Game ${game.socketId} is rendering`);
 
 	renderStage(game.stage, context, canvas);
 

@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { socket, user } from './main.js';
-import { canvas } from './game/renderGame.js';
+import { canvas, stopGameRenderer } from './game/renderGame.js';
 
 export default class Router {
 	static routes = [];
@@ -36,10 +36,8 @@ export default class Router {
 					height: canvas.height,
 					user: window.sessionStorage.getItem('user'),
 				});
-			} else if (route.path === '/rejoindre') {
-				socket.emit('gameStop');
-				socket.emit('gameJoin', { host: 'raph', user: user });
 			} else {
+				stopGameRenderer();
 				socket.emit('gameStop');
 			}
 			if (!skipPushState) {

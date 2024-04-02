@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import { io } from '../index.js';
+import { readUsersData } from '../managers/connexionManager.js';
 
 export default function forgetPassword(
 	login,
@@ -7,9 +8,7 @@ export default function forgetPassword(
 	response,
 	socketId
 ) {
-	const usersData = JSON.parse(
-		readFileSync('server/data/userData.json', 'utf8')
-	);
+	const usersData = readUsersData();
 	const user = usersData.find(
 		user =>
 			user.login === login &&

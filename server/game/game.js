@@ -129,6 +129,7 @@ function updateGame(gameInstance) {
 			io.to(mainPlayer.socketId).emit('gameStop', {
 				user: mainPlayer.user,
 				souls: mainPlayer.souls,
+				time: formatedTime,
 			});
 			otherPlayers.forEach(player => {
 				io.to(player.socketId).emit('gameStop', {
