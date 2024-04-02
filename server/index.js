@@ -39,7 +39,7 @@ usersData.forEach(user => {
 	setConnexion(user, false);
 });
 
-function setConnexion(user, value) {
+export function setConnexion(user, value) {
 	user.connexion = value;
 	writeFileSync('server/data/userData.json', JSON.stringify(usersData));
 }
@@ -47,7 +47,7 @@ function setConnexion(user, value) {
 io.on('connection', socket => {
 	console.log(`New connection: ${socket.id}`);
 
-	connexionManager(socket);
+	connexionManager(socket, usersData);
 
 	controllerManager(socket, currentGame);
 
