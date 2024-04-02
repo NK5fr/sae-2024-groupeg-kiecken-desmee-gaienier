@@ -34,6 +34,9 @@ export let stageData = JSON.parse(
 export let skinData = JSON.parse(
 	readFileSync('server/data/skinData.json', 'utf8')
 );
+export let bonusData = JSON.parse(
+	readFileSync('server/data/bonusData.json', 'utf8')
+);
 
 const usersData = JSON.parse(
 	readFileSync('server/data/userData.json', 'utf-8')
@@ -78,12 +81,23 @@ io.on('connection', socket => {
 		playersData = JSON.parse(
 			readFileSync('server/data/playerData.json', 'utf8')
 		);
-		let game = currentGame.find(game => game.user === user);
+		let game = currentGame.find(game => game.owner === user);
 		if (game) return;
 		let playerData = playersData.find(player => player.user === user);
 		game = new Game(width, height, playerData, socket.id);
 		game.startGame();
 		currentGame.push(game);
+		socket.emit('gameStart', game);
+	});
+
+	socket.on('gameJoin', ({ host, user }) => {
+		playersData = JSON.parse(
+			readFileSync('server/data/playerData.json', 'utf8')
+		);
+		let game = currentGame.find(game => game.owner === host);
+		if (!game) return;
+		let playerData = playersData.find(player => player.user === user);
+		game.addNewPlayer(playerData, socket.id);
 		socket.emit('gameStart', game);
 	});
 
@@ -94,55 +108,33 @@ io.on('connection', socket => {
 	});
 
 	socket.on('playerKeyDown', key => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id) game.mainPlayer.onKeyDown(key);
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === socket.id)
-				.forEach(player => player.onKeyDown(key));
+		const player = findPlayerBySocketId(socket.id);
+		if (!player) return;
+		player.onKeyDown(key);
 	});
 
 	socket.on('playerKeyUp', key => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id) game.mainPlayer.onKeyUp(key);
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === socket.id)
-				.forEach(player => player.onKeyUp(key));
+		const player = findPlayerBySocketId(socket.id);
+		if (!player) return;
+		player.onKeyUp(key);
 	});
 
 	socket.on('playerMouseDown', ({ clientX, clientY }) => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id)
-			game.mainPlayer.onMouseDown(clientX, clientY);
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === data.socketId)
-				.forEach(player => player.onMouseDown(data.x, data.y));
+		const player = findPlayerBySocketId(socket.id);
+		if (!player) return;
+		player.onMouseDown(clientX, clientY);
 	});
 
 	socket.on('playerMouseUp', () => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id) game.mainPlayer.onMouseUp();
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === socket.id)
-				.forEach(player => player.onMouseUp());
+		const player = findPlayerBySocketId(socket.id);
+		if (!player) return;
+		player.onMouseUp();
 	});
 
 	socket.on('playerMouseMove', ({ clientX, clientY }) => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id)
-			game.mainPlayer.onMouseMove(clientX, clientY);
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === socket.id)
-				.forEach(player => player.onMouseMove(clientX, clientY));
+		const player = findPlayerBySocketId(socket.id);
+		if (!player) return;
+		player.onMouseMove(clientX, clientY);
 	});
 
 	socket.on('canvasResampled', data => {
@@ -177,14 +169,33 @@ io.on('connection', socket => {
 		setStat(data.username, data.value, data.statName);
 	});
 
-	socket.on('close', (username) => {
-		setConnexion(usersData.find(u => u.login === username), false);
+	socket.on('close', username => {
+		setConnexion(
+			usersData.find(u => u.login === username),
+			false
+		);
 	});
 
-	socket.on('open', (username) => {
-		setConnexion(usersData.find(u => u.login === username), true);
+	socket.on('open', username => {
+		setConnexion(
+			usersData.find(u => u.login === username),
+			true
+		);
 	});
 });
+
+function findPlayerBySocketId(socketId) {
+	let player;
+	currentGame.forEach(game => {
+		if (game.mainPlayer.socketId === socketId) player = game.mainPlayer;
+		else {
+			game.otherPlayers.forEach(p => {
+				if (p.socketId === socketId) player = p;
+			});
+		}
+	});
+	return player;
+}
 
 addWebpackMiddleware(app);
 

@@ -4,6 +4,7 @@ const previousBackground = new Image();
 const background = new Image();
 const transitionBackground = new Image();
 const nameImage = new Image();
+
 let backgroundX = 0;
 
 let previousBackgroundY = 0;
@@ -32,7 +33,7 @@ export function renderStageChangement(stage, newStage, context, canvas) {
 	background.src = stage.background;
 	previousBackground.src = newStage.background;
 	transitionBackground.src = 'assets/stage/background/0.png';
-	previousBackgroundY += 5;
+	previousBackgroundY += 8;
 	transitionBackgroundY = previousBackgroundY - transitionBackground.height;
 	backgroundY = transitionBackgroundY - previousBackground.height;
 	console.log(backgroundY);

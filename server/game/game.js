@@ -10,7 +10,6 @@ export default class Game {
 
 	debug = false;
 
-	mainPlayer;
 	otherPlayers = [];
 
 	constructor(width, height, playerData, socketId) {
@@ -28,7 +27,7 @@ export default class Game {
 		this.stage = new Stage(this.stages[0], width, height);
 	}
 
-	addNewPlayer(socketId, playerData) {
+	addNewPlayer(playerData, socketId) {
 		this.otherPlayers.push(new Player(100, 100, playerData, socketId));
 	}
 
@@ -106,6 +105,19 @@ function updateGame(gameInstance) {
 			});
 		}
 	});
+	stage.bonus.forEach(bonus => {
+		if (mainPlayer.checkCollision(bonus)) {
+			mainPlayer.applyBonus(bonus);
+			bonus.health = 0;
+		}
+		otherPlayers.forEach(player => {
+			if (player.checkCollision(bonus)) {
+				player.applyBonus(bonus);
+				bonus.health = 0;
+			}
+		});
+	});
+
 	if (stage.stageIsClear()) {
 		gameInstance.stopGame();
 		if (
@@ -114,13 +126,22 @@ function updateGame(gameInstance) {
 		) {
 			const time = new Date(Date.now() - gameInstance.startTime);
 			const formatedTime = `${time.getUTCHours() >= 10 ? time.getUTCHours() : '0' + time.getUTCHours()}:${time.getUTCMinutes() >= 10 ? time.getUTCMinutes() : '0' + time.getUTCMinutes()}:${time.getUTCSeconds() >= 10 ? time.getUTCSeconds() : '0' + time.getUTCSeconds()}`;
-			io.to(gameInstance.socketId).emit('gameStop', {
+			io.to(mainPlayer.socketId).emit('gameStop', {
 				user: mainPlayer.user,
 				souls: mainPlayer.souls,
 			});
+			otherPlayers.forEach(player => {
+				io.to(player.socketId).emit('gameStop', {
+					user: player.user,
+					souls: player.souls,
+				});
+			});
 			return;
 		}
-		io.to(gameInstance.socketId).emit('stageTransition', gameInstance.stage);
+		io.to(mainPlayer.socketId).emit('stageTransition', stage);
+		otherPlayers.forEach(player => {
+			io.to(player.socketId).emit('stageTransition', stage);
+		});
 		gameInstance.stage = new Stage(
 			gameInstance.stages[gameInstance.stages.indexOf(stage.name) + 1],
 			gameInstance.width,
@@ -129,12 +150,16 @@ function updateGame(gameInstance) {
 	}
 	if (mainPlayer.health <= 0) {
 		gameInstance.stopGame();
-		io.to(gameInstance.socketId).emit('gameStop', {
+		io.to(mainPlayer.socketId).emit('gameStop', {
 			user: mainPlayer.user,
 			souls: mainPlayer.souls,
 		});
 	}
-	io.to(gameInstance.socketId).emit('gameUpdate', gameInstance);
+	gameInstance.otherPlayers = otherPlayers.filter(player => player.health > 0);
+	io.to(mainPlayer.socketId).emit('gameUpdate', gameInstance);
+	gameInstance.otherPlayers.forEach(player => {
+		io.to(player.socketId).emit('gameUpdate', gameInstance);
+	});
 }
 
 function spawnAngels(gameInstance) {

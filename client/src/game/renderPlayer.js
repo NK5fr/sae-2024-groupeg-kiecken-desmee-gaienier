@@ -14,12 +14,24 @@ export default function renderPlayer(player, context) {
 
 	context.drawImage(playerImage, player.posX, player.posY);
 
+	context.beginPath();
+	context.font = '20px Arial';
+	context.fillStyle = 'black';
+	context.fillText(player.user, player.posX, player.posY - 15);
+	context.closePath();
+
 	renderMissiles(player.missiles, context);
+}
+
+export function renderPlayers(players, context) {
+	players.forEach(player => {
+		renderPlayer(player, context);
+	});
 }
 
 export function renderHealthBar(player, position, context, canvas) {
 	const startX = 10 + position * 110;
-	const startY = canvas.height - (position === 0 ? 20 : 15);
+	const startY = 20;
 
 	const healthBarWidth = (player.health / player.maxHealth) * 100;
 	const healthBarHeight = position === 0 ? 15 : 10;
@@ -37,4 +49,26 @@ function calculateCurrentColorBasedOnHealth(player) {
 	let green = Math.floor((player.health / player.maxHealth) * 255);
 	let red = 255 - green;
 	return `rgb(${red}, ${green}, 0)`;
+}
+
+export function renderPlayerHitbox(player, context) {
+	context.beginPath();
+	context.rect(
+		player.posX,
+		player.posY,
+		player.hitboxWidth,
+		player.hitboxHeight
+	);
+	context.strokeStyle = 'red';
+	context.stroke();
+	context.closePath();
+}
+
+export function renderPlayerStats(player, context, canvas) {
+	context.font = '20px Arial';
+	context.fillStyle = 'black';
+	context.fillText(`Health: ${player.health}`, 10, 20);
+	context.fillText(`Damage: ${player.damage}`, 10, 40);
+	context.fillText(`Fire Speed: ${player.fireSpeed}`, 10, 60);
+	context.fillText(`Speed: ${player.speed}`, 10, 80);
 }

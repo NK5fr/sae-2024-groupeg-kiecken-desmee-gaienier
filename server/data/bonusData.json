@@ -1,0 +1,22 @@
+{
+    "damage": {
+        "percent": 0.1,
+        "hitboxWidth": 48,
+        "hitboxHeight": 48
+    },
+    "fireSpeed": {
+        "percent": 0.1,
+        "hitboxWidth": 48,
+        "hitboxHeight": 48
+    },
+    "health": {
+        "percent": 0.05,
+        "hitboxWidth": 48,
+        "hitboxHeight": 48
+    },
+    "speed": {
+        "percent": 0.1,
+        "hitboxWidth": 48,
+        "hitboxHeight": 48
+    }
+}

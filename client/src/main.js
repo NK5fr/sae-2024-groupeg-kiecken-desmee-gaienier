@@ -25,6 +25,7 @@ const playerCommands = [
 	's',
 	'q',
 	'd',
+	'g',
 ];
 
 PlayMenu.setMenu($('.menuJouer'));
@@ -55,6 +56,7 @@ ScoreMenu.setTable($('.scores'), [
 const routes = [
 	{ path: '/', view: $('.accueil') },
 	{ path: '/jeu', view: $('.jeu') },
+	{ path: '/rejoindre', view: $('.jeu') },
 	{ path: '/login', view: $('.login') },
 	{ path: '/signin', view: $('.signin') },
 	{ path: '/mdp_oublie', view: $('.mdp_oublie') },
@@ -115,6 +117,11 @@ socket.on('gameUpdate', game => {
 	setGame(game);
 });
 
+socket.on('gameJoin', game => {
+	setGame(game);
+	startGameRenderer();
+});
+
 socket.on('gameStop', data => {
 	stopGameRenderer();
 	Router.navigate('/rejouer');
@@ -122,11 +129,8 @@ socket.on('gameStop', data => {
 });
 
 socket.on('stageTransition', previousStage => {
+	stopGameRenderer();
 	startTransition(previousStage);
-});
-
-socket.on('stageTransition', newStage => {
-	startTransition(newStage);
 });
 
 socket.on('userLogin', login => {
@@ -185,8 +189,8 @@ function setAllCarouselData() {
 }
 
 window.addEventListener('unload', event => {
-	if(user) socket.emit('close', user);
-})
+	if (user) socket.emit('close', user);
+});
 
 export function setUserNull() {
 	user = null;
