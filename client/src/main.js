@@ -82,7 +82,6 @@ Router.setInnerLinks(document.body);
 if (user) {
 	Router.navigate(window.location.pathname);
 	setAllCarouselData();
-	setTimeout(() => socket.emit('open', user), 1000);
 } else Router.navigate('/login');
 
 window.onpopstate = () => {
@@ -187,6 +186,12 @@ function setAllCarouselData() {
 window.addEventListener('unload', event => {
 	if(user) socket.emit('close', user);
 })
+
+window.addEventListener('load', event => {
+	if(user) socket.emit('open', user);
+	//if(user) setTimeout(() => socket.emit('open', user), 1000);
+});
+
 
 export function setUserNull() {
 	user = null;
