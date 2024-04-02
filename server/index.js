@@ -2,18 +2,12 @@ import http from 'http';
 import express from 'express';
 import addWebpackMiddleware from './middlewares/addWebpackMiddleware.js';
 import { Server as IOServer } from 'socket.io';
-import login from './login/login.js';
-import signin from './login/signin.js';
-import forgetPassword from './login/forgetPassword.js';
-import Game from './game/game.js';
 import { readFileSync, writeFileSync } from 'fs';
-import resetPassword from './login/resetPassword.js';
-import logout from './login/logout.js';
-import {
-	setCurrentSkin,
-	setSkinsPool,
-	setStat,
-} from './player/playerDataManager.js';
+
+import connexionManager from './player/connexionManager.js';
+import controllerManager from './player/controllerManager.js';
+import gameManager from './player/gameManager.js';
+import playerManager from './player/playerDataManager.js';
 
 let currentGame = [];
 
@@ -49,141 +43,14 @@ function setConnexion(user, value) {
 
 io.on('connection', socket => {
 	console.log(`New connection: ${socket.id}`);
-	socket.on('userLogin', ({ userLogin, password }) => {
-		login(userLogin, password, socket.id);
-	});
-	socket.on('userLogout', login => {
-		logout(login, socket.id);
-	});
-	socket.on('userSignin', ({ login, password, recoverySentence, response }) => {
-		signin(login, password, recoverySentence, response, socket.id);
-	});
-	socket.on('userForgetPassword', ({ login, recoverySentence, response }) => {
-		forgetPassword(login, recoverySentence, response, socket.id);
-	});
-	socket.on('userResetPassword', ({ login, password }) => {
-		resetPassword(login, password, socket.id);
-	});
 
-	socket.on('setCarousel', user => {
-		const playerData = playersData.find(player => player.user === user);
-		socket.emit('setCarousel', {
-			playerData,
-			playerSkins: skinData.playerSkins,
-			weaponSkins: skinData.weaponSkins,
-		});
-	});
+	connexionManager(socket);
 
-	socket.on('gameStart', ({ user, width, height }) => {
-		playersData = JSON.parse(
-			readFileSync('server/data/playerData.json', 'utf8')
-		);
-		let game = currentGame.find(game => game.user === user);
-		if (game) return;
-		let playerData = playersData.find(player => player.user === user);
-		game = new Game(width, height, playerData, socket.id);
-		game.startGame();
-		currentGame.push(game);
-		socket.emit('gameStart', game);
-	});
+	controllerManager(socket, currentGame);
 
-	socket.on('stageChangeEnd', () => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		game.startGame();
-	});
+	gameManager(socket, currentGame, playersData);
 
-	socket.on('playerKeyDown', key => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id) game.mainPlayer.onKeyDown(key);
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === socket.id)
-				.forEach(player => player.onKeyDown(key));
-	});
-
-	socket.on('playerKeyUp', key => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id) game.mainPlayer.onKeyUp(key);
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === socket.id)
-				.forEach(player => player.onKeyUp(key));
-	});
-
-	socket.on('playerMouseDown', ({ clientX, clientY }) => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id)
-			game.mainPlayer.onMouseDown(clientX, clientY);
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === data.socketId)
-				.forEach(player => player.onMouseDown(data.x, data.y));
-	});
-
-	socket.on('playerMouseUp', () => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id) game.mainPlayer.onMouseUp();
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === socket.id)
-				.forEach(player => player.onMouseUp());
-	});
-
-	socket.on('playerMouseMove', ({ clientX, clientY }) => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		if (game.mainPlayer.socketId === socket.id)
-			game.mainPlayer.onMouseMove(clientX, clientY);
-		else
-			game.otherPlayers
-				.filter(player => player.socketId === socket.id)
-				.forEach(player => player.onMouseMove(clientX, clientY));
-	});
-
-	socket.on('canvasResampled', data => {
-		if (currentGame.length === 0) return;
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (game) {
-			game.width = data.width;
-			game.height = data.height;
-		}
-	});
-
-	socket.on('gameStop', () => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (!game) return;
-		currentGame = currentGame.filter(game => game.socketId !== socket.id);
-	});
-
-	socket.on('disconnect', () => {
-		const game = currentGame.find(game => game.socketId === socket.id);
-		if (game) game.stopGame();
-	});
-
-	socket.on('currentSkin', data => {
-		setCurrentSkin(data.username, data.skin, data.isProj);
-	});
-
-	socket.on('skinsPool', data => {
-		setSkinsPool(data.username, data.skin, data.isProj);
-	});
-
-	socket.on('stat', data => {
-		setStat(data.username, data.value, data.statName);
-	});
-
-	socket.on('close', (username) => {
-		setConnexion(usersData.find(u => u.login === username), false);
-	});
-
-	socket.on('open', (username) => {
-		setConnexion(usersData.find(u => u.login === username), true);
-	});
+	playerManager(socket, skinData);
 });
 
 addWebpackMiddleware(app);

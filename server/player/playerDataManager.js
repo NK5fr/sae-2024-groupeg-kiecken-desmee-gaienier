@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { playersData } from '../index.js';
 
-export function setCurrentSkin(username, skin, isProj) {
+function setCurrentSkin(username, skin, isProj) {
 	const player = playersData.find(p => p.user === username);
 	if (isProj) {
 		player.currentWeapon = skin;
@@ -11,7 +11,7 @@ export function setCurrentSkin(username, skin, isProj) {
 	fs.writeFileSync('server/data/playerData.json', JSON.stringify(playersData));
 }
 
-export function setSkinsPool(username, skin, isProj) {
+function setSkinsPool(username, skin, isProj) {
 	const player = playersData.find(p => p.user === username);
 	if (isProj) {
 		player.weaponsPool.push(skin);
@@ -23,8 +23,31 @@ export function setSkinsPool(username, skin, isProj) {
 	fs.writeFileSync('server/data/playerData.json', JSON.stringify(playersData));
 }
 
-export function setStat(username, value, statName) {
+function setStat(username, value, statName) {
 	const player = playersData.find(p => p.user === username);
 	player[statName] = value;
 	fs.writeFileSync('server/data/playerData.json', JSON.stringify(playersData));
+}
+
+export default function playerManager(socket, skinData) {
+	socket.on('currentSkin', data => {
+		setCurrentSkin(data.username, data.skin, data.isProj);
+	});
+
+	socket.on('skinsPool', data => {
+		setSkinsPool(data.username, data.skin, data.isProj);
+	});
+
+	socket.on('stat', data => {
+		setStat(data.username, data.value, data.statName);
+	});
+
+	socket.on('setCarousel', user => {
+		const playerData = playersData.find(player => player.user === user);
+		socket.emit('setCarousel', {
+			playerData,
+			playerSkins: skinData.playerSkins,
+			weaponSkins: skinData.weaponSkins,
+		});
+	});
 }
