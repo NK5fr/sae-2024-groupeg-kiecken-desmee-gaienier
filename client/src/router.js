@@ -31,9 +31,14 @@ export default class Router {
 			this.currentRoute = route;
 			route.view.show();
 			if (route.path === '/jeu') {
-				socket.emit('gameStart', {
+				socket.emit('user start a game', {
 					width: canvas.width,
 					height: canvas.height,
+					user: window.sessionStorage.getItem('user'),
+				});
+			} else if (route.path === '/rejoindre') {
+				socket.emit('gameJoin', {
+					host: 'raph',
 					user: window.sessionStorage.getItem('user'),
 				});
 			} else {

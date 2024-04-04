@@ -48,30 +48,82 @@ LoginMenu.setLogout($('.logout'));
 const score = new ScoreMenu($('.scores'));
 const game = new JoinMenu($('.join'));
 
+export const images = {};
+let resourcesToLoad = 0;
+
+loadResources();
+
+function loadResources() {
+	socket.emit('getResourcesToLoad');
+	socket.on('resourcesToLoad', ({ angel, bonus, missile, player }) => {
+		resourcesToLoad =
+			angel.length + bonus.length + missile.length + player.length;
+		angel.forEach(({ species, type }) => {
+			if (!images.angel) images.angel = {};
+			if (!images.angel[species]) images.angel[species] = {};
+			if (!images.angel[species][type])
+				images.angel[species][type] = new Image();
+			images.angel[species][type].src = `./assets/angel/${species}/${type}.png`;
+			images.angel[species][type].onload = () => {
+				resourcesToLoad--;
+			};
+		});
+		bonus.forEach(({ type }) => {
+			if (!images.bonus) images.bonus = {};
+			if (!images.bonus[type]) images.bonus[type] = new Image();
+			images.bonus[type].src = `./assets/bonus/${type}.png`;
+			images.bonus[type].onload = () => {
+				resourcesToLoad--;
+			};
+		});
+		missile.forEach(({ skin }) => {
+			if (!images.missiles) images.missiles = {};
+			if (!images.missiles[skin]) images.missiles[skin] = new Image();
+			images.missiles[skin].src = `./assets/missile/${skin}.png`;
+			images.missiles[skin].onload = () => {
+				resourcesToLoad--;
+			};
+		});
+		player.forEach(({ skin }) => {
+			if (!images.player) images.player = {};
+			if (!images.player[skin]) images.player[skin] = {};
+			images.player[skin].left = new Image();
+			images.player[skin].left.src = `./assets/player/${skin}/left.png`;
+			images.player[skin].idle = new Image();
+			images.player[skin].idle.src = `./assets/player/${skin}/idle.png`;
+			images.player[skin].idle.onload = () => {
+				resourcesToLoad--;
+			};
+			images.player[skin].right = new Image();
+			images.player[skin].right.src = `./assets/player/${skin}/right.png`;
+		});
+	});
+}
+
 game.setGames([
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
+	{ host: 'nathan', participants: 1 },
 ]);
 
 const routes = [
@@ -87,7 +139,7 @@ const routes = [
 	{ path: '/rejouer', view: $('.rejouer') },
 	{ path: '/resetPassword', view: $('.resetPassword') },
 	{ path: '/scores', view: $('.scores') },
-	{ path: '/join', view: $('.join') }
+	{ path: '/join', view: $('.join') },
 ];
 
 let carouselLife;
@@ -103,17 +155,24 @@ Router.notFound = $('.notFound');
 
 Router.setInnerLinks(document.body);
 
-if (user) {
-	Router.navigate(window.location.pathname);
-	setAllCarouselData();
-	setScores();
-} else Router.navigate('/login');
+function redirect() {
+	console.log(resourcesToLoad);
+	if (resourcesToLoad === 0) {
+		if (user) {
+			Router.navigate(window.location.pathname);
+			setAllCarouselData();
+			setScores();
+		} else Router.navigate('/login');
+	} else setTimeout(redirect, 1000);
+}
+
+redirect();
 
 window.onpopstate = () => {
 	Router.navigate(document.location.pathname, true);
 };
 
-socket.on('gameStart', game => {
+socket.on('user start a game', game => {
 	document.addEventListener('keydown', ({ key }) => {
 		if (!playerCommands.includes(key)) return;
 		socket.emit('playerKeyDown', key);
@@ -148,7 +207,7 @@ socket.on('gameStop', data => {
 	stopGameRenderer();
 	Router.navigate('/rejouer');
 	socket.emit('gameStop');
-	if(data.win) socket.emit('score', data);
+	if (data.win) socket.emit('score', data);
 });
 
 socket.on('stageTransition', previousStage => {

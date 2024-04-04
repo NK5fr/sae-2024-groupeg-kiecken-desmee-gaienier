@@ -156,6 +156,11 @@ function updateGame(gameInstance) {
 			user: mainPlayer.user,
 			souls: mainPlayer.souls,
 		});
+		gameInstance.otherPlayers.forEach(player => {
+			io.to(player.socketId).emit('gameStop', {
+				user: player.user,
+			});
+		});
 	}
 	gameInstance.otherPlayers = otherPlayers.filter(player => player.health > 0);
 	io.to(mainPlayer.socketId).emit('gameUpdate', gameInstance);

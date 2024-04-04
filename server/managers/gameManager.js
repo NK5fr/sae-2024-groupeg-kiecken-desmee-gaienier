@@ -3,7 +3,7 @@ import Game from '../game/game.js';
 import { addGame, currentGame, removeGame } from '../index.js';
 
 export default function gameManager(socket) {
-	socket.on('gameStart', ({ user, width, height }) => {
+	socket.on('user start a game', ({ user, width, height }) => {
 		const playersData = readPlayersData();
 		let game = currentGame.find(game => game.user === user);
 		if (game) return;
@@ -11,7 +11,7 @@ export default function gameManager(socket) {
 		game = new Game(width, height, player, socket.id);
 		game.startGame();
 		addGame(game);
-		socket.emit('gameStart', game);
+		socket.emit('user start a game', game);
 	});
 
 	socket.on('gameJoin', ({ host, user }) => {

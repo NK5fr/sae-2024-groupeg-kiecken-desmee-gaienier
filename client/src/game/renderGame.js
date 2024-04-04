@@ -24,7 +24,7 @@ export let stageTransitionEnd = false;
 let gameRenderer = null;
 let transitionRenderer = null;
 let game = null;
-let stage = null;
+let previousStage = null;
 
 canvasResizeObserver.observe(canvas);
 
@@ -41,14 +41,13 @@ export default function startGameRenderer() {
 	gameRenderer = requestAnimationFrame(renderGame);
 }
 
-export function startTransition(previousStage) {
-	stage = previousStage;
+export function startTransition(stage) {
+	previousStage = stage;
 	transitionRenderer = requestAnimationFrame(renderTransition);
 }
 
 function renderGame() {
 	context.clearRect(0, 0, game.width, game.height);
-	console.log(`Game ${game.socketId} is rendering`);
 
 	renderStage(game.stage, context, canvas);
 
@@ -71,7 +70,6 @@ function renderGame() {
 	});
 
 	if (game.debug) {
-		console.log('Debug mode is on');
 		renderPlayerHitbox(game.mainPlayer, context);
 		renderPlayerStats(game.mainPlayer, context, canvas);
 		game.otherPlayers.forEach(player => {
@@ -87,8 +85,8 @@ function renderGame() {
 
 function renderTransition() {
 	context.clearRect(0, 0, game.width, game.height);
-	console.log('Transition is rendering');
-	renderStageChangement(game.stage, stage, context, canvas);
+	console.log(previousStage);
+	renderStageChangement(previousStage, game.stage, context, canvas);
 	renderPlayer(game.mainPlayer, context);
 	game.otherPlayers.forEach(player => {
 		renderPlayer(player, context);
