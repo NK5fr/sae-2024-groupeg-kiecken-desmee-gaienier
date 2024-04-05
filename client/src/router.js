@@ -14,11 +14,20 @@ export default class Router {
 		this.#setInnerLinks = setInnerLinks;
 		$('.innerLink', this.#setInnerLinks).on('click', event => {
 			event.preventDefault();
-			Router.navigate($(event.currentTarget).attr('href'));
+			const link = $(event.currentTarget);
+			if (link.attr('host')) {
+				Router.navigate(
+					$(event.currentTarget).attr('href'),
+					false,
+					link.attr('host')
+				);
+			} else {
+				Router.navigate($(event.currentTarget).attr('href'));
+			}
 		});
 	}
 
-	static navigate(path, skipPushState = false) {
+	static navigate(path, skipPushState = false, hote = null) {
 		let route = this.routes.find(route => route.path === path);
 		if (userName && this.connexionRoutes.includes(route?.path)) {
 			route = this.routes.find(route => route.path === '/');
@@ -31,16 +40,19 @@ export default class Router {
 			this.currentRoute = route;
 			route.view.show();
 			if (route.path === '/jeu') {
-				socket.emit('user start a game', {
-					userName: window.sessionStorage.getItem('userName'),
-					width: canvas.width,
-					height: canvas.height,
-				});
-			} else if (route.path === '/rejoindre') {
-				socket.emit('user join a game', {
-					hostName: 'raph',
-					userName: window.sessionStorage.getItem('userName'),
-				});
+				if (hote) {
+					socket.emit('user join a game', {
+						hostName: hote,
+						userName: window.sessionStorage.getItem('userName'),
+					});
+				} else {
+					socket.emit('user start a game', {
+						userName: window.sessionStorage.getItem('userName'),
+						width: canvas.width,
+						height: canvas.height,
+						diff: $('.diff .active').val(),
+					});
+				}
 			} else {
 				stopGameRenderer();
 				socket.emit('gameStop');

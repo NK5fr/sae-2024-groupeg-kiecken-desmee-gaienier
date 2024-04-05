@@ -10,13 +10,14 @@ export default class Game {
 
 	debug = false;
 
-	constructor(width, height, playerProperties, socketId) {
+	constructor(width, height, playerProperties, socketId, diff) {
 		this.width = width;
 		this.height = height;
 
-		console.log(playerProperties);
 		this.owner = playerProperties.userName;
 		this.socketId = socketId;
+
+		this.diff = diff;
 
 		this.startTime = Date.now();
 

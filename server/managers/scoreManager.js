@@ -17,10 +17,6 @@ function writeScoresData(data) {
 export function scoreManager(socket) {
 	socket.on('score', data => {
 		addScore(data.user, data.time);
-		const scoresData = readScoresData();
-		socket.emit('setScore', {
-			scores: scoresData,
-		});
 	});
 
 	socket.on('setScore', () => {

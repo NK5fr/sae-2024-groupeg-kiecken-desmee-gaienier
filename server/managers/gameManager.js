@@ -3,14 +3,14 @@ import Game from '../game/game.js';
 import { addGame, currentGame, removeGame } from '../index.js';
 
 export default function gameManager(socket) {
-	socket.on('user start a game', ({ userName, width, height }) => {
+	socket.on('user start a game', ({ userName, width, height, diff }) => {
 		const playersProperties = readPlayersProperties();
 		let game = currentGame.find(g => g.owner === userName);
 		if (game) return;
 		console.log(playersProperties);
 		let playerProperties = playersProperties.find(p => p.userName === userName);
 		console.log(playerProperties);
-		game = new Game(width, height, playerProperties, socket.id);
+		game = new Game(width, height, playerProperties, socket.id, diff);
 		game.startGame();
 		addGame(game);
 		socket.emit('user start a game', game);

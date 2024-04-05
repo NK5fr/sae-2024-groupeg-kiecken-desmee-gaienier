@@ -101,32 +101,6 @@ function loadResources() {
 	});
 }
 
-game.setGames([
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-	{ host: 'nathan', participants: 1 },
-]);
-
 const routes = [
 	{ path: '/', view: $('.accueil') },
 	{ path: '/jeu', view: $('.jeu') },
@@ -163,6 +137,7 @@ function redirect() {
 			Router.navigate(window.location.pathname);
 			setAllCarouselData();
 			setScores();
+			setGames();
 		} else Router.navigate('/login');
 	} else setTimeout(redirect, 1000);
 }
@@ -193,7 +168,13 @@ socket.on('gameStop', data => {
 	stopGameRenderer();
 	Router.navigate('/rejouer');
 	socket.emit('gameStop');
-	if (data.win) socket.emit('score', data);
+	if (data.win) {
+		socket.emit('score', data);
+		setScores();
+		$('.rejouer h2').html(`Victoire, score : ${data.time}`);
+	} else {
+		$('.rejouer h2').html(`Défaite`);
+	}
 });
 
 socket.on('stageTransition', previousStage => {
@@ -206,6 +187,7 @@ socket.on('userLogin', login => {
 	userName = login;
 	setAllCarouselData();
 	setScores();
+	setGames();
 	Router.navigate('/');
 });
 
@@ -264,6 +246,13 @@ function setScores() {
 	});
 }
 
+function setGames() {
+	socket.emit('setGames');
+	socket.on('setGames', data => {
+		game.setGames(data.games);
+	});
+}
+
 function addListeners() {
 	document.addEventListener('keydown', ({ key }) => {
 		if (!playerCommands.includes(key)) return;
@@ -296,4 +285,5 @@ window.addEventListener('load', event => {
 export function setUserNull() {
 	userName = null;
 	window.sessionStorage.removeItem('userName');
+	window.sessionStorage.removeItem('diff');
 }

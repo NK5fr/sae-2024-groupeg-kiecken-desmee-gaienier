@@ -10,9 +10,17 @@ export default class PlayMenu {
 		$('.diff button', this.element).on('click', event => {
 			event.preventDefault();
 			$('.diff .active', this.element).removeClass('active');
-			$(event.currentTarget).addClass('active');
+			const target = $(event.currentTarget)
+			window.sessionStorage.setItem('diff', target.attr('class'));
+			target.addClass('active');
 		});
-		$('.diff .normal').addClass('active');
+		const diff = window.sessionStorage.getItem('diff');
+		if(diff) {
+			$(`.diff .${diff}`).addClass('active');
+		} else {
+			$(`.diff .normal`).addClass('active');
+			window.sessionStorage.setItem('diff', 'normal');
+		} 
 	}
 
 	static handleMenu(event) {
