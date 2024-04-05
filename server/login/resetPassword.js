@@ -12,6 +12,6 @@ export default function resetPassword(login, password, socketId) {
 		writeUsersProperties(usersProperties);
 		io.to(socketId).emit('changePath', '/login');
 	} else {
-		io.to(socketId).emit('serverAlert', 'Utilisateur non trouvé');
+		io.to(socketId).emit('server send alert', 'Utilisateur non trouvé');
 	}
 }

@@ -71,14 +71,14 @@ export default class CarouselSkin {
 				socket.emit('currentSkin', {
 					skin: skin,
 					isProj: this.isProj,
-					username: userName,
+					userName: userName,
 				});
 				this.actualSkin = skin;
 			} else if (this.actualSkin !== skin) {
 				socket.emit('skinsPool', {
 					skin: skin,
 					isProj: this.isProj,
-					username: userName,
+					userName: userName,
 				});
 				this.ownedSkins.push(skin);
 				this.actualSkin = skin;

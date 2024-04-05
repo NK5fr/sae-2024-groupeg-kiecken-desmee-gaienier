@@ -2,7 +2,9 @@ import { io } from '../index.js';
 import Player from './player.js';
 import { Stage } from './stage.js';
 
-const stage = ['venus', 'earth', 'jupiter', 'mars', 'saturn', 'uranus', 'sun'];
+const stage = [
+	'venus' /*, 'earth', 'jupiter', 'mars', 'saturn', 'uranus', 'sun'*/,
+];
 
 export default class Game {
 	#gameUpdater;
@@ -28,6 +30,8 @@ export default class Game {
 
 		this.stages = stage;
 		this.stage = new Stage(this.stages[0], width, height);
+
+		this.startGame();
 	}
 
 	addNewPlayer(playerProperties, socketId) {
@@ -67,21 +71,21 @@ export default class Game {
 	}
 }
 
-function updateGame(gameInstance) {
-	const players = gameInstance.players;
-	const stage = gameInstance.stage;
+function updateGame(game) {
+	const players = game.players;
+	const stage = game.stage;
 
 	players.forEach(player => {
 		if (player.health <= 0) return;
-		player.update(gameInstance.width, gameInstance.height);
+		player.update(game.width, game.height);
 	});
 
 	stage.update(players[0]);
 	stage.angels.forEach(angel => {
-		angel.update(players[0], gameInstance.width, gameInstance.height);
+		angel.update(players[0], game.width, game.height);
 	});
 	stage.strandedMissiles.forEach(missile => {
-		missile.update(gameInstance.width, gameInstance.height);
+		missile.update(game.width, game.height);
 	});
 
 	stage.bonus.forEach(bonus => {
@@ -118,18 +122,16 @@ function updateGame(gameInstance) {
 	});
 
 	if (stage.stageIsClear()) {
-		if (
-			gameInstance.stages.indexOf(stage.name) ===
-			gameInstance.stages.length - 1
-		) {
-			gameInstance.stopGame();
-			const time = new Date(Date.now() - gameInstance.startTime);
-			const formatedTime = `${time.getUTCHours() >= 10 ? time.getUTCHours() : '0' + time.getUTCHours()}
-				:${time.getUTCMinutes() >= 10 ? time.getUTCMinutes() : '0' + time.getUTCMinutes()}
-				:${time.getUTCSeconds() >= 10 ? time.getUTCSeconds() : '0' + time.getUTCSeconds()}`;
+		if (game.stages.indexOf(stage.name) === game.stages.length - 1) {
+			game.stopGame();
+			const time = new Date(Date.now() - game.startTime);
+			const formatedTime =
+				`${time.getUTCHours() >= 10 ? time.getUTCHours() : '0' + time.getUTCHours()}` +
+				`:${time.getUTCMinutes() >= 10 ? time.getUTCMinutes() : '0' + time.getUTCMinutes()}` +
+				`:${time.getUTCSeconds() >= 10 ? time.getUTCSeconds() : '0' + time.getUTCSeconds()}`;
 
 			players.forEach(player => {
-				io.to(player.socketId).emit('gameStop', {
+				io.to(player.socketId).emit('game is stoped', {
 					userName: player.userName,
 					souls: player.souls,
 					time: formatedTime,
@@ -138,22 +140,22 @@ function updateGame(gameInstance) {
 			});
 			return;
 		} else {
-			gameInstance.pauseGame();
+			game.pauseGame();
 			players.forEach(player => {
-				io.to(player.socketId).emit('stageTransition', stage);
+				io.to(player.socketId).emit('transition to next stage', game.stage);
 			});
-			gameInstance.stage = new Stage(
-				gameInstance.stages[gameInstance.stages.indexOf(stage.name) + 1],
-				gameInstance.width,
-				gameInstance.height
+			game.stage = new Stage(
+				game.stages[game.stages.indexOf(stage.name) + 1],
+				game.width,
+				game.height
 			);
 		}
 	}
 
 	if (players.length === 0) {
-		gameInstance.stopGame();
+		game.stopGame();
 		players.forEach(player => {
-			io.to(player.socketId).emit('gameStop', {
+			io.to(player.socketId).emit('game is stoped', {
 				userName: player.userName,
 				souls: player.souls,
 			});
@@ -162,7 +164,7 @@ function updateGame(gameInstance) {
 	}
 
 	players.forEach(player => {
-		io.to(player.socketId).emit('gameUpdate', gameInstance);
+		io.to(player.socketId).emit('game is updated', game);
 	});
 }
 

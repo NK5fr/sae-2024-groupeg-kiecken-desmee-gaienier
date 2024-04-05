@@ -7,6 +7,8 @@ export default class LoginMenu {
 			event.preventDefault();
 			const login = $('input[name=login]', menu).val();
 			const password = $('input[name=password]', menu).val();
+			$('input[name=login]', menu).val('');
+			$('input[name=password]', menu).val('');
 			socket.emit('userLogin', { userLogin: login, password });
 		});
 	}
@@ -19,6 +21,12 @@ export default class LoginMenu {
 			const password2 = $('input[name=password2]', menu).val();
 			const recoverySentence = $('select[name=recovery_phrase]', menu).val();
 			const response = $('input[name=reponse]', menu).val();
+
+			$('input[name=login]', menu).val('');
+			$('input[name=password]', menu).val('');
+			$('input[name=password2]', menu).val('');
+			$('select[name=recovery_phrase]', menu).val('');
+			$('input[name=reponse]', menu).val('');
 
 			if (password != password2) {
 				alert('Les mots de passe ne correspondent pas');
@@ -40,6 +48,9 @@ export default class LoginMenu {
 			const login = $('input[name=login]', menu).val();
 			const recoverySentence = $('select[name=recovery_phrase2]', menu).val();
 			const response = $('input[name=response]', menu).val();
+			$('input[name=login]', menu).val('');
+			$('input[name=recovery_phrase2]', menu).val('');
+			$('input[name=response]', menu).val('');
 			socket.emit('userForgetPassword', { login, recoverySentence, response });
 		});
 	}
@@ -49,6 +60,8 @@ export default class LoginMenu {
 			event.preventDefault();
 			const password = $('input[name=password]', menu).val();
 			const password2 = $('input[name=password2]', menu).val();
+			$('input[name=password]', menu).val('');
+			$('input[name=password2]', menu).val('');
 			if (password !== password2) {
 				alert('Les mots de passe ne correspondent pas');
 			} else if (!login) {
@@ -62,9 +75,8 @@ export default class LoginMenu {
 	static setLogout(button) {
 		button.on('click', event => {
 			event.preventDefault();
-			const login = window.sessionStorage.getItem('user');
+			const login = window.sessionStorage.getItem('userName');
 			setUserNull();
-			console.log(login);
 			socket.emit('userLogout', login);
 		});
 	}

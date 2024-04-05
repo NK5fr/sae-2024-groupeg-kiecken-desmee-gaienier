@@ -1,6 +1,11 @@
 import $ from 'jquery';
 import { socket, userName } from './main.js';
-import { canvas, stopGameRenderer } from './game/renderGame.js';
+import {
+	canvas,
+	getGame,
+	setGame,
+	stopGameRenderer,
+} from './game/renderGame.js';
 
 export default class Router {
 	static routes = [];
@@ -43,19 +48,27 @@ export default class Router {
 				if (hote) {
 					socket.emit('user join a game', {
 						hostName: hote,
-						userName: window.sessionStorage.getItem('userName'),
+						userName,
 					});
 				} else {
 					socket.emit('user start a game', {
-						userName: window.sessionStorage.getItem('userName'),
+						userName,
 						width: canvas.width,
 						height: canvas.height,
 						diff: $('.diff .active').val(),
 					});
 				}
+			} else if (route.path === '/join') {
+				socket.emit('client need gamesInfo');
 			} else {
-				stopGameRenderer();
-				socket.emit('gameStop');
+				if (getGame()) {
+					stopGameRenderer();
+					setGame(undefined);
+					socket.emit('game is stoped', {
+						userName,
+						souls: 0,
+					});
+				}
 			}
 			if (!skipPushState) {
 				window.history.pushState(null, null, route.path);

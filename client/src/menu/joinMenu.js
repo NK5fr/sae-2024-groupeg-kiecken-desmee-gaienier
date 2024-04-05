@@ -1,17 +1,16 @@
 import $ from 'jquery';
 
 export default class JoinMenu {
+	constructor(element) {
+		this.element = element;
+	}
 
-    constructor(element){
-        this.element = element;
-    }
-
-    setGames(games){
+	setGames(games) {
 		const table = $('table', this.element);
-		let html = ``;
-		games.forEach(game => {
-			html += `<tr class="innerLink" href="/jeu" host="${game.host}"><td>${game.host}</td><td>${game.participants}</td></tr>`;
+		let html = `<tr><th>Hôte</th><th>Participants</th><th></th></tr>`;
+		games.forEach(({ hostName, participants }) => {
+			html += `<tr><td>${hostName}</td><td>${participants}/4</td><td><a href="/jeu" class="innerLink" host="${hostName}">Rejoindre</a></tr>`;
 		});
 		table.html(html);
-    }
+	}
 }

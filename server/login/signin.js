@@ -17,7 +17,7 @@ export default function signin(
 ) {
 	const usersProperties = readUsersProperties();
 	if (usersProperties.find(u => u.login == login)) {
-		io.to(socketId).emit('serverAlert', "Nom d'utilisateur déjà utilisé");
+		io.to(socketId).emit('server send alert', "Nom d'utilisateur déjà utilisé");
 	} else {
 		const userProperties = {
 			login,

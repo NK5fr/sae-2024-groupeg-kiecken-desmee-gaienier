@@ -73,23 +73,81 @@ io.on('connection', socket => {
 		Object.values(skinsProperties.playerSkins).forEach(skin => {
 			players.push({ skin });
 		});
+		const stages = [];
+		Object.keys(stagesProperties).forEach(stage => {
+			stages.push({ stage });
+		});
 		socket.emit('resourcesToLoad', {
 			angels,
 			bonus,
 			missiles,
 			players,
+			stages,
 		});
+	});
+
+	socket.on('client need gamesInfo', () => {
+		const gamesInfo = [];
+		currentGame.forEach(g => {
+			gamesInfo.push({
+				hostName: g.owner,
+				participants: g.players.length,
+			});
+		});
+		socket.emit('server send gamesInfo', gamesInfo);
 	});
 });
 
 export function addGame(game) {
 	currentGame.push(game);
-	console.log(currentGame);
 }
 
-export function removeGame(socketId) {
-	currentGame = currentGame.filter(game => game.socketId !== socketId);
-	console.log(currentGame);
+export function removeGameByOwner(owner) {
+	currentGame = currentGame.filter(g => g.owner !== owner);
+}
+
+export function removeGameBySocketId(socketId) {
+	currentGame = currentGame.filter(g => g.socketId !== socketId);
+}
+
+export function findGameByOwner(owner) {
+	return currentGame.find(g => g.owner === owner);
+}
+
+export function findGameByPlayer(userName) {
+	return currentGame.find(g => g.players.some(p => p.userName === userName));
+}
+
+export function playerIsInGameByUserName(userName) {
+	return currentGame.some(g => g.players.some(p => p.userName === userName));
+}
+
+export function playerIsInGameBySocketId(socketId) {
+	return currentGame.some(g => g.players.some(p => p.socketId === socketId));
+}
+
+export function playerIsOwner(userName) {
+	return currentGame.some(g => g.owner === userName);
+}
+
+export function findPlayerByUserName(userName) {
+	let player;
+	currentGame.forEach(g => {
+		g.players.forEach(p => {
+			if (p.userName === userName) player = p;
+		});
+	});
+	return player;
+}
+
+export function findPlayerBySocketId(socketId) {
+	let player;
+	currentGame.forEach(g => {
+		g.players.forEach(p => {
+			if (p.socketId === socketId) player = p;
+		});
+	});
+	return player;
 }
 
 addWebpackMiddleware(app);

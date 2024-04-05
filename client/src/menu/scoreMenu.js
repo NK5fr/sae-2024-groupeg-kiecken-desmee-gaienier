@@ -12,7 +12,7 @@ export default class ScoreMenu {
 		let html = `<tr><th>Rang</th><th>Pseudo</th><th>Temps</th></tr>`;
 		let n = 1;
 		tenMost.forEach(score => {
-			html += `<tr><td>${n}</td><td>${score.user}</td><td>${score.score}</td></tr>`;
+			html += `<tr><td>${n}</td><td>${score.userName}</td><td>${score.score}</td></tr>`;
 			n++;
 		});
 		table.html(html);

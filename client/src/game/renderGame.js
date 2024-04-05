@@ -1,16 +1,12 @@
 import { socket } from '../main.js';
 import { renderAngels } from './renderAngel.js';
 import { renderAllBonus } from './renderBonus.js';
-import { renderMissiles, renderMissilesHitbox } from './renderMissiles.js';
-import renderPlayer, {
-	renderHealthBar,
-	renderPlayerHitbox,
-	renderPlayerStats,
-	renderPlayers,
-} from './renderPlayer.js';
-import renderStage, {
+import { renderMissiles } from './renderMissiles.js';
+import { renderHealthBar, renderPlayers } from './renderPlayer.js';
+import {
+	renderStageBackground,
 	renderStageProgressionBar,
-	renderStageChangement,
+	renderStageTransition,
 } from './renderStage.js';
 
 export const canvas = document.querySelector('.gameCanvas'),
@@ -30,41 +26,41 @@ let stageTransitionEnd = false;
 let gameRenderer = null;
 let transitionRenderer = null;
 let game = null;
-let previousStage = null;
+let prevStage = null;
 
 export default function startGameRenderer() {
 	gameRenderer = requestAnimationFrame(renderGame);
 }
 
 export function startTransition(stage) {
-	previousStage = stage;
+	prevStage = stage;
 	transitionRenderer = requestAnimationFrame(renderTransition);
 }
 
 function renderGame() {
 	context.clearRect(0, 0, game.width, game.height);
 
-	renderStage(game.stage, context, canvas);
+	const players = game.players;
+	const stage = game.stage;
 
-	renderPlayers(game.players, context);
+	renderStageBackground(stage.name, context);
 
-	renderAngels(game.stage.angels, context);
-	game.stage.angels.forEach(angel => {
-		if (angel.missiles) renderMissiles(angel.missiles, context);
-	});
+	renderPlayers(players, context);
 
-	renderMissiles(game.stage.strandedMissiles, context);
+	renderAngels(stage.angels, context);
 
-	renderAllBonus(game.stage.bonus, context);
+	renderMissiles(stage.strandedMissiles, context);
 
-	renderStageProgressionBar(game.stage, context, canvas);
+	renderAllBonus(stage.bonus, context);
 
-	for (let i = 0; i < game.players.length; i++) {
-		const player = game.players[i];
-		renderHealthBar(player, i, context, canvas);
+	renderStageProgressionBar(stage, context, canvas);
+
+	for (let position = 0; position < game.players.length; position++) {
+		const player = game.players[position];
+		renderHealthBar(player, position, context);
 	}
 
-	if (game.debug) {
+	/*if (game.debug) {
 		renderPlayerHitbox(game.mainPlayer, context);
 		renderPlayerStats(game.mainPlayer, context, canvas);
 		game.otherPlayers.forEach(player => {
@@ -74,13 +70,13 @@ function renderGame() {
 		game.otherPlayers.forEach(player => {
 			renderMissilesHitbox(player.missiles, context);
 		});
-	}
+	}*/
 	gameRenderer = requestAnimationFrame(renderGame);
 }
 
 function renderTransition() {
 	context.clearRect(0, 0, game.width, game.height);
-	renderStageChangement(previousStage, game.stage, context, canvas);
+	renderStageTransition(prevStage.name, game.stage.name, context);
 	renderPlayers(game.players, context);
 	if (stageTransitionEnd) {
 		stopGameRenderer();
@@ -94,6 +90,10 @@ function renderTransition() {
 
 export function setGame(gameInstance) {
 	game = gameInstance;
+}
+
+export function getGame() {
+	return game;
 }
 
 export function stageChangeEnd() {

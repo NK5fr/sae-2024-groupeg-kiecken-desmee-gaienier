@@ -15,8 +15,11 @@ export default function login(login, password, socketId) {
 		writeUsersProperties(usersProperties);
 		io.to(socketId).emit('userLogin', userProperties.login);
 	} else if (userProperties && userProperties.connexion) {
-		io.to(socketId).emit('serverAlert', 'Utilisateur déjà connecté');
+		io.to(socketId).emit('server send alert', 'Utilisateur déjà connecté');
 	} else {
-		io.to(socketId).emit('serverAlert', 'Mot de passe ou login incorrect');
+		io.to(socketId).emit(
+			'server send alert',
+			'Mot de passe ou login incorrect'
+		);
 	}
 }

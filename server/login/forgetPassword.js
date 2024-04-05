@@ -18,7 +18,7 @@ export default function forgetPassword(
 		io.to(socketId).emit('userResetPassword', login);
 	} else {
 		io.to(socketId).emit(
-			'serverAlert',
+			'server send alert',
 			'Login, phrase de récupération ou réponse incorrecte'
 		);
 	}
