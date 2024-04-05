@@ -255,6 +255,7 @@ function setGames() {
 	socket.emit('client need gamesInfo');
 	socket.on('server send gamesInfo', gamesInfo => {
 		game.setGames(gamesInfo);
+		Router.setInnerLinks(document.body);
 	});
 }
 

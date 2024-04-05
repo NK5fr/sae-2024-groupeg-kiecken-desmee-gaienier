@@ -7,9 +7,9 @@ export default class JoinMenu {
 
 	setGames(games) {
 		const table = $('table', this.element);
-		let html = `<tr><th>Hôte</th><th>Participants</th><th></th></tr>`;
+		let html = `<tr><th>Hôte</th><th>Participants</th></tr>`;
 		games.forEach(({ hostName, participants }) => {
-			html += `<tr><td>${hostName}</td><td>${participants}/4</td><td><a href="/jeu" class="innerLink" host="${hostName}">Rejoindre</a></tr>`;
+			html += `<tr href="/jeu" class="innerLink" host="${hostName}"><td>${hostName}</td><td>${participants}/4</td><td></tr>`;
 		});
 		table.html(html);
 	}
