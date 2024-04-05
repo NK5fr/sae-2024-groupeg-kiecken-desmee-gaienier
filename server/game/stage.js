@@ -1,25 +1,25 @@
 import { DiagWanderer, Shooter, Wanderer } from './angel.js';
-import { stageData, angelData } from '../index.js';
+import { stagesProperties, angelsProperties } from '../index.js';
 import Bonus from './bonus.js';
 
 export class Stage {
 	constructor(name) {
 		this.name = name;
 
-		this.angelsSpecies = stageData[name].angelsSpecies;
-		this.archangel = stageData[name].archangel;
+		this.angelsSpecies = stagesProperties[name].angelsSpecies;
+		this.archangel = stagesProperties[name].archangel;
 		this.angels = [];
 
 		this.strandedMissiles = [];
 		this.bonus = [];
 
-		this.background = stageData[name].background;
+		this.background = stagesProperties[name].background;
 		this.backgroundX = 0;
 
-		this.nameImage = stageData[name].nameImage;
+		this.nameImage = stagesProperties[name].nameImage;
 		this.nameOpacity = 1;
 
-		this.numberOfAngels = stageData[name].numberOfAngels;
+		this.numberOfAngels = stagesProperties[name].numberOfAngels;
 		this.numberOfAngelsSpawned = 0;
 		this.numberOfAngelsKilled = 0;
 	}
@@ -78,7 +78,7 @@ export class Stage {
 		let y = Math.floor(Math.random() * height);
 		if (this.numberOfAngelsSpawned < this.numberOfAngels) {
 			const angelType = this.chooseAngelType();
-			const currentAngelData = angelData[this.angelsSpecies][angelType];
+			const currentAngelData = angelsProperties[this.angelsSpecies][angelType];
 			let angel;
 			switch (angelType) {
 				case 'one':

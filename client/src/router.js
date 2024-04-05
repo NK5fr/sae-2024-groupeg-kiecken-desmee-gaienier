@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { socket, user } from './main.js';
+import { socket, userName } from './main.js';
 import { canvas, stopGameRenderer } from './game/renderGame.js';
 
 export default class Router {
@@ -20,7 +20,7 @@ export default class Router {
 
 	static navigate(path, skipPushState = false) {
 		let route = this.routes.find(route => route.path === path);
-		if (user && this.connexionRoutes.includes(route?.path)) {
+		if (userName && this.connexionRoutes.includes(route?.path)) {
 			route = this.routes.find(route => route.path === '/');
 		}
 		if (route) {
@@ -32,14 +32,14 @@ export default class Router {
 			route.view.show();
 			if (route.path === '/jeu') {
 				socket.emit('user start a game', {
+					userName: window.sessionStorage.getItem('userName'),
 					width: canvas.width,
 					height: canvas.height,
-					user: window.sessionStorage.getItem('user'),
 				});
 			} else if (route.path === '/rejoindre') {
-				socket.emit('gameJoin', {
-					host: 'raph',
-					user: window.sessionStorage.getItem('user'),
+				socket.emit('user join a game', {
+					hostName: 'raph',
+					userName: window.sessionStorage.getItem('userName'),
 				});
 			} else {
 				stopGameRenderer();

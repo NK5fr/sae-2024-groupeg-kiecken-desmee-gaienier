@@ -11,7 +11,7 @@ export default class Player extends Entity {
 	constructor(x, y, properties, socketId) {
 		super(x, y, properties);
 
-		this.user = properties.user;
+		this.userName = properties.userName;
 		this.socketId = socketId;
 
 		this.currentSkin = properties.currentSkin;

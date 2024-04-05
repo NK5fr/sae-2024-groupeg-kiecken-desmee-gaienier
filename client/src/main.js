@@ -15,7 +15,7 @@ import JoinMenu from './menu/joinMenu.js';
 
 export const socket = io();
 
-export let user = window.sessionStorage.getItem('user');
+export let userName = window.sessionStorage.getItem('userName');
 
 const playerCommands = [
 	'ArrowUp',
@@ -55,16 +55,17 @@ loadResources();
 
 function loadResources() {
 	socket.emit('getResourcesToLoad');
-	socket.on('resourcesToLoad', ({ angel, bonus, missile, player }) => {
+	socket.on('resourcesToLoad', ({ angels, bonus, missiles, players }) => {
 		resourcesToLoad =
-			angel.length + bonus.length + missile.length + player.length;
-		angel.forEach(({ species, type }) => {
-			if (!images.angel) images.angel = {};
-			if (!images.angel[species]) images.angel[species] = {};
-			if (!images.angel[species][type])
-				images.angel[species][type] = new Image();
-			images.angel[species][type].src = `./assets/angel/${species}/${type}.png`;
-			images.angel[species][type].onload = () => {
+			angels.length + bonus.length + missiles.length + players.length;
+		angels.forEach(({ species, type }) => {
+			if (!images.angels) images.angels = {};
+			if (!images.angels[species]) images.angels[species] = {};
+			if (!images.angels[species][type])
+				images.angels[species][type] = new Image();
+			images.angels[species][type].src =
+				`./assets/angel/${species}/${type}.png`;
+			images.angels[species][type].onload = () => {
 				resourcesToLoad--;
 			};
 		});
@@ -76,7 +77,7 @@ function loadResources() {
 				resourcesToLoad--;
 			};
 		});
-		missile.forEach(({ skin }) => {
+		missiles.forEach(({ skin }) => {
 			if (!images.missiles) images.missiles = {};
 			if (!images.missiles[skin]) images.missiles[skin] = new Image();
 			images.missiles[skin].src = `./assets/missile/${skin}.png`;
@@ -84,18 +85,18 @@ function loadResources() {
 				resourcesToLoad--;
 			};
 		});
-		player.forEach(({ skin }) => {
-			if (!images.player) images.player = {};
-			if (!images.player[skin]) images.player[skin] = {};
-			images.player[skin].left = new Image();
-			images.player[skin].left.src = `./assets/player/${skin}/left.png`;
-			images.player[skin].idle = new Image();
-			images.player[skin].idle.src = `./assets/player/${skin}/idle.png`;
-			images.player[skin].idle.onload = () => {
+		players.forEach(({ skin }) => {
+			if (!images.players) images.players = {};
+			if (!images.players[skin]) images.players[skin] = {};
+			images.players[skin].left = new Image();
+			images.players[skin].left.src = `./assets/player/${skin}/left.png`;
+			images.players[skin].idle = new Image();
+			images.players[skin].idle.src = `./assets/player/${skin}/idle.png`;
+			images.players[skin].idle.onload = () => {
 				resourcesToLoad--;
 			};
-			images.player[skin].right = new Image();
-			images.player[skin].right.src = `./assets/player/${skin}/right.png`;
+			images.players[skin].right = new Image();
+			images.players[skin].right.src = `./assets/player/${skin}/right.png`;
 		});
 	});
 }
@@ -158,7 +159,7 @@ Router.setInnerLinks(document.body);
 function redirect() {
 	console.log(resourcesToLoad);
 	if (resourcesToLoad === 0) {
-		if (user) {
+		if (userName) {
 			Router.navigate(window.location.pathname);
 			setAllCarouselData();
 			setScores();
@@ -173,23 +174,7 @@ window.onpopstate = () => {
 };
 
 socket.on('user start a game', game => {
-	document.addEventListener('keydown', ({ key }) => {
-		if (!playerCommands.includes(key)) return;
-		socket.emit('playerKeyDown', key);
-	});
-	document.addEventListener('keyup', ({ key }) => {
-		if (!playerCommands.includes(key)) return;
-		socket.emit('playerKeyUp', key);
-	});
-	document.addEventListener('mousedown', ({ clientX, clientY }) => {
-		socket.emit('playerMouseDown', { clientX, clientY });
-	});
-	document.addEventListener('mouseup', () => {
-		socket.emit('playerMouseUp');
-	});
-	document.addEventListener('mousemove', ({ clientX, clientY }) => {
-		socket.emit('playerMouseMove', { clientX, clientY });
-	});
+	addListeners();
 	setGame(game);
 	startGameRenderer();
 });
@@ -198,7 +183,8 @@ socket.on('gameUpdate', game => {
 	setGame(game);
 });
 
-socket.on('gameJoin', game => {
+socket.on('user join a game', game => {
+	addListeners();
 	setGame(game);
 	startGameRenderer();
 });
@@ -216,8 +202,8 @@ socket.on('stageTransition', previousStage => {
 });
 
 socket.on('userLogin', login => {
-	window.sessionStorage.setItem('user', login);
-	user = login;
+	window.sessionStorage.setItem('userName', login);
+	userName = login;
 	setAllCarouselData();
 	setScores();
 	Router.navigate('/');
@@ -232,7 +218,7 @@ socket.on('serverAlert', message => {
 });
 
 function setAllCarouselData() {
-	socket.emit('setCarousel', user);
+	socket.emit('setCarousel', userName);
 	socket.on('setCarousel', ({ playerData, playerSkins, weaponSkins }) => {
 		carouselLife = new CarouselStat(
 			$('.personnalisation .health'),
@@ -277,16 +263,37 @@ function setScores() {
 		score.setTable(data.scores);
 	});
 }
+
+function addListeners() {
+	document.addEventListener('keydown', ({ key }) => {
+		if (!playerCommands.includes(key)) return;
+		socket.emit('playerKeyDown', key);
+	});
+	document.addEventListener('keyup', ({ key }) => {
+		if (!playerCommands.includes(key)) return;
+		socket.emit('playerKeyUp', key);
+	});
+	document.addEventListener('mousedown', ({ clientX, clientY }) => {
+		socket.emit('playerMouseDown', { clientX, clientY });
+	});
+	document.addEventListener('mouseup', () => {
+		socket.emit('playerMouseUp');
+	});
+	document.addEventListener('mousemove', ({ clientX, clientY }) => {
+		socket.emit('playerMouseMove', { clientX, clientY });
+	});
+}
+
 window.addEventListener('unload', event => {
-	if (user) socket.emit('close', user);
+	if (userName) socket.emit('close', userName);
 });
 
 window.addEventListener('load', event => {
-	if (user) socket.emit('open', user);
+	if (userName) socket.emit('open', userName);
 	//if(user) setTimeout(() => socket.emit('open', user), 1000);
 });
 
 export function setUserNull() {
-	user = null;
-	window.sessionStorage.removeItem('user');
+	userName = null;
+	window.sessionStorage.removeItem('userName');
 }

@@ -1,5 +1,5 @@
 import Entity from './entity.js';
-import { bonusData } from '../index.js';
+import { bonusProperties } from '../index.js';
 
 export default class Bonus extends Entity {
 	constructor(x, y, type, propeties) {
@@ -19,6 +19,6 @@ export default class Bonus extends Entity {
 	}
 
 	static createBonus(posX, posY, type) {
-		return new Bonus(posX, posY, type, bonusData[type]);
+		return new Bonus(posX, posY, type, bonusProperties[type]);
 	}
 }

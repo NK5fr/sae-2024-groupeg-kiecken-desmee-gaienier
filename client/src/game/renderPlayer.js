@@ -5,14 +5,14 @@ export default function renderPlayer(player, context) {
 	if (player.health <= 0) return;
 	let direction =
 		player.speedX > 0 ? 'right' : player.speedX < 0 ? 'left' : 'idle';
-	const image = images.player[player.currentSkin][direction];
+	const image = images.players[player.currentSkin][direction];
 
 	context.drawImage(image, player.posX, player.posY);
 
 	context.beginPath();
 	context.font = '20px Arial';
 	context.fillStyle = 'black';
-	context.fillText(player.user, player.posX, player.posY - 15);
+	context.fillText(player.userName, player.posX, player.posY - 15);
 	context.closePath();
 
 	renderMissiles(player.missiles, context);

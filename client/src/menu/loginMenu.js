@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { setUserNull, socket} from '../main.js';
+import { setUserNull, socket } from '../main.js';
 
 export default class LoginMenu {
 	static setLogin(menu) {

@@ -33,7 +33,6 @@ export function renderStageChangement(stage, newStage, context, canvas) {
 	previousBackgroundY += 8;
 	transitionBackgroundY = previousBackgroundY - transitionBackground.height;
 	backgroundY = transitionBackgroundY - previousBackground.height;
-	console.log(backgroundY);
 	context.drawImage(previousBackground, backgroundX, previousBackgroundY);
 	context.drawImage(
 		previousBackground,

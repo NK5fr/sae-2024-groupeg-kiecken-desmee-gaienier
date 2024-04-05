@@ -16,26 +16,21 @@ import renderStage, {
 export const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d'),
 	canvasResizeObserver = new ResizeObserver(() => {
-		resampleCanvas();
+		canvas.width = canvas.clientWidth;
+		canvas.height = canvas.clientHeight;
+		socket.emit('canvas was resized', {
+			width: canvas.width,
+			height: canvas.height,
+		});
 	});
 
-export let stageTransitionEnd = false;
+canvasResizeObserver.observe(canvas);
 
+let stageTransitionEnd = false;
 let gameRenderer = null;
 let transitionRenderer = null;
 let game = null;
 let previousStage = null;
-
-canvasResizeObserver.observe(canvas);
-
-function resampleCanvas() {
-	canvas.width = canvas.clientWidth;
-	canvas.height = canvas.clientHeight;
-	socket.emit('canvasResampled', {
-		width: canvas.width,
-		height: canvas.height,
-	});
-}
 
 export default function startGameRenderer() {
 	gameRenderer = requestAnimationFrame(renderGame);
@@ -51,8 +46,7 @@ function renderGame() {
 
 	renderStage(game.stage, context, canvas);
 
-	renderPlayer(game.mainPlayer, context);
-	renderPlayers(game.otherPlayers, context);
+	renderPlayers(game.players, context);
 
 	renderAngels(game.stage.angels, context);
 	game.stage.angels.forEach(angel => {
@@ -64,10 +58,11 @@ function renderGame() {
 	renderAllBonus(game.stage.bonus, context);
 
 	renderStageProgressionBar(game.stage, context, canvas);
-	renderHealthBar(game.mainPlayer, 0, context, canvas);
-	game.otherPlayers.forEach((player, index) => {
-		renderHealthBar(player, index + 1, context, canvas);
-	});
+
+	for (let i = 0; i < game.players.length; i++) {
+		const player = game.players[i];
+		renderHealthBar(player, i, context, canvas);
+	}
 
 	if (game.debug) {
 		renderPlayerHitbox(game.mainPlayer, context);
@@ -85,15 +80,11 @@ function renderGame() {
 
 function renderTransition() {
 	context.clearRect(0, 0, game.width, game.height);
-	console.log(previousStage);
 	renderStageChangement(previousStage, game.stage, context, canvas);
-	renderPlayer(game.mainPlayer, context);
-	game.otherPlayers.forEach(player => {
-		renderPlayer(player, context);
-	});
+	renderPlayers(game.players, context);
 	if (stageTransitionEnd) {
 		stopGameRenderer();
-		socket.emit('stageChangeEnd');
+		socket.emit('stage end his transition');
 		stageTransitionEnd = false;
 		startGameRenderer();
 	} else {

@@ -1,10 +1,12 @@
 import { io } from '../index.js';
-import { readUsersData, writeUsersData } from '../managers/connexionManager.js';
 import {
-	readPlayersData,
-	writePlayersData,
+	readUsersProperties,
+	writeUsersProperties,
+} from '../managers/connexionManager.js';
+import {
+	readPlayersProperties,
+	writePlayersProperties,
 } from '../managers/playerManager.js';
-//import encryptionTool from './encryptionTool.js';
 
 export default function signin(
 	login,
@@ -13,30 +15,29 @@ export default function signin(
 	response,
 	socketId
 ) {
-	const usersData = readUsersData();
-	let user = usersData.find(user => user.login == login);
-	if (user) {
+	const usersProperties = readUsersProperties();
+	if (usersProperties.find(u => u.login == login)) {
 		io.to(socketId).emit('serverAlert', "Nom d'utilisateur déjà utilisé");
 	} else {
-		//const cryptPassword = encryptionTool(password);
-		user = {
+		const userProperties = {
 			login,
-			//cryptPassword,
 			password,
 			recoverySentence,
 			response,
 			connexion: false,
 		};
-		usersData.push(user);
-		writeUsersData(usersData);
-		const playersData = readPlayersData();
-		const player = Object.assign(
+		usersProperties.push(userProperties);
+		writeUsersProperties(usersProperties);
+
+		const playersProperties = readPlayersProperties();
+		const playerProperties = Object.assign(
 			{},
-			playersData.find(player => player.user == 'default')
+			playersProperties.find(p => p.userName == 'default')
 		);
-		player.user = login;
-		playersData.push(player);
-		writePlayersData(playersData);
+		playerProperties.userName = login;
+		playersProperties.push(playerProperties);
+		writePlayersProperties(playersProperties);
+
 		io.to(socketId).emit('userLogin', login);
 	}
 }

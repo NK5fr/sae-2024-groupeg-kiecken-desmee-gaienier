@@ -3,33 +3,35 @@ import Game from '../game/game.js';
 import { addGame, currentGame, removeGame } from '../index.js';
 
 export default function gameManager(socket) {
-	socket.on('user start a game', ({ user, width, height }) => {
-		const playersData = readPlayersData();
-		let game = currentGame.find(game => game.user === user);
+	socket.on('user start a game', ({ userName, width, height }) => {
+		const playersProperties = readPlayersProperties();
+		let game = currentGame.find(g => g.owner === userName);
 		if (game) return;
-		let player = playersData.find(player => player.user === user);
-		game = new Game(width, height, player, socket.id);
+		console.log(playersProperties);
+		let playerProperties = playersProperties.find(p => p.userName === userName);
+		console.log(playerProperties);
+		game = new Game(width, height, playerProperties, socket.id);
 		game.startGame();
 		addGame(game);
 		socket.emit('user start a game', game);
 	});
 
-	socket.on('gameJoin', ({ host, user }) => {
-		const playersData = readPlayersData();
-		let game = currentGame.find(game => game.owner === host);
+	socket.on('user join a game', ({ hostName, userName }) => {
+		const playersProperties = readPlayersProperties();
+		let game = currentGame.find(g => g.owner === hostName);
 		if (!game) return;
-		let player = playersData.find(player => player.user === user);
-		game.addNewPlayer(player, socket.id);
-		socket.emit('gameStart', game);
+		let playerProperties = playersProperties.find(p => p.userName === userName);
+		game.addNewPlayer(playerProperties, socket.id);
+		socket.emit('user join a game', game);
 	});
 
-	socket.on('stageChangeEnd', () => {
+	socket.on('stage end his transition', () => {
 		const game = currentGame.find(game => game.socketId === socket.id);
 		if (!game) return;
 		game.startGame();
 	});
 
-	socket.on('canvasResampled', data => {
+	socket.on('canvas was resized', data => {
 		const game = currentGame.find(game => game.socketId === socket.id);
 		if (game) {
 			game.width = data.width;
@@ -46,6 +48,6 @@ export default function gameManager(socket) {
 	});
 }
 
-function readPlayersData() {
-	return JSON.parse(readFileSync('server/data/playerData.json', 'utf8'));
+function readPlayersProperties() {
+	return JSON.parse(readFileSync('server/data/playersProperties.json', 'utf8'));
 }

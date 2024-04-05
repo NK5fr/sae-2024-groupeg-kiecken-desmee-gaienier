@@ -1,30 +1,32 @@
 import { readFileSync, writeFileSync } from 'fs';
 
-export function addScore(username, score) {
-	const scoreData = readScoreData();
-	scoreData.push({ user: username, score: score });
-	writeScoreData(scoreData);
+export function addScore(userName, score) {
+	const scoresData = readScoresData();
+	scoresData.push({ userName, score });
+	writeScoresData(scoresData);
 }
 
-function readScoreData() {
-	return JSON.parse(readFileSync('server/data/scoreData.json', 'utf8'));
+function readScoresData() {
+	return JSON.parse(readFileSync('server/data/scoresData.json', 'utf8'));
 }
 
-function writeScoreData(data) {
-	writeFileSync('server/data/scoreData.json', JSON.stringify(data));
+function writeScoresData(data) {
+	writeFileSync('server/data/scoresData.json', JSON.stringify(data));
 }
 
-export function scoreManager(socket, scoreData) {
+export function scoreManager(socket) {
 	socket.on('score', data => {
 		addScore(data.user, data.time);
+		const scoresData = readScoresData();
 		socket.emit('setScore', {
-			scores: scoreData,
+			scores: scoresData,
 		});
 	});
 
 	socket.on('setScore', () => {
+		const scoresData = readScoresData();
 		socket.emit('setScore', {
-			scores: scoreData,
+			scores: scoresData,
 		});
 	});
 }

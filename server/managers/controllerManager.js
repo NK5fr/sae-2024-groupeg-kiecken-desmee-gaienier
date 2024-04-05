@@ -34,13 +34,20 @@ export default function controllerManager(socket) {
 
 function findPlayerBySocketId(socketId) {
 	let player;
-	currentGame.forEach(game => {
-		if (game.mainPlayer.socketId === socketId) player = game.mainPlayer;
-		else {
-			game.otherPlayers.forEach(p => {
-				if (p.socketId === socketId) player = p;
-			});
-		}
+	currentGame.forEach(g => {
+		g.players.forEach(p => {
+			if (p.socketId === socketId) player = p;
+		});
+	});
+	return player;
+}
+
+function findPlayerByName(userName) {
+	let player;
+	currentGame.forEach(g => {
+		g.players.forEach(p => {
+			if (p.userName === userName) player = p;
+		});
 	});
 	return player;
 }

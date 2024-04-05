@@ -22,26 +22,29 @@ export default function connexionManager(socket) {
 		resetPassword(login, password, socket.id);
 	});
 	socket.on('close', username => {
-		const usersData = readUsersData();
-		const user = usersData.find(u => u.login === username);
-		setConnexion(user, false, usersData);
+		const usersProperties = readUsersProperties();
+		const userProperties = usersProperties.find(u => u.login === username);
+		setConnexion(userProperties, false, usersProperties);
 	});
 	socket.on('open', username => {
-		const usersData = readUsersData();
-		const user = usersData.find(u => u.login === username);
-		setConnexion(user, true, usersData);
+		const usersProperties = readUsersProperties();
+		const userProperties = usersProperties.find(u => u.login === username);
+		setConnexion(userProperties, true, usersProperties);
 	});
 }
 
-function setConnexion(user, value, usersData) {
+function setConnexion(user, value, usersProperties) {
 	user.connexion = value;
-	writeUsersData(usersData);
+	writeUsersProperties(usersProperties);
 }
 
-export function readUsersData() {
-	return JSON.parse(readFileSync('server/data/userData.json', 'utf8'));
+export function readUsersProperties() {
+	return JSON.parse(readFileSync('server/data/usersProperties.json', 'utf8'));
 }
 
-export function writeUsersData(usersData) {
-	writeFileSync('server/data/userData.json', JSON.stringify(usersData));
+export function writeUsersProperties(usersProperties) {
+	writeFileSync(
+		'server/data/usersProperties.json',
+		JSON.stringify(usersProperties)
+	);
 }
