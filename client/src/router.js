@@ -14,11 +14,16 @@ export default class Router {
 		this.#setInnerLinks = setInnerLinks;
 		$('.innerLink', this.#setInnerLinks).on('click', event => {
 			event.preventDefault();
-			Router.navigate($(event.currentTarget).attr('href'));
+			const link = $(event.currentTarget);
+			if(link.attr('host')){
+				Router.navigate($(event.currentTarget).attr('href'), false, link.attr('host'));
+			}else{
+				Router.navigate($(event.currentTarget).attr('href'));
+			}
 		});
 	}
 
-	static navigate(path, skipPushState = false) {
+	static navigate(path, skipPushState = false, hote = null) {
 		let route = this.routes.find(route => route.path === path);
 		if (user && this.connexionRoutes.includes(route?.path)) {
 			route = this.routes.find(route => route.path === '/');
@@ -31,16 +36,19 @@ export default class Router {
 			this.currentRoute = route;
 			route.view.show();
 			if (route.path === '/jeu') {
-				socket.emit('user start a game', {
-					width: canvas.width,
-					height: canvas.height,
-					user: window.sessionStorage.getItem('user'),
-				});
-			} else if (route.path === '/rejoindre') {
-				socket.emit('gameJoin', {
-					host: 'raph',
-					user: window.sessionStorage.getItem('user'),
-				});
+				if(hote){
+					socket.emit('gameJoin', {
+						host: hote,
+						user: window.sessionStorage.getItem('user'),
+					}); 
+				}else{
+					socket.emit('user start a game', {
+						width: canvas.width,
+						height: canvas.height,
+						user: window.sessionStorage.getItem('user'),
+						diff: $(".diff .active").val()
+					});
+				}
 			} else {
 				stopGameRenderer();
 				socket.emit('gameStop');

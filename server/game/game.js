@@ -12,12 +12,14 @@ export default class Game {
 
 	otherPlayers = [];
 
-	constructor(width, height, playerData, socketId) {
+	constructor(width, height, playerData, socketId, diff) {
 		this.width = width;
 		this.height = height;
 
 		this.owner = playerData.user;
 		this.socketId = socketId;
+
+		this.diff = diff;
 
 		this.startTime = Date.now();
 
