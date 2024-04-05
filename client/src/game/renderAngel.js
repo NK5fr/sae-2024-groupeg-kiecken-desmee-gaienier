@@ -1,9 +1,8 @@
-const angelSkinPath = 'assets/angel';
-const angelImage = new Image();
+import { images } from '../main.js';
 
 export default function renderAngel(angel, context) {
-	angelImage.src = `${angelSkinPath}/${angel.species}/${angel.type}.png`;
-	context.drawImage(angelImage, angel.posX, angel.posY);
+	const image = images.angel[angel.species][angel.type];
+	context.drawImage(image, angel.posX, angel.posY);
 }
 
 export function renderAngels(angels, context) {

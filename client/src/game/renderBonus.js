@@ -1,12 +1,10 @@
-const bonusSkinPath = 'assets/bonus';
-const bonusImage = new Image();
+import { images } from '../main.js';
 
 export default function renderBonus(bonus, context) {
-	bonusImage.src = `${bonusSkinPath}/${bonus.type}.png`;
-	console.log(bonusImage.posX, bonusImage.posY);
+	const image = images.bonus[bonus.type];
 	context.save();
 	context.globalAlpha = bonus.opacity;
-	context.drawImage(bonusImage, bonus.posX, bonus.posY);
+	context.drawImage(image, bonus.posX, bonus.posY);
 	context.restore();
 }
 

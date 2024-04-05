@@ -46,6 +46,34 @@ writeFileSync('server/data/userData.json', JSON.stringify(usersData));
 
 io.on('connection', socket => {
 	console.log(`New connection: ${socket.id}`);
+
+	socket.on('getResourcesToLoad', () => {
+		const angel = [];
+		Object.keys(angelData).forEach(species => {
+			Object.keys(angelData[species]).forEach(type => {
+				angel.push({ species, type });
+			});
+		});
+		const bonus = [];
+		Object.keys(bonusData).forEach(type => {
+			bonus.push({ type });
+		});
+		const missile = [];
+		Object.values(skinData.weaponSkins).forEach(skin => {
+			missile.push({ skin });
+		});
+		const player = [];
+		Object.values(skinData.playerSkins).forEach(skin => {
+			player.push({ skin });
+		});
+		socket.emit('resourcesToLoad', {
+			angel,
+			bonus,
+			missile,
+			player,
+		});
+	});
+
 	connexionManager(socket);
 	controllerManager(socket);
 	gameManager(socket);

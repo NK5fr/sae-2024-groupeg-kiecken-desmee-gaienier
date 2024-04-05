@@ -1,38 +1,35 @@
 import { stageChangeEnd } from './renderGame.js';
 
-const previousBackground = new Image();
-const background = new Image();
+const stageImages = {};
 const transitionBackground = new Image();
-const nameImage = new Image();
+transitionBackground.src = 'assets/stage/background/0.png';
 
 let backgroundX = 0;
-
 let previousBackgroundY = 0;
 let backgroundY = 0;
 let transitionBackgroundY = 0;
 
 export default function renderStage(stage, context) {
-	background.src = stage.background;
+	if (!stageImages[stage.name]) {
+		stageImages[stage.name] = new Image();
+		stageImages[stage.name].src = stage.background;
+	}
+	const background = stageImages[stage.name];
 	backgroundX -= 1;
 	if (backgroundX <= -background.width) {
 		backgroundX = -1;
 	}
 	context.drawImage(background, backgroundX, 0);
 	context.drawImage(background, backgroundX + background.width, 0);
-	if (stage.nameImage) {
-		nameImage.src = stage.nameImage;
-		context.save();
-		context.globalAlpha = stage.nameOpacity;
-		context.drawImage(nameImage, 10, 10);
-		context.restore();
-		stage.nameOpacity -= 0.01;
-	}
 }
 
 export function renderStageChangement(stage, newStage, context, canvas) {
-	background.src = stage.background;
-	previousBackground.src = newStage.background;
-	transitionBackground.src = 'assets/stage/background/0.png';
+	const previousBackground = stageImages[stage.name];
+	if (!stageImages[newStage.name]) {
+		stageImages[newStage.name] = new Image();
+		stageImages[newStage.name].src = newStage.background;
+	}
+	const background = stageImages[newStage.name];
 	previousBackgroundY += 8;
 	transitionBackgroundY = previousBackgroundY - transitionBackground.height;
 	backgroundY = transitionBackgroundY - previousBackground.height;
