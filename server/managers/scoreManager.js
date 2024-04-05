@@ -14,15 +14,13 @@ function writeScoreData(data) {
 	writeFileSync('server/data/scoreData.json', JSON.stringify(data));
 }
 
-export function scoreManager(socket, scoreData) {
+export function scoreManager(socket) {
 	socket.on('score', data => {
 		addScore(data.user, data.time);
-		socket.emit('setScore', {
-			scores: scoreData,
-		});
 	});
 
 	socket.on('setScore', () => {
+		const scoreData = readScoreData();
 		socket.emit('setScore', {
 			scores: scoreData,
 		});

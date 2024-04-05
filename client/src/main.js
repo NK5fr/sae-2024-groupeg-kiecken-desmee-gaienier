@@ -48,32 +48,6 @@ LoginMenu.setLogout($('.logout'));
 const score = new ScoreMenu($('.scores'));
 const game = new JoinMenu($('.join'));
 
-game.setGames([
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-	{host:"nathan",participants:1},
-]);
-
 const routes = [
 	{ path: '/', view: $('.accueil') },
 	{ path: '/jeu', view: $('.jeu') },
@@ -107,6 +81,7 @@ if (user) {
 	Router.navigate(window.location.pathname);
 	setAllCarouselData();
 	setScores();
+	setGames();
 } else Router.navigate('/login');
 
 window.onpopstate = () => {
@@ -148,7 +123,13 @@ socket.on('gameStop', data => {
 	stopGameRenderer();
 	Router.navigate('/rejouer');
 	socket.emit('gameStop');
-	if(data.win) socket.emit('score', data);
+	if(data.win) {
+		socket.emit('score', data);
+		setScores();
+		$(".rejouer h2").html(`Victoire, score : ${data.time}`);
+	}else{
+		$(".rejouer h2").html(`Défaite`);
+	}
 });
 
 socket.on('stageTransition', previousStage => {
@@ -161,6 +142,7 @@ socket.on('userLogin', login => {
 	user = login;
 	setAllCarouselData();
 	setScores();
+	setGames();
 	Router.navigate('/');
 });
 
@@ -218,6 +200,14 @@ function setScores() {
 		score.setTable(data.scores);
 	});
 }
+
+function setGames() {
+	socket.emit('setGames');
+	socket.on('setGames', data => {
+		game.setGames(data.games);
+	});
+}
+
 window.addEventListener('unload', event => {
 	if (user) socket.emit('close', user);
 });

@@ -50,7 +50,7 @@ io.on('connection', socket => {
 	controllerManager(socket);
 	gameManager(socket);
 	playerManager(socket);
-	scoreManager(socket, scoreData);
+	scoreManager(socket);
 });
 
 export function addGame(game) {
