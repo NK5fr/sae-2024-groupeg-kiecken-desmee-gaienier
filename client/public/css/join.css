@@ -63,6 +63,7 @@
 
 .join table td, .join table th {
     padding: 1%;
+    width: 50%;
 }
 
 .join table tr:nth-child(2n + 1){

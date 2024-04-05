@@ -279,4 +279,5 @@ window.addEventListener('load', event => {
 export function setUserNull() {
 	user = null;
 	window.sessionStorage.removeItem('user');
+	window.sessionStorage.removeItem('diff');
 }

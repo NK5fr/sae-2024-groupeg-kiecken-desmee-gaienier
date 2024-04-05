@@ -8,7 +8,7 @@ export default class JoinMenu {
 
     setGames(games){
 		const table = $('table', this.element);
-		let html = `<tr><th>Hôte</th><th>Participants</th></tr>`;
+		let html = ``;
 		games.forEach(game => {
 			html += `<tr class="innerLink" href="/jeu" host="${game.host}"><td>${game.host}</td><td>${game.participants}</td></tr>`;
 		});

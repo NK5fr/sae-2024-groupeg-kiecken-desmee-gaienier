@@ -40,12 +40,13 @@ export default class Router {
 					socket.emit('gameJoin', {
 						host: hote,
 						user: window.sessionStorage.getItem('user'),
-					});
+					}); 
 				}else{
-					socket.emit('gameStart', {
+					socket.emit('user start a game', {
 						width: canvas.width,
 						height: canvas.height,
 						user: window.sessionStorage.getItem('user'),
+						diff: $(".diff .active").val()
 					});
 				}
 			} else {

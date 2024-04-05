@@ -3,12 +3,13 @@ import Game from '../game/game.js';
 import { addGame, currentGame, removeGame } from '../index.js';
 
 export default function gameManager(socket) {
-	socket.on('user start a game', ({ user, width, height }) => {
+	socket.on('user start a game', ({ user, width, height , diff}) => {
+		console.log(diff);
 		const playersData = readPlayersData();
 		let game = currentGame.find(game => game.user === user);
 		if (game) return;
 		let player = playersData.find(player => player.user === user);
-		game = new Game(width, height, player, socket.id);
+		game = new Game(width, height, player, socket.id, diff);
 		game.startGame();
 		addGame(game);
 		socket.emit('user start a game', game);
