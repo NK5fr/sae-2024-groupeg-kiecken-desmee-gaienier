@@ -9,7 +9,6 @@ export default function login(login, password, socketId) {
 	const userProperties = usersProperties.find(
 		u => u.login === login && u.password === password
 	);
-	console.log(userProperties);
 	if (userProperties && !userProperties.connexion) {
 		userProperties.connexion = true;
 		writeUsersProperties(usersProperties);

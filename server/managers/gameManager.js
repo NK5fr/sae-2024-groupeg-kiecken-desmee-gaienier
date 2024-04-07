@@ -59,6 +59,7 @@ export default function gameManager(socket) {
 		playerProperties.souls += souls;
 		writePlayersProperties(playersProperties);
 		if (playerIsOwner(userName)) {
+			findGameByOwner(userName).stopGame();
 			removeGameByOwner(userName);
 		}
 	});

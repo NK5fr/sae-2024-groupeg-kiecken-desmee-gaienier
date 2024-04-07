@@ -135,8 +135,6 @@ Router.routes = routes;
 Router.connexionRoutes = ['/login', '/signin', '/mdp_oublie', '/resetPassword'];
 Router.notFound = $('.notFound');
 
-Router.setInnerLinks(document.body);
-
 window.onpopstate = () => {
 	Router.navigate(document.location.pathname, true);
 };
@@ -170,9 +168,14 @@ socket.on(
 		Router.navigate('/rejouer');
 		socket.emit('game is stoped', { userName, souls });
 		if (win) {
-			socket.emit('client send score', { userName, time });
+			const date = new Date(time);
+			const formatedTime =
+				`${date.getUTCHours() >= 10 ? date.getUTCHours() : '0' + date.getUTCHours()}` +
+				`:${date.getUTCMinutes() >= 10 ? date.getUTCMinutes() : '0' + date.getUTCMinutes()}` +
+				`:${date.getUTCSeconds() >= 10 ? date.getUTCSeconds() : '0' + time.getUTCSeconds()}`;
+			socket.emit('client send score', { userName, formatedTime });
 			setScores();
-			$('.rejouer h2').html(`Victoire, score : ${time}`);
+			$('.rejouer h2').html(`Victoire, score : ${formatedTime}`);
 		} else {
 			$('.rejouer h2').html(`Défaite`);
 		}
