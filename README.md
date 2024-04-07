@@ -36,5 +36,7 @@ Pour réellement achever Heaven Must Fall il faudrait :
 
 ## Notre fièreté
 
+Nous sommes particulièrement fiers de notre travail d'équipe, nous avons su construire un environnement collaboratif où chacun apporte ses compétences et ses idées. Nous avons développé une culture d'entraide et de soutien mutuel, ce qui nous a permis de surmonter les défis techniques avec succès. Chaque membre de l'équipe a pu contribuer à l'amélioration continue de Heaven Must Fall.
+
 
 
