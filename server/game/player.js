@@ -4,7 +4,7 @@ import Missile from './missile.js';
 const stat = {
 	healthIncrement: 5,
 	damageIncrement: 2,
-	fireSpeedIncrement: 8,
+	fireSpeedIncrement: 9,
 	speedIncrement: 2,
 };
 export default class Player extends Entity {

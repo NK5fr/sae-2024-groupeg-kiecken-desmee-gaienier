@@ -1,5 +1,5 @@
 import { socket } from '../main.js';
-import { renderAngels } from './renderAngel.js';
+import renderAngel, { renderAngels } from './renderAngel.js';
 import { renderAllBonus } from './renderBonus.js';
 import { renderMissiles } from './renderMissiles.js';
 import { renderHealthBar, renderPlayers } from './renderPlayer.js';
@@ -48,6 +48,9 @@ function renderGame() {
 	renderPlayers(players, context);
 
 	renderAngels(stage.angels, context);
+	if (stage.archangel) {
+		renderAngel(stage.archangel, context);
+	}
 
 	renderMissiles(stage.strandedMissiles, context);
 

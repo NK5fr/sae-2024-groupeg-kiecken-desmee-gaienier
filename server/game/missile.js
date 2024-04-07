@@ -4,7 +4,14 @@ const missileProperties = {
 	health: 1,
 	damage: 1,
 	speed: 20,
-	fireSpeed: 0,
+	hitboxWidth: 24,
+	hitboxHeight: 24,
+};
+
+const foeMissileProperties = {
+	health: 1,
+	damage: 1,
+	speed: 15,
 	hitboxWidth: 24,
 	hitboxHeight: 24,
 };
@@ -36,5 +43,10 @@ export default class Missile extends Entity {
 	static createMissile(posX, posY, fireAngle, damage, type) {
 		missileProperties.damage = damage;
 		return new Missile(posX, posY, fireAngle, type, missileProperties);
+	}
+
+	static createFoeMissile(posX, posY, fireAngle, damage) {
+		missileProperties.damage = damage;
+		return new Missile(posX, posY, fireAngle, 'bible', foeMissileProperties);
 	}
 }

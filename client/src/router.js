@@ -33,6 +33,7 @@ export default class Router {
 	}
 
 	static navigate(path, skipPushState = false, hote = null) {
+		console.log('navigate', path, skipPushState, hote);
 		let route = this.routes.find(route => route.path === path);
 		if (userName && this.connexionRoutes.includes(route?.path)) {
 			route = this.routes.find(route => route.path === '/');
