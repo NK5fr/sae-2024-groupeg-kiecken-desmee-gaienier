@@ -19,15 +19,15 @@
         "angelsSpecies": "puissance",
         "archangel": "camael"
     },
-    "uranus": {
-        "numberOfAngels": 60,
-        "angelsSpecies": "cherubin",
-        "archangel": "raphael"
-    },
     "saturn": {
-        "numberOfAngels": 90,
+        "numberOfAngels": 60,
         "angelsSpecies": "seraphin",
         "archangel": "cassiel"
+    },
+    "uranus": {
+        "numberOfAngels": 90,
+        "angelsSpecies": "cherubin",
+        "archangel": "raphael"
     },
     "sun" : {
         "numberOfAngels": 150,

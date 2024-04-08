@@ -169,7 +169,9 @@ socket.on(
 		stopGameRenderer();
 		setGame(undefined);
 		Router.navigate('/rejouer');
-		$(".personnalisation header h4").html(`<img href="images/soul.png" alt="âmes"> : ${souls}`);
+		$('.personnalisation header h4').html(
+			`<img href="images/soul.png" alt="âmes"> : ${souls}`
+		);
 		socket.emit('game is stoped', { userName, souls });
 		if (win) {
 			const date = new Date(time);
@@ -259,10 +261,12 @@ function setScores() {
 	});
 }
 
-function setSouls() {
-	socket.emit('client need souls');
+export function setSouls() {
+	socket.emit('client need souls', userName);
 	socket.on('server send souls', souls => {
-		$(".personnalisation header h4").html(`<img href="images/soul.png" alt="âmes"> : ${souls}`);
+		$('.personnalisation header h4').html(
+			`<img href="images/soul.png" alt="âmes"> : ${souls}`
+		);
 	});
 }
 

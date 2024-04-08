@@ -6,7 +6,9 @@ import { readFileSync, writeFileSync } from 'fs';
 import connexionManager from './managers/connexionManager.js';
 import controllerManager from './managers/controllerManager.js';
 import gameManager from './managers/gameManager.js';
-import playerManager from './managers/playerManager.js';
+import playerManager, {
+	readPlayersProperties,
+} from './managers/playerManager.js';
 import { scoreManager } from './managers/scoreManager.js';
 
 export let currentGame = [];
@@ -95,6 +97,14 @@ io.on('connection', socket => {
 			});
 		});
 		socket.emit('server send gamesInfo', gamesInfo);
+	});
+
+	socket.on('client need souls', userName => {
+		const playersProperties = readPlayersProperties();
+		const playerProperties = playersProperties.find(
+			p => p.userName === userName
+		);
+		socket.emit('server send souls', playerProperties.souls);
 	});
 });
 

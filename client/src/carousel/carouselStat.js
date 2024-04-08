@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { socket, userName } from '../main.js';
+import { setSouls, socket, userName } from '../main.js';
 
 const healthPrice = 250;
 const damagePrice = 300;
@@ -41,6 +41,7 @@ export default class CarouselStat {
 				}
 				this.price = Math.round(this.price * 1.5);
 				this.setCarousel();
+				setSouls();
 			});
 		});
 	}
