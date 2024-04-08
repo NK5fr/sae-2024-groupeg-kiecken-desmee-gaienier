@@ -33,6 +33,9 @@ export class Stage {
 			}
 		});
 		this.angels = this.angels.filter(angel => angel.health > 0);
+		this.strandedMissiles = this.strandedMissiles.filter(
+			missile => missile.health > 0
+		);
 		this.bonus = this.bonus.filter(bonus => bonus.health > 0);
 		this.numberOfAngelsKilled = this.numberOfAngelsSpawned - this.angels.length;
 	}
