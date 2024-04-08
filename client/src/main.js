@@ -135,6 +135,8 @@ Router.routes = routes;
 Router.connexionRoutes = ['/login', '/signin', '/mdp_oublie', '/resetPassword'];
 Router.notFound = $('.notFound');
 
+Router.setInnerLinks(document.body);
+
 window.onpopstate = () => {
 	Router.navigate(document.location.pathname, true);
 };
@@ -258,7 +260,6 @@ function setGames() {
 	socket.emit('client need gamesInfo');
 	socket.on('server send gamesInfo', gamesInfo => {
 		game.setGames(gamesInfo);
-		Router.setInnerLinks(document.body);
 	});
 }
 

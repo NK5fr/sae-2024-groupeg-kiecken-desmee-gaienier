@@ -14,7 +14,7 @@ export default class CarouselStat {
 			socket.emit('stat', {
 				statName: this.statName,
 				value: this.actualLevel,
-				username: userName,
+				userName: userName,
 			});
 			this.setCarousel();
 		});
