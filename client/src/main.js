@@ -148,6 +148,7 @@ function redirect() {
 			setAllCarouselData();
 			setScores();
 			setGames();
+			setSouls();
 		} else Router.navigate('/login');
 	} else setTimeout(redirect, 1000);
 }
@@ -168,6 +169,7 @@ socket.on(
 		stopGameRenderer();
 		setGame(undefined);
 		Router.navigate('/rejouer');
+		$(".personnalisation header h4").html(`<img href="images/soul.png" alt="âmes"> : ${souls}`);
 		socket.emit('game is stoped', { userName, souls });
 		if (win) {
 			const date = new Date(time);
@@ -195,6 +197,7 @@ socket.on('userLogin', login => {
 	setAllCarouselData();
 	setScores();
 	setGames();
+	setSouls();
 	Router.navigate('/');
 });
 
@@ -253,6 +256,13 @@ function setScores() {
 	socket.emit('client need scores');
 	socket.on('server send scores', scores => {
 		score.setTable(scores);
+	});
+}
+
+function setSouls() {
+	socket.emit('client need souls');
+	socket.on('server send souls', souls => {
+		$(".personnalisation header h4").html(`<img href="images/soul.png" alt="âmes"> : ${souls}`);
 	});
 }
 
