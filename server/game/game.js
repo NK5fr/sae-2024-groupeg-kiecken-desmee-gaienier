@@ -2,9 +2,7 @@ import { io } from '../index.js';
 import Player from './player.js';
 import { Stage } from './stage.js';
 
-const stage = [
-	'venus' /*'earth', 'jupiter', 'mars', 'saturn', 'uranus', 'sun'*/,
-];
+const stage = ['venus', 'earth', 'jupiter', 'mars', 'saturn', 'uranus', 'sun'];
 
 const soulsByAngelType = {
 	archangel: 150,

@@ -13,6 +13,6 @@ export default class JoinMenu {
 			html += `<tr href="/jeu" class="innerLink" host="${hostName}"><td>${hostName}</td><td>${participants}/4</td><td></tr>`;
 		});
 		table.html(html);
-		Router.setInnerLinks($("table .innerLink", this.element));
+		Router.setInnerLinks($('table', this.element));
 	}
 }
