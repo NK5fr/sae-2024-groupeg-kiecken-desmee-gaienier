@@ -6,9 +6,8 @@ const entityProperties = {
 	health: 1,
 	speed: 1,
 	damage: 1,
-	sprite: 'sprite',
-	width: 30,
-	height: 30,
+	hitboxWidth: 30,
+	hitboxHeight: 30,
 };
 
 describe('Entity', () => {
@@ -20,9 +19,8 @@ describe('Entity', () => {
 		assert.equal(entity.maxHealth, 1);
 		assert.equal(entity.speed, 1);
 		assert.equal(entity.damage, 1);
-		assert.equal(entity.sprite, 'sprite');
-		assert.equal(entity.width, 30);
-		assert.equal(entity.height, 30);
+		assert.equal(entity.hitboxWidth, 30);
+		assert.equal(entity.hitboxHeight, 30);
 	});
 
 	it('should detect collision', () => {

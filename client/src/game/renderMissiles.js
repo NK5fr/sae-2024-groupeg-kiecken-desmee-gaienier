@@ -17,22 +17,3 @@ export function renderMissiles(missiles, context) {
 		renderMissile(missile, context);
 	});
 }
-
-function renderMissileHitbox(missile, context) {
-	context.beginPath();
-	context.rect(
-		missile.posX,
-		missile.posY,
-		missile.hitboxWidth,
-		missile.hitboxHeight
-	);
-	context.strokeStyle = 'red';
-	context.stroke();
-	context.closePath();
-}
-
-export function renderMissilesHitbox(missiles, context) {
-	missiles.forEach(missile => {
-		renderMissileHitbox(missile, context);
-	});
-}

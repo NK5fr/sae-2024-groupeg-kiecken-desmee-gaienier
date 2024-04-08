@@ -3,35 +3,37 @@ import { describe, it } from 'node:test';
 import Player from '../game/player.js';
 
 const playerProperties = {
-	health: 5,
-	speed: 10,
-	damage: 10,
-	sprite: {
-		idle: 'sprite',
-		left: 'sprite',
-		right: 'sprite',
-	},
-	width: 30,
-	height: 30,
-	missileType: 'card',
-	fireRate: 25,
+	health: 2,
+	damage: 4,
+	speed: 6,
+	fireSpeed: 8,
+	hitboxWidth: 30,
+	hitboxHeight: 30,
+	currentSkin: 'sprite',
+	currentWeapon: 'card',
+	skinsPool: ['sprite'],
+	weaponsPool: ['card'],
+	souls: 0,
 };
 
 describe('Player', () => {
-	const player = new Player(0, 20, 20, playerProperties);
+	const player = new Player(20, 20, playerProperties, 'socket');
 
 	it('should has all properties', () => {
 		assert.strictEqual(player.posX, 20);
 		assert.strictEqual(player.posY, 20);
-		assert.strictEqual(player.health, 5);
-		assert.strictEqual(player.maxHealth, 5);
-		assert.strictEqual(player.speed, 10);
-		assert.strictEqual(player.damage, 10);
-		assert.strictEqual(player.sprite, 'sprite');
-		assert.strictEqual(player.width, 30);
-		assert.strictEqual(player.height, 30);
-		assert.strictEqual(player.missileType, 'card');
-		assert.strictEqual(player.fireRate, 25);
+		assert.strictEqual(player.health, 15);
+		assert.strictEqual(player.maxHealth, 15);
+		assert.strictEqual(player.speed, 15);
+		assert.strictEqual(player.damage, 9);
+		assert.strictEqual(player.fireSpeed, 72);
+		assert.strictEqual(player.hitboxWidth, 30);
+		assert.strictEqual(player.hitboxHeight, 30);
+		assert.strictEqual(player.currentSkin, 'sprite');
+		assert.strictEqual(player.currentWeapon, 'card');
+		assert.deepStrictEqual(player.skinsPool, ['sprite']);
+		assert.deepStrictEqual(player.weaponsPool, ['card']);
+		assert.strictEqual(player.souls, 0);
 	});
 
 	it('should detect key press', () => {

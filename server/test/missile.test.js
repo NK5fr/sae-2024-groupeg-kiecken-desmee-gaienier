@@ -6,13 +6,12 @@ const missileProperties = {
 	health: 1,
 	speed: 1,
 	damage: 1,
-	sprite: 'sprite',
-	width: 30,
-	height: 30,
+	hitboxWidth: 30,
+	hitboxHeight: 30,
 };
 
 describe('Missile', () => {
-	const missile = new Missile(0, 0, missileProperties, 0);
+	const missile = new Missile(0, 0, 0, 'card', missileProperties);
 
 	it('should has all properties', () => {
 		assert.equal(missile.posX, 0);
@@ -21,9 +20,9 @@ describe('Missile', () => {
 		assert.equal(missile.maxHealth, 1);
 		assert.equal(missile.speed, 1);
 		assert.equal(missile.damage, 1);
-		assert.equal(missile.sprite, 'sprite');
-		assert.equal(missile.width, 30);
-		assert.equal(missile.height, 30);
+		assert.equal(missile.type, 'card');
+		assert.equal(missile.hitboxWidth, 30);
+		assert.equal(missile.hitboxHeight, 30);
 		assert.equal(missile.fireAngle, 0);
 	});
 
