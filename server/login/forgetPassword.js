@@ -1,6 +1,5 @@
-import { readFileSync } from 'fs';
 import { io } from '../index.js';
-import { readUsersData } from '../managers/connexionManager.js';
+import { readUsersProperties } from '../managers/connexionManager.js';
 
 export default function forgetPassword(
 	login,
@@ -8,18 +7,18 @@ export default function forgetPassword(
 	response,
 	socketId
 ) {
-	const usersData = readUsersData();
-	const user = usersData.find(
-		user =>
-			user.login === login &&
-			user.recoverySentence === recoverySentence &&
-			user.response === response
+	const usersProperties = readUsersProperties();
+	const userProperties = usersProperties.find(
+		u =>
+			u.login === login &&
+			u.recoverySentence === recoverySentence &&
+			u.response === response
 	);
-	if (user) {
+	if (userProperties) {
 		io.to(socketId).emit('userResetPassword', login);
 	} else {
 		io.to(socketId).emit(
-			'serverAlert',
+			'server send alert',
 			'Login, phrase de récupération ou réponse incorrecte'
 		);
 	}

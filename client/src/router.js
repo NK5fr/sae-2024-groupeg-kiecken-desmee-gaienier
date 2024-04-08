@@ -1,6 +1,11 @@
 import $ from 'jquery';
-import { socket, user } from './main.js';
-import { canvas, stopGameRenderer } from './game/renderGame.js';
+import { socket, userName } from './main.js';
+import {
+	canvas,
+	getGame,
+	setGame,
+	stopGameRenderer,
+} from './game/renderGame.js';
 
 export default class Router {
 	static routes = [];
@@ -15,17 +20,22 @@ export default class Router {
 		$('.innerLink', this.#setInnerLinks).on('click', event => {
 			event.preventDefault();
 			const link = $(event.currentTarget);
-			if(link.attr('host')){
-				Router.navigate($(event.currentTarget).attr('href'), false, link.attr('host'));
-			}else{
+			if (link.attr('host')) {
+				Router.navigate(
+					$(event.currentTarget).attr('href'),
+					false,
+					link.attr('host')
+				);
+			} else {
 				Router.navigate($(event.currentTarget).attr('href'));
 			}
 		});
 	}
 
 	static navigate(path, skipPushState = false, hote = null) {
+		console.log('navigate', path, skipPushState, hote);
 		let route = this.routes.find(route => route.path === path);
-		if (user && this.connexionRoutes.includes(route?.path)) {
+		if (userName && this.connexionRoutes.includes(route?.path)) {
 			route = this.routes.find(route => route.path === '/');
 		}
 		if (route) {
@@ -36,22 +46,30 @@ export default class Router {
 			this.currentRoute = route;
 			route.view.show();
 			if (route.path === '/jeu') {
-				if(hote){
-					socket.emit('gameJoin', {
-						host: hote,
-						user: window.sessionStorage.getItem('user'),
-					}); 
-				}else{
+				if (hote) {
+					socket.emit('user join a game', {
+						hostName: hote,
+						userName,
+					});
+				} else {
 					socket.emit('user start a game', {
+						userName,
 						width: canvas.width,
 						height: canvas.height,
-						user: window.sessionStorage.getItem('user'),
-						diff: $(".diff .active").val()
+						diff: $('.diff .active').val(),
 					});
 				}
+			} else if (route.path === '/join') {
+				socket.emit('client need gamesInfo');
 			} else {
-				stopGameRenderer();
-				socket.emit('gameStop');
+				if (getGame()) {
+					stopGameRenderer();
+					setGame(undefined);
+					socket.emit('game is stoped', {
+						userName,
+						souls: 0,
+					});
+				}
 			}
 			if (!skipPushState) {
 				window.history.pushState(null, null, route.path);

@@ -1,42 +1,35 @@
 {
     "venus": {
-        "background": "/assets/stage/background/1.png",
         "numberOfAngels": 10,
         "angelsSpecies": "cupidon",
         "archangel": "anael"
     },
     "earth": {
-        "background": "/assets/stage/background/2.png",
         "numberOfAngels": 10,
         "angelsSpecies": "vertue",
         "archangel": "sachiel"
     },
     "jupiter": {
-        "background": "/assets/stage/background/3.png",
         "numberOfAngels": 10,
         "angelsSpecies": "domination",
         "archangel": "gabriel"
     },
     "mars": {
-        "background": "/assets/stage/background/4.png",
         "numberOfAngels": 10,
         "angelsSpecies": "puissance",
         "archangel": "camael"
     },
     "uranus": {
-        "background": "/assets/stage/background/5.png",
         "numberOfAngels": 10,
         "angelsSpecies": "cherubin",
         "archangel": "raphael"
     },
     "saturn": {
-        "background": "/assets/stage/background/6.png",
         "numberOfAngels": 10,
         "angelsSpecies": "seraphin",
         "archangel": "michael"
     },
     "sun" : {
-        "background": "/assets/stage/background/7.png",
         "numberOfAngels": 10,
         "angelsSpecies": "trone",
         "archangel": "cassiel"

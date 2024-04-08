@@ -1,18 +1,18 @@
 import { images } from '../main.js';
 import { renderMissiles } from './renderMissiles.js';
 
-export default function renderPlayer(player, context) {
+export function renderPlayer(player, context) {
 	if (player.health <= 0) return;
 	let direction =
 		player.speedX > 0 ? 'right' : player.speedX < 0 ? 'left' : 'idle';
-	const image = images.player[player.currentSkin][direction];
+	const image = images.players[player.currentSkin][direction];
 
 	context.drawImage(image, player.posX, player.posY);
 
 	context.beginPath();
 	context.font = '20px Arial';
 	context.fillStyle = 'black';
-	context.fillText(player.user, player.posX, player.posY - 15);
+	context.fillText(player.userName, player.posX, player.posY - 15);
 	context.closePath();
 
 	renderMissiles(player.missiles, context);
@@ -24,20 +24,30 @@ export function renderPlayers(players, context) {
 	});
 }
 
-export function renderHealthBar(player, position, context, canvas) {
+export function renderHealthBar(player, position, context) {
 	const startX = 10 + position * 110;
-	const startY = 20;
+	const startY = 10;
 
-	const healthBarWidth = (player.health / player.maxHealth) * 100;
-	const healthBarHeight = position === 0 ? 15 : 10;
+	const healthBarWidth = (player.health / player.maxHealth) * 150;
+	const healthBarHeight = position === 0 ? 20 : 15;
 
 	context.fillStyle = calculateCurrentColorBasedOnHealth(player);
 	context.fillRect(startX, startY, healthBarWidth, healthBarHeight);
 
-	context.rect(startX, startY, 100, healthBarHeight);
+	context.beginPath();
+	context.rect(startX, startY, 150, healthBarHeight);
 	context.strokeStyle = 'black';
 	context.lineWidth = 2;
 	context.stroke();
+	context.closePath();
+
+	context.font = '20px Arial';
+	context.fillStyle = 'black';
+	context.fillText(
+		player.userName,
+		startX + 10,
+		startY + healthBarHeight - 3.5
+	);
 }
 
 function calculateCurrentColorBasedOnHealth(player) {

@@ -1,68 +1,71 @@
 import { readFileSync, writeFileSync } from 'fs';
 
-function setCurrentSkin(username, skin, isProj) {
-	const playersData = readPlayersData();
-	const player = playersData.find(p => p.user === username);
-	if (isProj) {
-		player.currentWeapon = skin;
-	} else {
-		player.currentSkin = skin;
-	}
-	writePlayersData(playersData);
-}
-
-function setSkinsPool(username, skin, isProj) {
-	const playersData = readPlayersData();
-	const player = playersData.find(p => p.user === username);
-	if (isProj) {
-		player.weaponsPool.push(skin);
-		player.currentWeapon = skin;
-	} else {
-		player.skinsPool.push(skin);
-		player.currentSkin = skin;
-	}
-	writePlayersData(playersData);
-}
-
-function setStat(username, value, statName) {
-	const playersData = readPlayersData();
-	const player = playersData.find(p => p.user === username);
-	player[statName] = value;
-	writePlayersData(playersData);
-}
-
-export default function playerManager(socket, skinData) {
+export default function playerManager(socket) {
 	socket.on('currentSkin', data => {
-		setCurrentSkin(data.username, data.skin, data.isProj);
+		setCurrentSkin(data.userName, data.skin, data.isProj);
 	});
 
 	socket.on('skinsPool', data => {
-		setSkinsPool(data.username, data.skin, data.isProj);
+		setSkinsPool(data.userName, data.skin, data.isProj);
 	});
 
 	socket.on('stat', data => {
-		setStat(data.username, data.value, data.statName);
+		setStat(data.userName, data.value, data.statName);
 	});
 
-	socket.on('setCarousel', user => {
-		const playersData = readPlayersData();
-		const skinData = readSkinData();
-		socket.emit('setCarousel', {
-			playerData: playersData.find(p => p.user === user),
-			playerSkins: skinData.playerSkins,
-			weaponSkins: skinData.weaponSkins,
+	socket.on('client need playerProperties', userName => {
+		const playersProperties = readPlayersProperties();
+		const skinsProperties = readSkinsProperties();
+		socket.emit('server send playerProperties', {
+			playerProperties: playersProperties.find(p => p.userName === userName),
+			playerSkins: skinsProperties.playerSkins,
+			weaponSkins: skinsProperties.weaponSkins,
 		});
 	});
 }
 
-export function readPlayersData() {
-	return JSON.parse(readFileSync('server/data/playerData.json', 'utf8'));
+export function readPlayersProperties() {
+	return JSON.parse(readFileSync('server/data/playersProperties.json', 'utf8'));
 }
 
-function readSkinData() {
-	return JSON.parse(readFileSync('server/data/skinData.json', 'utf8'));
+export function writePlayersProperties(playersProperties) {
+	writeFileSync(
+		'server/data/playersProperties.json',
+		JSON.stringify(playersProperties)
+	);
 }
 
-export function writePlayersData(playersData) {
-	writeFileSync('server/data/playerData.json', JSON.stringify(playersData));
+function readSkinsProperties() {
+	return JSON.parse(readFileSync('server/data/skinsProperties.json', 'utf8'));
+}
+
+function setCurrentSkin(userName, skin, isProj) {
+	const playersProperties = readPlayersProperties();
+	const playerProperties = playersProperties.find(p => p.userName === userName);
+	if (isProj) {
+		playerProperties.currentWeapon = skin;
+	} else {
+		playerProperties.currentSkin = skin;
+	}
+	writePlayersProperties(playersProperties);
+}
+
+function setSkinsPool(userName, skin, isProj) {
+	const playersProperties = readPlayersProperties();
+	const playerProperties = playersProperties.find(p => p.userName === userName);
+	if (isProj) {
+		playerProperties.weaponsPool.push(skin);
+		playerProperties.currentWeapon = skin;
+	} else {
+		playerProperties.skinsPool.push(skin);
+		playerProperties.currentSkin = skin;
+	}
+	writePlayersProperties(playersProperties);
+}
+
+function setStat(userName, value, statName) {
+	const playersProperties = readPlayersProperties();
+	const playerProperties = playersProperties.find(p => p.userName === userName);
+	playerProperties[statName] = value;
+	writePlayersProperties(playersProperties);
 }

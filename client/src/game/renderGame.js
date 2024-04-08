@@ -1,75 +1,69 @@
 import { socket } from '../main.js';
-import { renderAngels } from './renderAngel.js';
+import renderAngel, { renderAngels } from './renderAngel.js';
 import { renderAllBonus } from './renderBonus.js';
-import { renderMissiles, renderMissilesHitbox } from './renderMissiles.js';
-import renderPlayer, {
-	renderHealthBar,
-	renderPlayerHitbox,
-	renderPlayerStats,
-	renderPlayers,
-} from './renderPlayer.js';
-import renderStage, {
+import { renderMissiles } from './renderMissiles.js';
+import { renderHealthBar, renderPlayers } from './renderPlayer.js';
+import {
+	renderStageBackground,
 	renderStageProgressionBar,
-	renderStageChangement,
+	renderStageTransition,
 } from './renderStage.js';
 
 export const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d'),
 	canvasResizeObserver = new ResizeObserver(() => {
-		resampleCanvas();
+		canvas.width = canvas.clientWidth;
+		canvas.height = canvas.clientHeight;
+		socket.emit('canvas was resized', {
+			width: canvas.width,
+			height: canvas.height,
+		});
 	});
-
-export let stageTransitionEnd = false;
-
-let gameRenderer = null;
-let transitionRenderer = null;
-let game = null;
-let previousStage = null;
 
 canvasResizeObserver.observe(canvas);
 
-function resampleCanvas() {
-	canvas.width = canvas.clientWidth;
-	canvas.height = canvas.clientHeight;
-	socket.emit('canvasResampled', {
-		width: canvas.width,
-		height: canvas.height,
-	});
-}
+let stageTransitionEnd = false;
+let gameRenderer = null;
+let transitionRenderer = null;
+let game = null;
+let prevStage = null;
 
 export default function startGameRenderer() {
 	gameRenderer = requestAnimationFrame(renderGame);
 }
 
 export function startTransition(stage) {
-	previousStage = stage;
+	prevStage = stage;
 	transitionRenderer = requestAnimationFrame(renderTransition);
 }
 
 function renderGame() {
 	context.clearRect(0, 0, game.width, game.height);
 
-	renderStage(game.stage, context, canvas);
+	const players = game.players;
+	const stage = game.stage;
 
-	renderPlayer(game.mainPlayer, context);
-	renderPlayers(game.otherPlayers, context);
+	renderStageBackground(stage.name, context);
 
-	renderAngels(game.stage.angels, context);
-	game.stage.angels.forEach(angel => {
-		if (angel.missiles) renderMissiles(angel.missiles, context);
-	});
+	renderPlayers(players, context);
 
-	renderMissiles(game.stage.strandedMissiles, context);
+	renderAngels(stage.angels, context);
+	if (stage.archangel) {
+		renderAngel(stage.archangel, context);
+	}
 
-	renderAllBonus(game.stage.bonus, context);
+	renderMissiles(stage.strandedMissiles, context);
 
-	renderStageProgressionBar(game.stage, context, canvas);
-	renderHealthBar(game.mainPlayer, 0, context, canvas);
-	game.otherPlayers.forEach((player, index) => {
-		renderHealthBar(player, index + 1, context, canvas);
-	});
+	renderAllBonus(stage.bonus, context);
 
-	if (game.debug) {
+	renderStageProgressionBar(stage, context, canvas);
+
+	for (let position = 0; position < game.players.length; position++) {
+		const player = game.players[position];
+		renderHealthBar(player, position, context);
+	}
+
+	/*if (game.debug) {
 		renderPlayerHitbox(game.mainPlayer, context);
 		renderPlayerStats(game.mainPlayer, context, canvas);
 		game.otherPlayers.forEach(player => {
@@ -79,21 +73,17 @@ function renderGame() {
 		game.otherPlayers.forEach(player => {
 			renderMissilesHitbox(player.missiles, context);
 		});
-	}
+	}*/
 	gameRenderer = requestAnimationFrame(renderGame);
 }
 
 function renderTransition() {
 	context.clearRect(0, 0, game.width, game.height);
-	console.log(previousStage);
-	renderStageChangement(previousStage, game.stage, context, canvas);
-	renderPlayer(game.mainPlayer, context);
-	game.otherPlayers.forEach(player => {
-		renderPlayer(player, context);
-	});
+	renderStageTransition(prevStage.name, game.stage.name, context);
+	renderPlayers(game.players, context);
 	if (stageTransitionEnd) {
 		stopGameRenderer();
-		socket.emit('stageChangeEnd');
+		socket.emit('stage end his transition');
 		stageTransitionEnd = false;
 		startGameRenderer();
 	} else {
@@ -103,6 +93,10 @@ function renderTransition() {
 
 export function setGame(gameInstance) {
 	game = gameInstance;
+}
+
+export function getGame() {
+	return game;
 }
 
 export function stageChangeEnd() {

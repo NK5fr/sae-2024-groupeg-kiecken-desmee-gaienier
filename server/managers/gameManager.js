@@ -1,52 +1,78 @@
-import { readFileSync } from 'fs';
 import Game from '../game/game.js';
-import { addGame, currentGame, removeGame } from '../index.js';
+import {
+	addGame,
+	currentGame,
+	findGameByOwner,
+	findGameByPlayer,
+	findPlayerBySocketId,
+	playerIsInGameBySocketId,
+	playerIsInGameByUserName,
+	playerIsOwner,
+	removeGameByOwner,
+	removeGameBySocketId,
+} from '../index.js';
+import {
+	readPlayersProperties,
+	writePlayersProperties,
+} from './playerManager.js';
 
 export default function gameManager(socket) {
-	socket.on('user start a game', ({ user, width, height , diff}) => {
-		console.log(diff);
-		const playersData = readPlayersData();
-		let game = currentGame.find(game => game.user === user);
-		if (game) return;
-		let player = playersData.find(player => player.user === user);
-		game = new Game(width, height, player, socket.id, diff);
-		game.startGame();
-		addGame(game);
-		socket.emit('user start a game', game);
+	socket.on('user start a game', ({ userName, width, height, diff }) => {
+		if (playerIsOwner(userName)) return;
+		const playersProperties = readPlayersProperties();
+		const playerProperties = playersProperties.find(
+			p => p.userName === userName
+		);
+		addGame(new Game(width, height, playerProperties, socket.id, diff));
+		socket.emit('game is started', findGameByOwner(userName));
 	});
 
-	socket.on('gameJoin', ({ host, user }) => {
-		const playersData = readPlayersData();
-		let game = currentGame.find(game => game.owner === host);
-		if (!game) return;
-		let player = playersData.find(player => player.user === user);
-		game.addNewPlayer(player, socket.id);
-		socket.emit('gameStart', game);
+	socket.on('user join a game', ({ hostName, userName }) => {
+		if (!playerIsOwner(hostName) && playerIsInGameByUserName(userName)) return;
+		const playersProperties = readPlayersProperties();
+		const playerProperties = playersProperties.find(
+			p => p.userName === userName
+		);
+		findGameByOwner(hostName).addNewPlayer(playerProperties, socket.id);
+		socket.emit('game is started', findGameByOwner(hostName));
 	});
 
-	socket.on('stageChangeEnd', () => {
+	socket.on('stage end his transition', () => {
 		const game = currentGame.find(game => game.socketId === socket.id);
 		if (!game) return;
 		game.startGame();
 	});
 
-	socket.on('canvasResampled', data => {
+	socket.on('canvas was resized', ({ width, height }) => {
 		const game = currentGame.find(game => game.socketId === socket.id);
 		if (game) {
-			game.width = data.width;
-			game.height = data.height;
+			game.width = width;
+			game.height = height;
 		}
 	});
 
-	socket.on('gameStop', () => {
-		removeGame(socket.id);
+	socket.on('game is stoped', ({ userName, souls }) => {
+		const playersProperties = readPlayersProperties();
+		const playerProperties = playersProperties.find(
+			p => p.userName === userName
+		);
+		playerProperties.souls += souls;
+		writePlayersProperties(playersProperties);
+		if (playerIsOwner(userName)) {
+			findGameByOwner(userName).stopGame();
+			removeGameByOwner(userName);
+		}
 	});
 
 	socket.on('disconnect', () => {
-		removeGame(socket.id);
+		if (playerIsInGameBySocketId(socket.id)) {
+			const player = findPlayerBySocketId(socket.id);
+			if (playerIsOwner(player.userName)) {
+				removeGameByOwner(player.userName);
+			} else {
+				const game = findGameByPlayer(player.userName);
+				game.removePlayer(player.userName);
+			}
+		}
 	});
-}
-
-function readPlayersData() {
-	return JSON.parse(readFileSync('server/data/playerData.json', 'utf8'));
 }

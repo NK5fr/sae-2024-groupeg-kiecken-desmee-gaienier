@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { socket, user } from '../main.js';
+import { socket, userName } from '../main.js';
 
 export default class CarouselSkin {
 	constructor(element, skins, ownedSkins, actualSkin, isProj) {
@@ -71,14 +71,14 @@ export default class CarouselSkin {
 				socket.emit('currentSkin', {
 					skin: skin,
 					isProj: this.isProj,
-					username: user,
+					userName: userName,
 				});
 				this.actualSkin = skin;
 			} else if (this.actualSkin !== skin) {
 				socket.emit('skinsPool', {
 					skin: skin,
 					isProj: this.isProj,
-					username: user,
+					userName: userName,
 				});
 				this.ownedSkins.push(skin);
 				this.actualSkin = skin;

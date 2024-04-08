@@ -6,7 +6,6 @@ export default class Entity {
 		this.health = this.maxHealth = properties.health;
 		this.damage = properties.damage;
 		this.speed = properties.speed;
-		this.fireSpeed = properties.fireSpeed;
 
 		this.hitboxWidth = properties.hitboxWidth;
 		this.hitboxHeight = properties.hitboxHeight;
