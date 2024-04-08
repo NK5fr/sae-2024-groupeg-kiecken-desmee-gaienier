@@ -75,8 +75,8 @@
     },
     "cupidon": {
         "one" : {
-            "speed": 5,
-            "health": 12,
+            "speed": 4,
+            "health": 6,
             "damage": 1,
             "hitboxWidth": 96,
             "hitboxHeight": 96
@@ -90,7 +90,7 @@
         },
         "three" : {
             "speed": 3,
-            "health": 24,
+            "health": 18,
             "damage": 2,
             "hitboxWidth": 96,
             "hitboxHeight": 96
