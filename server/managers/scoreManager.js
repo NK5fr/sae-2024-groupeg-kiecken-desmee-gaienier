@@ -1,13 +1,14 @@
 import { readFileSync, writeFileSync } from 'fs';
+import { io } from '../index.js';
 
 export function scoreManager(socket) {
-	socket.on('client send score', ({ userName, time }) => {
-		addScore(userName, time);
+	socket.on('client send score', ({ userName, formatedTime }) => {
+		addScore(userName, formatedTime);
 	});
 
 	socket.on('client need scores', () => {
 		const scoresData = readScoresData();
-		socket.emit('server send scores', scoresData);
+		io.emit('server send scores', scoresData);
 	});
 }
 
