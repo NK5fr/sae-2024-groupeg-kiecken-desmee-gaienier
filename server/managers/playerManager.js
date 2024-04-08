@@ -9,9 +9,15 @@ export default function playerManager(socket) {
 		setSkinsPool(data.userName, data.skin, data.isProj);
 	});
 
-	socket.on('stat', data => {
-		setStat(data.userName, data.value, data.statName);
-	});
+	socket.on(
+		'stat purchase tentative',
+		({ userName, statName, value, price }) => {
+			socket.emit('stat purchase validation', {
+				validate: setStat(userName, statName, value, price),
+				statName,
+			});
+		}
+	);
 
 	socket.on('client need playerProperties', userName => {
 		const playersProperties = readPlayersProperties();
@@ -63,9 +69,12 @@ function setSkinsPool(userName, skin, isProj) {
 	writePlayersProperties(playersProperties);
 }
 
-function setStat(userName, value, statName) {
+function setStat(userName, statName, value, price) {
 	const playersProperties = readPlayersProperties();
 	const playerProperties = playersProperties.find(p => p.userName === userName);
+	if (playerProperties.souls < price) return false;
+	playerProperties.souls -= price;
 	playerProperties[statName] = value;
 	writePlayersProperties(playersProperties);
+	return true;
 }
