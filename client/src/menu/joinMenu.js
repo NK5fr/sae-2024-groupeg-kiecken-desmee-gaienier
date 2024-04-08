@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import Router from '../router.js';
 
 export default class JoinMenu {
 	constructor(element) {
@@ -12,5 +13,6 @@ export default class JoinMenu {
 			html += `<tr href="/jeu" class="innerLink" host="${hostName}"><td>${hostName}</td><td>${participants}/4</td><td></tr>`;
 		});
 		table.html(html);
+		Router.setInnerLinks($("table .innerLink", this.element));
 	}
 }

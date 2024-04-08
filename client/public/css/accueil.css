@@ -96,3 +96,8 @@
     margin: 0px;
     margin-top: 7%;
 }
+
+.accueil .pub img {
+    width: 100%;
+    height: 100%;
+}
