@@ -56,4 +56,20 @@
     padding: 5% 0;
 }
 
+.personnalisation header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.personnalisation header > *{
+    width: 33%;
+}
+
+.personnalisation header h4{
+    margin-top: 1%;
+}
+
+.personnalisation header h4 img{
+    width: 10%;
+}
 
