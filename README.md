@@ -9,6 +9,7 @@
 
 ## Diagrammes de séquence
 
+![Diagramme de séquence de connexion](./diagrammeSéquence/Diagramme%20_de_séquence_connexion.PNG)
 
 
 
