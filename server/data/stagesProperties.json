@@ -5,33 +5,33 @@
         "archangel": "anael"
     },
     "earth": {
-        "numberOfAngels": 10,
+        "numberOfAngels": 16,
         "angelsSpecies": "vertue",
         "archangel": "sachiel"
     },
     "jupiter": {
-        "numberOfAngels": 10,
+        "numberOfAngels": 28,
         "angelsSpecies": "domination",
         "archangel": "gabriel"
     },
     "mars": {
-        "numberOfAngels": 10,
+        "numberOfAngels": 42,
         "angelsSpecies": "puissance",
         "archangel": "camael"
     },
     "uranus": {
-        "numberOfAngels": 10,
+        "numberOfAngels": 60,
         "angelsSpecies": "cherubin",
         "archangel": "raphael"
     },
     "saturn": {
-        "numberOfAngels": 10,
+        "numberOfAngels": 90,
         "angelsSpecies": "seraphin",
-        "archangel": "michael"
+        "archangel": "cassiel"
     },
     "sun" : {
-        "numberOfAngels": 10,
+        "numberOfAngels": 150,
         "angelsSpecies": "trone",
-        "archangel": "cassiel"
+        "archangel": "michael"
     }
 }

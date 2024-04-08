@@ -3,49 +3,49 @@
         "anael": {
             "speed": 10,
             "health": 100,
-            "damage": 5,
+            "damage": 3,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         },
         "camael": {
-            "speed": 10,
-            "health": 100,
-            "damage": 5,
+            "speed": 12,
+            "health": 75,
+            "damage": 6,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         },
         "cassiel": {
-            "speed": 10,
-            "health": 100,
-            "damage": 5,
+            "speed": 15,
+            "health": 125,
+            "damage": 3,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         },
         "gabriel": {
             "speed": 10,
-            "health": 100,
-            "damage": 5,
+            "health": 50,
+            "damage": 8,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         },
         "michael": {
-            "speed": 10,
-            "health": 100,
-            "damage": 5,
+            "speed": 15,
+            "health": 150,
+            "damage": 25,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         },
         "raphael": {
-            "speed": 10,
-            "health": 100,
-            "damage": 5,
+            "speed": 13,
+            "health": 125,
+            "damage": 3,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         },
         "sachiel": {
-            "speed": 10,
-            "health": 100,
-            "damage": 5,
+            "speed": 15,
+            "health": 75,
+            "damage": 2,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         }
@@ -53,21 +53,21 @@
     "cherubin": {
         "one" : {
             "speed": 5,
-            "health": 2,
+            "health": 20,
             "damage": 1,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
         "two" : {
             "speed": 7,
-            "health": 1,
+            "health": 10,
             "damage": 3,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
         "three" : {
             "speed": 3,
-            "health": 3,
+            "health": 30,
             "damage": 2,
             "hitboxWidth": 96,
             "hitboxHeight": 96
@@ -76,21 +76,21 @@
     "cupidon": {
         "one" : {
             "speed": 5,
-            "health": 2,
+            "health": 12,
             "damage": 1,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
         "two" : {
             "speed": 7,
-            "health": 1,
+            "health": 6,
             "damage": 3,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
         "three" : {
             "speed": 3,
-            "health": 3,
+            "health": 24,
             "damage": 2,
             "hitboxWidth": 96,
             "hitboxHeight": 96
@@ -99,114 +99,114 @@
     "domination": {
         "one" : {
             "speed": 5,
-            "health": 2,
-            "damage": 1,
+            "health": 20,
+            "damage": 2,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
         "two" : {
-            "speed": 7,
-            "health": 1,
-            "damage": 3,
+            "speed": 10,
+            "health": 15,
+            "damage": 5,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
         "three" : {
-            "speed": 3,
-            "health": 3,
-            "damage": 2,
+            "speed": 4,
+            "health": 28,
+            "damage": 4,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         }
     },
     "puissance": {
         "one": {
-            "speed": 5,
-            "health": 2,
-            "damage": 1,
+            "speed": 4.5,
+            "health": 25,
+            "damage": 5,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
         "two": {
-            "speed": 7,
-            "health": 1,
-            "damage": 3,
+            "speed": 4,
+            "health": 23,
+            "damage": 10,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
         "three": {
-            "speed": 3,
-            "health": 3,
-            "damage": 2,
+            "speed": 5,
+            "health": 24,
+            "damage": 6,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         }
     },
     "seraphin": {
         "one" : {
-            "speed": 5,
-            "health": 2,
-            "damage": 1,
+            "speed": 10,
+            "health": 15,
+            "damage": 2,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
         "two" : {
-            "speed": 7,
-            "health": 1,
-            "damage": 3,
+            "speed": 15,
+            "health": 10,
+            "damage": 1,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
         "three" : {
             "speed": 3,
-            "health": 3,
-            "damage": 2,
+            "health": 40,
+            "damage": 5,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         }
     },
     "trone": {
         "one" : {
-            "speed": 5,
-            "health": 2,
-            "damage": 1,
+            "speed": 7,
+            "health": 40,
+            "damage": 2,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
         "two" : {
             "speed": 7,
-            "health": 1,
+            "health": 15,
             "damage": 3,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
         "three" : {
             "speed": 3,
-            "health": 3,
-            "damage": 2,
+            "health": 26,
+            "damage": 6,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         }
     },
     "vertue": {
         "one" : {
-            "speed": 5,
-            "health": 2,
-            "damage": 1,
+            "speed": 6,
+            "health": 20,
+            "damage": 1.5,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
         "two" : {
-            "speed": 7,
-            "health": 1,
-            "damage": 3,
+            "speed": 8,
+            "health": 15,
+            "damage": 4,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         },
         "three" : {
-            "speed": 3,
-            "health": 3,
-            "damage": 2,
+            "speed": 4,
+            "health": 28,
+            "damage": 2.75,
             "hitboxWidth": 96,
             "hitboxHeight": 96
         }
