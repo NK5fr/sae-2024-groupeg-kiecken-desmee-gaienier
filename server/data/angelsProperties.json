@@ -3,49 +3,49 @@
         "anael": {
             "speed": 10,
             "health": 100,
-            "damage": 5,
+            "damage": 3,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         },
         "camael": {
-            "speed": 10,
-            "health": 100,
-            "damage": 5,
+            "speed": 12,
+            "health": 75,
+            "damage": 6,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         },
         "cassiel": {
-            "speed": 10,
-            "health": 100,
-            "damage": 5,
+            "speed": 15,
+            "health": 125,
+            "damage": 3,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         },
         "gabriel": {
             "speed": 10,
-            "health": 100,
-            "damage": 5,
+            "health": 50,
+            "damage": 8,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         },
         "michael": {
-            "speed": 10,
-            "health": 100,
-            "damage": 5,
+            "speed": 15,
+            "health": 150,
+            "damage": 25,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         },
         "raphael": {
-            "speed": 10,
-            "health": 100,
-            "damage": 5,
+            "speed": 13,
+            "health": 125,
+            "damage": 3,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         },
         "sachiel": {
-            "speed": 10,
-            "health": 100,
-            "damage": 5,
+            "speed": 15,
+            "health": 75,
+            "damage": 2,
             "hitboxWidth": 144,
             "hitboxHeight": 144
         }

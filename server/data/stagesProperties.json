@@ -27,11 +27,11 @@
     "saturn": {
         "numberOfAngels": 10,
         "angelsSpecies": "seraphin",
-        "archangel": "michael"
+        "archangel": "cassiel"
     },
     "sun" : {
         "numberOfAngels": 10,
         "angelsSpecies": "trone",
-        "archangel": "cassiel"
+        "archangel": "michael"
     }
 }
