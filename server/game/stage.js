@@ -38,7 +38,7 @@ export class Stage {
 	}
 
 	bonusWillSpawn() {
-		return Math.random() < 0.1;
+		return Math.random() < 0.2;
 	}
 
 	chooseBonusType() {
