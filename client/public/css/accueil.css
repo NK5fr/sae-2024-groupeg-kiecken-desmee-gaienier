@@ -5,10 +5,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-left: 10%;
     margin-top:7% ;
     width: 30%;
-    border: 3px solid #ffe600;
+    border: 3px solid #8b8017;
     text-align: center;
     height: 60%;
     background-color: #fff;
@@ -21,7 +20,7 @@
     align-items: center;
     justify-content: center;
     margin: auto;
-    margin-top:2% ;
+    margin-top:1% ;
     width: 100%;
     padding: 10px;
     text-align: center;
@@ -72,4 +71,28 @@
 .menuAccueil .diff .active{
     border: 2px solid #c46a16;
     background-color: #c46a16;
+}
+
+.menuAccueil h2 {
+    margin-top: 5%;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.accueil > div {
+    display: flex;
+    justify-content: space-around;
+}
+
+.accueil .pub {
+    border: 3px dashed #000000;
+    text-align: center;
+    background-color: #fff;
+    padding: 0px;
+    overflow: hidden;
+}
+
+.accueil .pubList {
+    width: 30%;
+    margin: 0px;
+    margin-top: 7%;
 }
