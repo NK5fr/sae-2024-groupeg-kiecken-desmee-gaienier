@@ -168,7 +168,6 @@ socket.on(
 	({ userName, souls, time = '00:00:00', win = false }) => {
 		stopGameRenderer();
 		setGame(undefined);
-		Router.navigate('/rejouer');
 		$('.personnalisation header h4').html(
 			`<img src="images/soul.png" alt="âmes"> : ${souls}`
 		);
@@ -185,6 +184,7 @@ socket.on(
 		} else {
 			$('.rejouer h2').html(`Défaite`);
 		}
+		Router.navigate('/rejouer');
 	}
 );
 

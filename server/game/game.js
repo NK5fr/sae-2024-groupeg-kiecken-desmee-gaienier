@@ -25,6 +25,7 @@ export default class Game {
 		this.socketId = socketId;
 
 		this.diffficulty = difficulty;
+		// Vous avez remarqué ?
 
 		this.startTime = Date.now();
 
@@ -234,8 +235,6 @@ function finishGame(game) {
 		io.to(player.socketId).emit('game is stoped', {
 			userName: player.userName,
 			souls: player.souls,
-			time: Date.now() - game.startTime,
-			win: false,
 		});
 	});
 	return;

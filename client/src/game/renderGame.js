@@ -62,18 +62,6 @@ function renderGame() {
 		const player = game.players[position];
 		renderHealthBar(player, position, context);
 	}
-
-	/*if (game.debug) {
-		renderPlayerHitbox(game.mainPlayer, context);
-		renderPlayerStats(game.mainPlayer, context, canvas);
-		game.otherPlayers.forEach(player => {
-			renderPlayerHitbox(player, context);
-		});
-		renderMissilesHitbox(game.mainPlayer.missiles, context);
-		game.otherPlayers.forEach(player => {
-			renderMissilesHitbox(player.missiles, context);
-		});
-	}*/
 	gameRenderer = requestAnimationFrame(renderGame);
 }
 
