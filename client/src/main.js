@@ -170,7 +170,7 @@ socket.on(
 		setGame(undefined);
 		Router.navigate('/rejouer');
 		$('.personnalisation header h4').html(
-			`<img href="images/soul.png" alt="âmes"> : ${souls}`
+			`<img src="images/soul.png" alt="âmes"> : ${souls}`
 		);
 		socket.emit('game is stoped', { userName, souls });
 		if (win) {
@@ -265,7 +265,7 @@ export function setSouls() {
 	socket.emit('client need souls', userName);
 	socket.on('server send souls', souls => {
 		$('.personnalisation header h4').html(
-			`<img href="images/soul.png" alt="âmes"> : ${souls}`
+			`<img src="images/soul.png" alt="âmes"> : ${souls}`
 		);
 	});
 }
